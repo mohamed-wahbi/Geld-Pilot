@@ -10,14 +10,6 @@
         }
       ]
     },
-    "list-etudiant-web-part": {
-      "components": [
-        {
-          "entrypoint": "./lib/webparts/listEtudiant/ListEtudiantWebPart.js",
-          "manifest": "./src/webparts/listEtudiant/ListEtudiantWebPart.manifest.json"
-        }
-      ]
-    },
     "welcome-web-part": {
       "components": [
         {
@@ -30,7 +22,6 @@
   "externals": {},
   "localizedResources": {
     "HelloWorldWebPartStrings": "lib/webparts/helloWorld/loc/{locale}.js",
-    "ListEtudiantWebPartStrings": "lib/webparts/listEtudiant/loc/{locale}.js",
     "WelcomeWebPartStrings": "lib/webparts/welcome/loc/{locale}.js"
   }
 }
