@@ -1,38 +1,55 @@
-.App {
+.InfoPlatformComp {
+  background-color: #f3f6fc78;
+}
+
+.TitreComp{
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(90deg, #182936, #f47c28);
+  font-size: clamp(2.9rem, 1.243vw + 2.502rem, 4.2rem);
+  font-weight: 700;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  display: flex;
+  align-items: center;
+  padding: 36px;
 }
 
-.App-link {
-  color: #61dafb;
+.descInfo {
+  color: #363636;
+  font-size: clamp(1.6rem, 0.096vw + 1.569rem, 1.7rem);
+  padding: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.descInfo h4 {
+  color: #363636;
+  font-size: clamp(1.6rem, 0.096vw + 1.569rem, 1.7rem);
+}
+
+.descInfo p {
+  color: rgb(77 77 77);
+  font-size: 18px;
+  font-weight: 450;
+}
+
+.CardInfoComp  {
+  padding: 30px;
+  width: 80%;
+  margin: auto;
+}
+
+.cardInfoItem {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #dcdcdc;
+  padding-bottom: 35px;
+
+
+}
+
+.cardInfoItem img {
+  width: 40%;
+  height: 400px;
 }
