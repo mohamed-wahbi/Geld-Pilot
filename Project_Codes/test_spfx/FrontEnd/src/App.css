@@ -1,55 +1,143 @@
-.InfoPlatformComp {
-  background-color: #f3f6fc78;
+.footerComp {
+  width: 100%;
+  background-color: var(--bricks-color-kuizli);
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  padding-top: 20px;
 }
 
-.TitreComp{
+/* ----- Footer Top ----- */
+.footerTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(90deg, #182936, #f47c28);
-  font-size: clamp(2.9rem, 1.243vw + 2.502rem, 4.2rem);
-  font-weight: 700;
+}
+
+.alightLogo img {
+  transition: transform 0.3s ease-in-out;
+  height: 65px;
+  width: 180px;
+}
+
+.alightLogo img:hover {
+  transform: scale(1.1);
+}
+
+/* Social Icons */
+.alightSocials {
+  display: flex;
   justify-content: center;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.alightSocials .socialIcon {
+  background-color: #dc7024;
+  padding: 10px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 20px;
   display: flex;
   align-items: center;
-  padding: 36px;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
 }
 
-.descInfo {
-  color: #363636;
-  font-size: clamp(1.6rem, 0.096vw + 1.569rem, 1.7rem);
-  padding: 20px;
+.alightSocials .socialIcon:hover {
+  background-color: #f47c28;
+  transform: scale(1.1);
 }
 
-.descInfo h4 {
-  color: #363636;
-  font-size: clamp(1.6rem, 0.096vw + 1.569rem, 1.7rem);
-}
-
-.descInfo p {
-  color: rgb(77 77 77);
-  font-size: 18px;
-  font-weight: 450;
-}
-
-.CardInfoComp  {
-  padding: 30px;
-  width: 80%;
-  margin: auto;
-}
-
-.cardInfoItem {
+/* Navigation Links */
+.alightLinks {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #dcdcdc;
-  padding-bottom: 35px;
-
-
+  gap: 10px;
+  margin: 20px 0;
 }
 
-.cardInfoItem img {
-  width: 40%;
-  height: 400px;
+.alightLinks .linkText {
+  color: #c1ccd5;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.alightLinks .linkText:hover {
+  color: #f47c28;
+}
+
+.bar {
+  height: 15px;
+  width: 2px;
+  background-color: #ffffff;
+}
+
+/* ----- Footer Bottom ----- */
+.footerBottom {
+  text-align: center;
+  background-color: #29455b91;
+  padding: 10px 0;
+  background-image: url("./flous.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: exclusion;
+}
+
+.footerBottom h5 {
+  font-size: 14px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.footerBottom p {
+  font-size: 12px;
+  margin: 5px 0;
+}
+
+.heartIcon {
+  color: #f47c28;
+  animation: heartbeat 1.5s infinite;
+}
+
+/* Animation du cœur */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .alightLinks {
+    flex-direction: column;
+  }
+
+  .bar {
+    display: none;
+  }
+
+  .footerBottom h5 {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .alightLogo img {
+    height: 65px;
+    width: 180px;
+  }
 }
