@@ -10,22 +10,23 @@ const Footer = () => {
           <img src={logo} alt='Alight Logo' />
         </div>
         <div className='alightSocials'>
-          <div className='socialIcon'><FaLinkedin /></div>
-          <div className='socialIcon'><FaXing /></div>
-          <div className='socialIcon'><FaYoutube /></div>
-          <div className='socialIcon'><FaFacebook /></div>
-          <div className='socialIcon'><FaTwitter /></div>
+          <div className='socialIcon'><a href="https://www.linkedin.com/company/alight-consulting-gmbh/" target="_blank"><FaLinkedin /></a></div>
+          <div className='socialIcon'><a href="https://www.xing.com/pages/alightconsultinggmbh" target="_blank"><FaXing /></a></div>
+          <div className='socialIcon'><a href="https://www.youtube.com/@alightconsultinggmbh" target="_blank"><FaYoutube /></a>  </div>
+          <div className='socialIcon'><a href="https://www.facebook.com/AlightConsultingGmbH" target="_blank"><FaFacebook /></a></div>
+          <div className='socialIcon'><a href="https://x.com/i/flow/login?redirect_after_login=%2FAlightCon" target="_blank"><FaTwitter /></a></div>
+          {/* links not suported by edge */}
         </div>
         <div className='alightLinks'>
-          <a className='linkText' href='#'>Home</a>
+          <a className='linkText' href="https://alight.eu/en/" target='_blank'>Home</a>
           <div className='bar'></div>
-          <a className='linkText' href='#'>Solutions</a>
+          <a className='linkText' href="https://alight.eu/en/solutions/"target='_blank'>Solutions</a>
           <div className='bar'></div>
-          <a className='linkText' href='#'>Technologies</a>
+          <a className='linkText' href="https://alight.eu/en/technologies/" target='_blank'>Technologies</a>
           <div className='bar'></div>
-          <a className='linkText' href='#'>References</a>
+          <a className='linkText' href="https://alight.eu/en/references/" target='_blank'>References</a>
           <div className='bar'></div>
-          <a className='linkText' href='#'>About Us</a>
+          <a className='linkText' href="https://alight.eu/en/about-us/" target='_blank'>About Us</a>
         </div>
       </div>
       <div className='footerBottom'>

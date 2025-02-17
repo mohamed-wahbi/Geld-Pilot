@@ -1,6 +1,6 @@
 .footerComp {
   width: 100%;
-  background-color: var(--bricks-color-kuizli);
+  background-color: #ffffff;
   color: #ffffff;
   font-family: Arial, sans-serif;
   padding-top: 20px;
@@ -28,13 +28,15 @@
 .alightSocials {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 15px;
   margin: 15px 0;
 }
 
 .alightSocials .socialIcon {
+  height: 40px;
+  width: 40px;
   background-color: #dc7024;
-  padding: 10px;
   border-radius: 50%;
   color: #ffffff;
   font-size: 20px;
@@ -78,13 +80,14 @@
 
 /* ----- Footer Bottom ----- */
 .footerBottom {
-  text-align: center;
-  background-color: #29455b91;
-  padding: 10px 0;
-  background-image: url("./flous.webp");
+  background-blend-mode: soft-light;
+  background-color: #0f244591;
+  background-image: url("../assets/footerBack.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-blend-mode: exclusion;
+  padding: 10px 0;
+  text-align: center;
+  background-position-y: -271px;
 }
 
 .footerBottom h5 {
