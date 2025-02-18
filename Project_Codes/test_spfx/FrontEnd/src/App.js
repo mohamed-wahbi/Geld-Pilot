@@ -1,12 +1,14 @@
 import React from 'react'
 import "./App.css"
-import Footer from './Footer'
+import Register from './components/Register'
+import Login from './components/Login'
 
 
 const App = () => {
   return (
     <div>
-      <Footer />
+      <Register />
+      {/* <Login /> */}
     </div>
   )
 }
