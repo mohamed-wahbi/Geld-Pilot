@@ -1,16 +1,13 @@
 import React from 'react'
-import "./App.css"
-import Login from './components/Login/Login'
-import Register from './components/Register/Registet'
-
-
+import AccessInfo from './components/AccessInfo/AccessInfo'
 
 const App = () => {
   return (
     <div>
-      <Register />
+      <AccessInfo />
     </div>
   )
 }
 
 export default App
+

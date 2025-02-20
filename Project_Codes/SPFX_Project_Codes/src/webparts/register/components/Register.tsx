@@ -105,6 +105,10 @@ const Register: React.FC = () => {
           <p>Create an account and start your financial journey.</p>
         </div>
 
+        <div className={styles.infoAccess} onClick={()=>{window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Access_Infos.aspx"}}>
+          <p>Important to read before registration! 🤚</p>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className={styles.email}>
             <label>Name</label>

@@ -276,3 +276,18 @@
   /* Change la couleur au survol */
   text-decoration: underline;
 }
+
+.infoAccess {
+    background-color: rgb(51 83 113 / 95%);
+    border-radius: 4px;
+    color: #cbd0d6;
+    font-weight: 500;
+    padding: 1px 0;
+    text-align: center;
+    transition: 0.4s;
+    cursor: pointer;
+}
+
+.infoAccess:hover {
+  color: #f9ac7e ;
+}
