@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import "../components/authLoginRegister.css";
-import A from "../A.png";
 import logo from "../logo.png";
 import google from "../google.jpg";
 import Person from "../assets/Tablet login-amico.png";
+
 
 const AuthLoginRegister = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -77,7 +77,7 @@ const AuthLoginRegister = () => {
               ? "Sign in to start your financial adventure."
               : "Create an account and start your financial journey."}
           </p>
-          
+
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -113,7 +113,7 @@ const AuthLoginRegister = () => {
           )}
 
           <div className="recaptcha">
-            <ReCAPTCHA sitekey="6LepWKwqAAAAAO1P_FmjLm3MB3PwxXNpCjciDhZN" onChange={handleReCAPTCHAChange} />
+            <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_KEY} onChange={handleReCAPTCHAChange} />
           </div>
 
           {errorMessage && <p className="error">{errorMessage}</p>}
@@ -123,7 +123,10 @@ const AuthLoginRegister = () => {
 
         <p style={{ textAlign: "center", fontSize: "15px" }}>
           {isLogin ? "New in our platform?" : "Already have an account?"}
-          <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }} onClick={() => setIsLogin(!isLogin)}>
+          <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }} onClick={() => {
+             setIsLogin(!isLogin);
+          }  
+             } >
             {isLogin ? " Create an account" : " Sign in"}
           </span>
         </p>
@@ -136,7 +139,7 @@ const AuthLoginRegister = () => {
         <div className="googleConnect">
           <img src={google} alt="google logo" />
         </div>
-        
+
       </div>
     </div>
   );

@@ -1,13 +1,13 @@
 import React from 'react'
 import "./App.css"
-import AuthLoginRegister from './components/AuthLoginRegister'
+import Login from './components/Login/Login'
 
 
 
 const App = () => {
   return (
     <div>
-      <AuthLoginRegister />
+      <Login />
     </div>
   )
 }

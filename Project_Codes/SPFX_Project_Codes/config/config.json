@@ -1,4 +1,5 @@
 {
+
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
   "version": "2.0",
   "bundles": {
@@ -33,6 +34,14 @@
           "manifest": "./src/webparts/footer/FooterWebPart.manifest.json"
         }
       ]
+    },
+    "login-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/login/LoginWebPart.js",
+          "manifest": "./src/webparts/login/LoginWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -40,6 +49,9 @@
     "HelloWorldWebPartStrings": "lib/webparts/helloWorld/loc/{locale}.js",
     "WelcomeWebPartStrings": "lib/webparts/welcome/loc/{locale}.js",
     "InfoWebPartStrings": "lib/webparts/info/loc/{locale}.js",
-    "FooterWebPartStrings": "lib/webparts/footer/loc/{locale}.js"
+    "FooterWebPartStrings": "lib/webparts/footer/loc/{locale}.js",
+    "LoginWebPartStrings": "lib/webparts/login/loc/{locale}.js"
   }
 }
+
+
