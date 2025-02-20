@@ -55,7 +55,7 @@ const Login: React.FC = () => {
     <div className={styles.authComp}>
       <div className={styles.backRight}>
         
-        <div className={styles.miroir}></div>
+        <div className={styles.miroir} onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/home.aspx"}}></div>
         
         <img src={require("../assets/Tablet login-amico.png")} alt="logo" width={80} className={styles.personLogo} />
 
@@ -103,7 +103,9 @@ const Login: React.FC = () => {
           <button className={styles.loginBtn} type="submit">Sign In</button>
         </form>
         <p style={{ textAlign: "center", fontSize: "15px" }}>
-          New in our platform? <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }}>Create an account</span>
+          New in our platform? <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }}
+          onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Register.aspx"}}   
+          >Create an account</span>
         </p>
         <div className={styles.orStyle}>
           <p>OR</p>
