@@ -20,7 +20,7 @@ const Login: React.FC = () => {
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // Gestion du changement de ReCAPTCHA
+  // Gestion du changement de ReCAPTCHA done
   const handleReCAPTCHAChange = (value: string | null) => {
     if (value) {
       setIsVerified(true);
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
     }
   };
 
-  // Gestion de l'expiration de ReCAPTCHA
+  // Gestion de l'expiration de ReCAPTCHA done
   const handleReCAPTCHAExpired = () => {
     setIsVerified(false);
     setErrorMessage("ReCAPTCHA expired. Please verify again.");
