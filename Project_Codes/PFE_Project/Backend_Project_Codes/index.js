@@ -4,7 +4,8 @@ require("dotenv").config()
 const app = express();
 const cors = require('cors');
 
-
+// Imported Routes :
+const authRoutes = require('./routes/authRoute.js');
 
 
 
@@ -15,7 +16,9 @@ app.use(cors());
 
 
 
-// routes : 
+// Path routes : 
+app.use('/api/auth',authRoutes);
+
 
 
 

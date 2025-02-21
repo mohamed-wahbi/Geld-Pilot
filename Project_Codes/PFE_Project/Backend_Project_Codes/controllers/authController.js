@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const { User, registerVerify, loginVerify } = require("../models/userModel.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { Entreprise } = require("../models/EntrepriseModel.js");
 require("dotenv").config()
 
 const Token_Secret = process.env.Token_Secret
@@ -38,6 +37,7 @@ module.exports.registerCtel = asyncHandler(async (req, res) => {
     username: req.body.username,
     email: req.body.email,
     password: hashedPassword,
+    numTel: req.body.numTel
   });
   await newUser.save();
 
