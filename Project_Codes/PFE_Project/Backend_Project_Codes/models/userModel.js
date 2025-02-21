@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true,
         trim: true,
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 8
     },
-    numTel:{
+    phone:{
         type:String,
         trim:true,
         minlength:8,
@@ -50,10 +50,10 @@ const User = mongoose.model('User', userSchema);
 // Vérification de l'inscription d'un nouvel utilisateur
 function registerVerify(obj) {
     const schema = Joi.object({
-        username: Joi.string().trim().min(2).max(100).required(),
+        name: Joi.string().trim().min(2).max(100).required(),
         email: Joi.string().trim().min(5).max(100).required().email(),
         password: Joi.string().trim().min(8).required(),
-        numTel: Joi.string().trim().length(8).required()
+        phone: Joi.string().trim().length(8).required()
     });
     return schema.validate(obj);
 }

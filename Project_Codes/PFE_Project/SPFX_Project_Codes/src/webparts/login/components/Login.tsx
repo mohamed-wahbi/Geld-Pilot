@@ -20,11 +20,18 @@ const Login: React.FC = () => {
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  // Gestion du changement de ReCAPTCHA
   const handleReCAPTCHAChange = (value: string | null) => {
     if (value) {
       setIsVerified(true);
       setErrorMessage("");
     }
+  };
+
+  // Gestion de l'expiration de ReCAPTCHA
+  const handleReCAPTCHAExpired = () => {
+    setIsVerified(false);
+    setErrorMessage("ReCAPTCHA expired. Please verify again.");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,9 +47,10 @@ const Login: React.FC = () => {
     setErrorMessage("");
 
     try {
-      console.log(formData);
-      setFormData({ email: "", password: "" });
-      const response = await axios.post("https://your-api.com/api/login", formData);
+      const response = await axios.post("http://127.0.0.1:3320/api/auth/login",{
+        email: formData.email,
+        password: formData.password
+      } );
       console.log("Login successful:", response.data);
       localStorage.setItem("token", response.data.token);
     } catch (error: any) {
@@ -58,8 +66,8 @@ const Login: React.FC = () => {
         <div className={styles.miroir} onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/home.aspx"}}></div>
         
         <img src={require("../assets/Tablet login-amico.png")} alt="logo" width={80} className={styles.personLogo} />
-
       </div>
+
       <div className={styles.LoginContent}>
         <div >
           <img src={require("../assets/logo.png")} alt="logo" />
@@ -70,6 +78,7 @@ const Login: React.FC = () => {
         <div className={styles.logoDescrip}>
           <p>Sign in to start your financial adventure.</p>
         </div>
+
         <form onSubmit={handleSubmit}>
           <div className={styles.email}>
             <label>Email</label>
@@ -93,20 +102,25 @@ const Login: React.FC = () => {
               required
             />
           </div>
-          <div >
+
+          <div>
             <ReCAPTCHA
               sitekey="6LeGL90qAAAAAGGG1leCj3bWsUevD0256Nil5WFG"
               onChange={handleReCAPTCHAChange}
+              onExpired={handleReCAPTCHAExpired}  // Ajout de cette fonction pour détecter l'expiration
             />
           </div>
+
           {errorMessage && <p className={styles.error}>{errorMessage}</p>}
           <button className={styles.loginBtn} type="submit">Sign In</button>
         </form>
+
         <p style={{ textAlign: "center", fontSize: "15px" }}>
           New in our platform? <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }}
           onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Register.aspx"}}   
           >Create an account</span>
         </p>
+
         <div className={styles.orStyle}>
           <p>OR</p>
           <hr />

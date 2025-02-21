@@ -34,10 +34,10 @@ module.exports.registerCtel = asyncHandler(async (req, res) => {
 
   // New user and save it in DB
   const newUser = new User({
-    username: req.body.username,
+    name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
-    numTel: req.body.numTel
+    phone: req.body.phone
   });
   await newUser.save();
 
@@ -74,15 +74,15 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
 
   // Genaration of the Token
   const token = jwt.sign(
-    { id: findEmailUser._id,username: findEmailUser.username , isAdmin: findEmailUser.isAdmin},
+    { id: findEmailUser._id,name: findEmailUser.name , isAdmin: findEmailUser.isAdmin},
     Token_Secret,
     { expiresIn: '8h' }
   );
 
   res.status(200).json({
     _id: findEmailUser._id,
-    username: findEmailUser.username,
-    numTel : findEmailUser.numTel,
+    name: findEmailUser.name,
+    phone : findEmailUser.phone,
     isAdmin: findEmailUser.isAdmin,
     profilePhoto: findEmailUser.profilePhoto,
     token

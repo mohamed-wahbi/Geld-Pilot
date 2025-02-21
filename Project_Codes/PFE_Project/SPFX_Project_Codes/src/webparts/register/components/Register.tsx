@@ -30,11 +30,18 @@ const Register: React.FC = () => {
     confirmPassword: "",
   });
 
-  const handleReCAPTCHAChange = ( value:string | null ) => {
+  // Gestion du changement de ReCAPTCHA
+  const handleReCAPTCHAChange = (value: string | null) => {
     if (value) {
       setIsVerified(true);
       setErrorMessage("");
     }
+  };
+
+  // Gestion de l'expiration de ReCAPTCHA
+  const handleReCAPTCHAExpired = () => {
+    setIsVerified(false);
+    setErrorMessage("ReCAPTCHA expired. Please verify again.");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,15 +62,12 @@ const Register: React.FC = () => {
     }
 
     try {
-      console.log(formData);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirmPassword: "",
-      });
-      const response = await axios.post("http://localhost:5000/api/register", {formData});
+      const response = await axios.post("http://127.0.0.1:3320/api/auth/register", {
+          name:formData.name,
+          email:formData.email,
+          phone: formData.phone,
+          password:formData.password
+    });
       console.log(response.data)
       setSuccessMessage("Registration successful! Redirecting...");
       setErrorMessage("");
@@ -77,7 +81,7 @@ const Register: React.FC = () => {
 
       // Redirect after 2 seconds
       setTimeout(() => {
-        window.location.href = "/login"; // Change "/login" according to your route
+        window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"; // Change "/login" according to your route
       }, 2000);
 
     } catch (error) {
@@ -122,7 +126,7 @@ const Register: React.FC = () => {
 
           <div className={styles.email}>
             <label>Phone</label>
-            <input name="phone" placeholder="Enter your phone number" type="tel" value={formData.phone} onChange={handleChange} required />
+            <input name="phone" placeholder="Enter your phone number" type="number" value={formData.phone} onChange={handleChange} required />
           </div>
 
           <div className={styles.email}>
@@ -136,7 +140,9 @@ const Register: React.FC = () => {
           </div>
 
           <div>
-            <ReCAPTCHA sitekey="6LeGL90qAAAAAGGG1leCj3bWsUevD0256Nil5WFG" onChange={handleReCAPTCHAChange} />
+            <ReCAPTCHA sitekey="6LeGL90qAAAAAGGG1leCj3bWsUevD0256Nil5WFG"
+              onExpired={handleReCAPTCHAExpired}  // Ajout de cette fonction pour détecter l'expiration
+              onChange={handleReCAPTCHAChange} />
           </div>
 
           {errorMessage && <p className={styles.error}>{errorMessage}</p>}
