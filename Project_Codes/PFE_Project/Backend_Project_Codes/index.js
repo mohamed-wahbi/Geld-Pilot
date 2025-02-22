@@ -6,6 +6,7 @@ const cors = require('cors');
 
 // Imported Routes :
 const authRoutes = require('./routes/authRoute.js');
+const authorizationUserRoutes = require('./routes/authorizedUserRoute.js');
 
 
 
@@ -18,6 +19,7 @@ app.use(cors());
 
 // Path routes : 
 app.use('/api/auth',authRoutes);
+app.use('/api/authorization',authorizationUserRoutes);
 
 
 

@@ -30,6 +30,32 @@ module.exports.createAuthorizationCrtl = asyncHandler(async (req, res) => {
     });
 });
 
+
+/*--------------------------------------------------
+* @desc    Get all authorized platform users
+* @route   GET /api/authorization/get_all
+* @access  Admin only
+----------------------------------------------------*/
+module.exports.getAllAuthCtrl = asyncHandler(async (req, res) => {
+    const allAuthorizedUsers = await AuthorizedUser.find({});
+
+    if (allAuthorizedUsers.length === 0) {
+        return res.status(404).json({
+            message: "No authorized users found. Please create one.",
+        });
+    }
+
+    res.status(200).json({
+        allAuthorizedUsers,
+    });
+});
+
+
+
+
+
+
+
 /*--------------------------------------------------
 * @desc    Delete one authorized user
 * @route   DELETE /api/authorization/delete_one/:id
