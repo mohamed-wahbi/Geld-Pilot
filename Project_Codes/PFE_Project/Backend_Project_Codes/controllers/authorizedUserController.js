@@ -39,7 +39,7 @@ module.exports.createAuthorizationCrtl = asyncHandler(async (req, res) => {
 module.exports.getAllAuthCtrl = asyncHandler(async (req, res) => {
     const allAuthorizedUsers = await AuthorizedUser.find({});
 
-    if (allAuthorizedUsers.length === 0) {
+    if (allAuthorizedUsers.length() === 0) {
         return res.status(404).json({
             message: "No authorized users found. Please create one.",
         });

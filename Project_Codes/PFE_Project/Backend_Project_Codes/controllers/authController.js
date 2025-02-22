@@ -110,3 +110,22 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
 });
 
 
+/*--------------------------------------------------
+* @desc    Get All Users
+* @router  /api/auth/get_all_users
+* @methode GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getAllUsersCtrl = asyncHandler(async(req,res)=>{
+  const getAllUsers = await User.find({})
+
+  if(getAllUsers.length === 0){
+    return res.status(400).json({message:"No User regstred in data base!"})
+  }
+
+  res.status(200).json({
+    getAllUsers
+    
+  })
+})
+
