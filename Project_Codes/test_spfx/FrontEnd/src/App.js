@@ -1,10 +1,10 @@
 import React from 'react'
-import AccessInfo from './components/AccessInfo/AccessInfo'
+import Authorization from './components/Authorization/Authorization'
 
 const App = () => {
   return (
     <div>
-      <AccessInfo />
+      <Authorization/>
     </div>
   )
 }

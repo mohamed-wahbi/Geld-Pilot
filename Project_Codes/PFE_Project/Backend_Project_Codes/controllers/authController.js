@@ -72,6 +72,9 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'Email or password is invalid' });
   }
 
+  
+  
+
   // Genaration of the Token
   const token = jwt.sign(
     { id: findEmailUser._id,name: findEmailUser.name , isAdmin: findEmailUser.isAdmin},
@@ -79,12 +82,18 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
     { expiresIn: '8h' }
   );
 
+  // change Connect statue :
+  if (token) {
+    findEmailUser.isConnected = true
+  } 
+
   res.status(200).json({
     _id: findEmailUser._id,
     name: findEmailUser.name,
     phone : findEmailUser.phone,
     isAdmin: findEmailUser.isAdmin,
     profilePhoto: findEmailUser.profilePhoto,
+    isConnected: findEmailUser.isConnected,
     token
   });
   
