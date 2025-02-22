@@ -1,11 +1,82 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./authorization.css";
 
 import logo from "../../assets/logo-removebg-preview.png"
+import axios from 'axios';
 
 const Authorization = () => {
+  const [userEmail,setUserEmail] = useState("")
   const [activeTab, setActiveTab] = useState('partners');
   const [isclicked, setIsclicked] = useState(false);
+  const [Users,setUsers] = useState([]);
+  const [AuthUsers,setAuthUsers] = useState([])
+
+  useEffect(()=>{ featchAllUsers()},[])
+  useEffect(()=>{ featchAllAuthorizedUsers()},[])
+
+  
+
+
+    // --------------------------------Create Authorization for User---------------------------
+    const CreateUserAuthorization = async () => {
+      try {
+        const newUsersAuth = await axios.post("http://127.0.0.1:3320/api/authorization/create",{
+          email:userEmail
+        })
+        console.log(newUsersAuth.data.message)
+        setUserEmail("")
+        featchAllAuthorizedUsers()
+        featchAllUsers()
+        
+      } catch (error) {
+        console.log("error featching Users!", error)
+      }
+    }
+    // ________________________________________________________________________
+  
+  
+
+
+  // --------------------------------User get all---------------------------
+  const featchAllUsers = async () => {
+    try {
+      const Users = await axios.get("http://127.0.0.1:3320/api/auth/get_all_users")
+      console.log(Users.data.getAllUsers)
+      setUsers(Users.data.getAllUsers)
+    } catch (error) {
+      console.log("error featching Users!", error)
+    }
+  }
+  // ________________________________________________________________________
+
+
+    // --------------------------------get all Authorized Users---------------------------
+    const featchAllAuthorizedUsers = async () => {
+      try {
+        const AuthUsers = await axios.get("http://127.0.0.1:3320/api/authorization/get_all")
+        console.log(AuthUsers.data.allAuthorizedUsers)
+        setAuthUsers(AuthUsers.data.allAuthorizedUsers)
+      } catch (error) {
+        console.log("error featching Users!", error)
+      }
+    }
+    // ________________________________________________________________________
+
+
+
+// --------------------------------Delete User---------------------------
+const deleteOneAuthUser = async (id) => {
+  try {
+    const deleteUser = await axios.delete(`http://127.0.0.1:3320/api/authorization/delete_one/${id}`)
+    console.log(deleteUser.data.message)
+    featchAllAuthorizedUsers()
+    featchAllUsers()
+  } catch (error) {
+    console.log("error featching Users!", error)
+  }
+}
+// ________________________________________________________________________
+
 
   return (
     <div className='authorizationComp'>
@@ -33,12 +104,17 @@ const Authorization = () => {
               </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>wahbi@gmail.com</td>
-                  <td>Wahbi</td>
-                  <td>23569874</td>
-                  <td>Connected</td>
-                </tr>
+              {Users.map((user)=>{
+                return(
+                  <tr>
+                    <td> {user.email} </td>
+                    <td> {user.name} </td>
+                    <td> {user.phone} </td>
+                    <td> {user.isConnected === true?"Connected":"not connected"} </td>
+                  </tr>
+                )
+              })}
+                
               </tbody>
             </table>
           </div>
@@ -49,8 +125,8 @@ const Authorization = () => {
 
             <div className='CreatedUser'>
                 
-              <button className={isclicked?"addUserBtnLogo":"addUserBtnText"} onClick={()=>setIsclicked(!isclicked)}>{isclicked?"➕":"Create New"}</button>
-              {isclicked?<input type='email' placeholder='Enter email of user' className='userInput' />:null}
+              <button className={isclicked?"addUserBtnLogo":"addUserBtnText"} onClick={()=>{setIsclicked(!isclicked) ; CreateUserAuthorization()}}>{isclicked?"➕":"Create New"}</button>
+              {isclicked?<input type='email' placeholder='Enter email of user' className='userInput' value={userEmail} onChange={(e)=>setUserEmail(e.target.value)} />:null}
             </div>
 
 
@@ -58,16 +134,25 @@ const Authorization = () => {
               <thead>
                 <tr>
                   <th>Email</th>
+                  <th>Is Registred</th>
                   <th>Created At</th>
                   <th>Control</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>wahbi@gmail.com</td>
-                  <td>12/02/2025</td>
-                  <td><button className='control-btn delete'>🗑️delete</button></td>
-                </tr>
+                {AuthUsers.map((user)=>{
+                  return(
+                    <tr>
+                      <td> {user.authorizedEmail} </td>
+                      <td>{user.isRegistred===true?"registred":"not Registred"}</td>
+                      <td> {user.createdAt} </td>
+                      <td><button className='control-btn delete'
+                        onClick={()=>deleteOneAuthUser(user._id)}
+                      >🗑️delete</button></td>
+                    </tr>
+                  )
+                })}
+                
               </tbody>
             </table>
           </div>

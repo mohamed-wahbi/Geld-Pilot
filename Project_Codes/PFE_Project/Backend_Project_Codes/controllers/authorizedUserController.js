@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { AuthorizedUser, validateAuthUser } = require("../models/authorizedUserModel.js");
+const { User } = require("../models/userModel.js");
 
 /*--------------------------------------------------
 * @desc    Create new authorization for a new platform user
@@ -39,11 +40,11 @@ module.exports.createAuthorizationCrtl = asyncHandler(async (req, res) => {
 module.exports.getAllAuthCtrl = asyncHandler(async (req, res) => {
     const allAuthorizedUsers = await AuthorizedUser.find({});
 
-    if (allAuthorizedUsers.length() === 0) {
-        return res.status(404).json({
-            message: "No authorized users found. Please create one.",
-        });
-    }
+    // if (allAuthorizedUsers.length === 0) {
+    //      res.status(404).json({
+    //         message: "No authorized users found. Please create one.",
+    //     });
+    // }
 
     res.status(200).json({
         allAuthorizedUsers,
@@ -65,13 +66,20 @@ module.exports.deleteOneAuthorizationCrtl = asyncHandler(async (req, res) => {
     // Check if the authorization exists in the database
     const authorizedUser = await AuthorizedUser.findById(req.params.id);
     if (!authorizedUser) {
-        return res.status(404).json({ message: "This user does not exist!" });
+        return res.status(404).json({ message: "This authorized user does not exist!" });
     }
 
-    // Remove the found email authorization
+    const userRegistred = await User.findOne({email: authorizedUser.authorizedEmail})
+    
+if (userRegistred) {        
+        await User.findOneAndDelete({email: authorizedUser.authorizedEmail});
+     }
+    // Remove the found email authorization and the registred user
     await AuthorizedUser.findByIdAndDelete(req.params.id);
 
+    
+
     res.status(200).json({
-        message: "Authorization deleted successfully.",
+        message: "Authorization and User deleted successfully.",
     });
 });

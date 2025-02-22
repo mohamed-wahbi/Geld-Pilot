@@ -9,6 +9,11 @@ const authUserSchema = new mongoose.Schema(
             trim: true,
             unique: true,
         },
+
+        isRegistred : {
+            type:Boolean,
+            default:false
+        }
     },
     {
         timestamps: true,

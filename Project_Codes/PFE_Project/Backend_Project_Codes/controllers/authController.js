@@ -51,6 +51,13 @@ module.exports.registerCtel = asyncHandler(async (req, res) => {
   });
   await newUser.save();
 
+  // Change register status of authorized user:
+  const updateAuthUser = await AuthorizedUser.findOneAndUpdate(
+    {authorizedEmail: req.body.email},
+    {isRegistred: true},
+    {new:true}
+  )
+
   // Send a response to client
   res.status(201).json({ message: 'You registered successfully, please log in' });
 });
@@ -93,9 +100,11 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
   );
 
   // Changing the user's connection status: :
-  if (token) {
-    findEmailUser.isConnected = true
-  } 
+  const updatedUser = await User.findByIdAndUpdate(
+    (_id=findEmailUser._id),
+    {isConnected:true},
+    {new:true}
+  );
 
   res.status(200).json({
     _id: findEmailUser._id,
