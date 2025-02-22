@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { User, registerVerify, loginVerify } = require("../models/userModel.js");
+const { AuthorizedUser } = require("../models/authorizedUserModel.js")
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config()
@@ -22,6 +23,14 @@ module.exports.registerCtel = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
+  // Verify if the user is authorized to access the platform
+  const findAuthorizedUser = await AuthorizedUser.findOne({ authorizedEmail: req.body.email });
+  if (!findAuthorizedUser) {
+    return res.status(403).json({
+        message: "You are not authorized to access this platform. Please contact the financial manager to request access."
+    });
+  }
+
   // Is user already exists
   const findUser = await User.findOne({ email: req.body.email });
   if (findUser) {
@@ -31,6 +40,7 @@ module.exports.registerCtel = asyncHandler(async (req, res) => {
   // Hash the password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
 
   // New user and save it in DB
   const newUser = new User({
@@ -82,7 +92,7 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
     { expiresIn: '8h' }
   );
 
-  // change Connect statue :
+  // Changing the user's connection status: :
   if (token) {
     findEmailUser.isConnected = true
   } 

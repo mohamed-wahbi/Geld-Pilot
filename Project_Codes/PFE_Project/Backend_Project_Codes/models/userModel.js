@@ -40,10 +40,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    // To track the user's connection status:
     isConnected: {
         type: Boolean,
         default: false
     }
+
 }
 , {
     timestamps: true
