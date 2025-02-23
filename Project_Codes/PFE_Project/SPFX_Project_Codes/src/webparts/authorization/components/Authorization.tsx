@@ -3,6 +3,7 @@ import styles from './Authorization.module.scss';
 // const AOS = require("aos");
 import "aos/dist/aos.css";
 // import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 // Define a type for the users and authorized users (if needed for type safety)
@@ -52,8 +53,79 @@ const Authorization: React.FC = () => {
   const [userEmail, setUserEmail] = React.useState<string>('');
   const [activeTab, setActiveTab] = React.useState<string>('partners');
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
-  const [users] = React.useState<User[]>([]);
-  const [authUsers] = React.useState<User[]>([]);
+  const [users,setUsers] = React.useState<User[]>([]);
+  const [authUsers,setAuthUsers] = React.useState<User[]>([]);
+  
+
+
+  React.useEffect(() => { featchAllUsers() }, [])
+  React.useEffect(() => { featchAllAuthorizedUsers() }, [])
+
+
+
+
+  // ------------------------------Create Authorization for User---------------------------
+  const CreateUserAuthorization = async () => {
+    try {
+      const newUsersAuth = await axios.post("http://127.0.0.1:3320/api/authorization/create", {
+        email: userEmail
+      })
+      console.log(newUsersAuth.data.message)
+      setUserEmail("")
+      featchAllAuthorizedUsers()
+      featchAllUsers()
+
+
+    } catch (error) {
+      console.log("error featching Users!", error)
+    }
+  }
+  // ________________________________________________________________________
+
+
+
+
+  // --------------------------------User get all---------------------------
+  const featchAllUsers = async () => {
+    try {
+      const Users = await axios.get("http://127.0.0.1:3320/api/auth/get_all_users")
+      console.log(Users.data.getAllUsers)
+      setUsers(Users.data.getAllUsers)
+    } catch (error) {
+      console.log("error featching Users!", error)
+    }
+  }
+  // ________________________________________________________________________
+
+
+  // --------------------------------get all Authorized Users---------------------------
+  const featchAllAuthorizedUsers = async () => {
+    try {
+      const AuthUsers = await axios.get("http://127.0.0.1:3320/api/authorization/get_all")
+      console.log(AuthUsers.data.allAuthorizedUsers)
+      setAuthUsers(AuthUsers.data.allAuthorizedUsers)
+    } catch (error) {
+      console.log("error featching Users!", error)
+    }
+  }
+  // ________________________________________________________________________
+
+
+
+  // --------------------------------Delete User---------------------------
+  const deleteOneAuthUser = async (id, email) => {
+    try {
+      const deleteUser = await axios.delete(`http://127.0.0.1:3320/api/authorization/delete_one/${id}`)
+      console.log(deleteUser.data.message)
+      featchAllAuthorizedUsers()
+      featchAllUsers()
+      console.log(`User and Authorization of this email [${email}], are successfully deleted.🗑️`)
+    } catch (error) {
+      console.log(`User and Authorization of this email [${email}], are not deleted!`)
+
+    }
+  }
+  // ________________________________________________________________________
 
 
   return (
