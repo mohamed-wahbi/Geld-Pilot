@@ -6,6 +6,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 const AOS = require("aos");
 import "aos/dist/aos.css";
 
+
+
 interface FormData {
   email: string;
   password: string;
