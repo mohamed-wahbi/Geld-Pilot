@@ -52,8 +52,8 @@ const Authorization: React.FC = () => {
   const [userEmail, setUserEmail] = React.useState<string>('');
   const [activeTab, setActiveTab] = React.useState<string>('partners');
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
-  const [users, setUsers] = React.useState<User[]>([]);
-  const [authUsers, setAuthUsers] = React.useState<User[]>([]);
+  const [users] = React.useState<User[]>([]);
+  const [authUsers] = React.useState<User[]>([]);
 
 
   return (
@@ -79,9 +79,9 @@ const Authorization: React.FC = () => {
         </div>
       </div>
 
-      <div className={styles.authUserTable}> {/* Apply authUserTable style */}
+      <div > {/* Apply authUserTable style */}
         {activeTab === 'partners' && (
-          <div className={styles.partnerTable}> {/* Apply partnerTable style */}
+          <div > {/* Apply partnerTable style */}
             {users.length === 0 ? (
               <p style={{ paddingTop: '5px', color: '#6a2929' }}>
                 No users registered in the database!
@@ -114,8 +114,8 @@ const Authorization: React.FC = () => {
         )}
 
         {activeTab === 'create' && (
-          <div className={styles.createdUserTable}> {/* Apply createdUserTable style */}
-            <div className={styles.createdUser}> {/* Apply createdUser style */}
+          <div > {/* Apply createdUserTable style */}
+            <div className={styles.CreatedUser}> {/* Apply createdUser style */}
               <button
                 className={isClicked ? styles.addUserBtnLogo : styles.addUserBtnText} // Apply dynamic styles
                 onClick={() => { setIsClicked(!isClicked); }}
