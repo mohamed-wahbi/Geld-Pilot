@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Authorization: React.FC<IAuthorizationProps> = () => {
   const token = localStorage.getItem("token");
-  const [isAdmin,setIsAdmin] = useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [userEmail, setUserEmail] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>('partners');
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -24,7 +24,7 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
         window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
       }
     }
-     if (token == null) {
+    if (token == null) {
       window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
     }
   }, [token, isAdmin]);
@@ -61,7 +61,7 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
     } catch (error) {
       setUserEmail("")
       notify("Error creating user authorization, try with another address.");
-      
+
     }
   };
 
@@ -112,10 +112,10 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
     const year = date.getFullYear();
     const hours = pad(date.getHours());
     const minutes = pad(date.getMinutes());
-  
+
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
-  
+
 
   return (
     <div className={styles.authorizationComp}>
@@ -148,9 +148,9 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
                 <tbody>
                   {users.map(user => (
                     <tr key={user._id}>
-                      <td style={{textTransform:"capitalize",fontWeight: "500"}}>{user.name}</td>
-                      <td><a href={`mailto:${user.email}`} style={{textDecoration: "none",color: "inherit"}}>📧 {user.email}</a></td>
-                      <td><a href={`tel:${user.phone}`} style={{textDecoration: "none",color: "inherit"}}>📱 {user.phone}</a></td>
+                      <td style={{ textTransform: "capitalize", fontWeight: "500" }}>{user.name}</td>
+                      <td><a href={`mailto:${user.email}`} style={{ textDecoration: "none", color: "inherit" }}>📧 {user.email}</a></td>
+                      <td><a href={`tel:${user.phone}`} style={{ textDecoration: "none", color: "inherit" }}>📱 {user.phone}</a></td>
                       <td>{user.isConnected ? <div className={styles.connected}></div> : <div className={styles.notConnected}></div>}</td>
                     </tr>
                   ))}
@@ -164,10 +164,10 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
           <div  >
             <div className={styles.CreatedUser} >
               <button className={isClicked ? styles.addUserBtnLogo : styles.addUserBtnText} onClick={() => { setIsClicked(!isClicked); createUserAuthorization(); }}>
-                {isClicked  ? "➕" : "Create New"}
+                {isClicked ? "➕" : "Create New"}
               </button>
               {isClicked && (
-                <input type="email" placeholder="Enter email of user" value={userEmail} onChange={(e) => setUserEmail(e.target.value)}  className={styles.userInput}  />
+                <input type="email" placeholder="Enter email of user" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} className={styles.userInput} />
               )}
             </div>
             {authUsers.length === 0 ? <p>No authorized users, you can create one.</p> : (
@@ -183,7 +183,7 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
                 <tbody>
                   {authUsers.map(user => (
                     <tr key={user._id}>
-                      <td><a href={`mailto:${user.authorizedEmail}`} style={{textDecoration: "none",color: "inherit"}}>📧 {user.authorizedEmail}</a></td>
+                      <td><a href={`mailto:${user.authorizedEmail}`} style={{ textDecoration: "none", color: "inherit" }}>📧 {user.authorizedEmail}</a></td>
                       <td>{user.isRegistred ? "✅" : "⛔"}</td>
                       <td>{formatDate(user.createdAt)}</td>
                       <td><button className={styles.controlBtnDelete} onClick={() => deleteOneAuthUser(user._id, user.authorizedEmail)} >🗑️</button></td>
