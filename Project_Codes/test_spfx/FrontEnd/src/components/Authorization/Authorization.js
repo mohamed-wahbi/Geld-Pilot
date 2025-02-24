@@ -42,7 +42,7 @@ const Authorization = () => {
 
 
 
-  // ------------------------------Create Authorization for User---------------------------
+  // --------------------------------Create Authorization for User---------------------------
   const CreateUserAuthorization = async () => {
     try {
       const newUsersAuth = await axios.post("http://127.0.0.1:3320/api/authorization/create", {
@@ -196,6 +196,7 @@ const Authorization = () => {
 
                     <th>Name</th>
                     <th>Email</th>
+
                     <th>Phone</th>
                     <th>Status</th>
 
@@ -207,8 +208,10 @@ const Authorization = () => {
                       <tr key={user._id}>
                         <td style={{ "textTransform": "capitalize", "fontWeight": "500" }}> {user.name} </td>
                         <td> <a href={`mailto = ${user.email}`}>📧 {user.email}</a> </td>
+
                         <td><a href={`tel = ${user.phone}`}>📞 {user.phone}</a>  </td>
                         <td> {user.isConnected === true ? "✅" : "⛔"} </td>
+
                       </tr>
                     )
                   })}
@@ -222,12 +225,15 @@ const Authorization = () => {
 
         {activeTab === 'create' && (
           <div className='CreatedUserTable'>
+
             <div className='CreatedUser'>
+
               <button className={isclicked ? "addUserBtnLogo" : "addUserBtnText"} onClick={() => { setIsclicked(!isclicked); CreateUserAuthorization() }}>{isclicked ? "➕" : "Create New"}</button>
               {isclicked ? <input type='email' placeholder='Enter email of user' className='userInput' value={userEmail} onChange={(e) => setUserEmail(e.target.value)} /> : null}
             </div>
 
-            {AuthUsers.length === 0 ? <p style={{ 'paddingTop': '5px', 'color': '#6a2929' }}> No authorized users, you can create one. </p> : <table className='table'>
+
+            {AuthUsers.length === 0 ? <p style={{ 'paddingTop': '5px', 'color': '#6a2929' }}>No authorized users, you can create one.</p> : <table className='table'>
               <thead>
                 <tr>
                   <th>Email</th>

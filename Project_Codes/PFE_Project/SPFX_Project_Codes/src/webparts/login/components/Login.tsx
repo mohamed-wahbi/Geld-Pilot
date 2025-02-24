@@ -55,6 +55,7 @@ const Login: React.FC = () => {
       } );
       console.log("Login successful:", response.data);
       localStorage.setItem("token", response.data.token);
+      window.location.href="https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Admin_Auth.aspx"
     } catch (error: any) {
       console.error("Login error:", error.response?.data || error.message);
       setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
