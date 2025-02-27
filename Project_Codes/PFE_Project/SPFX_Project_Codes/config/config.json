@@ -65,6 +65,14 @@
           "manifest": "./src/webparts/authorization/AuthorizationWebPart.manifest.json"
         }
       ]
+    },
+    "ia-support-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/iaSupport/IaSupportWebPart.js",
+          "manifest": "./src/webparts/iaSupport/IaSupportWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -76,6 +84,7 @@
     "LoginWebPartStrings": "lib/webparts/login/loc/{locale}.js",
     "RegisterWebPartStrings": "lib/webparts/register/loc/{locale}.js",
     "AccessInfoWebPartStrings": "lib/webparts/accessInfo/loc/{locale}.js",
-    "AuthorizationWebPartStrings": "lib/webparts/authorization/loc/{locale}.js"
+    "AuthorizationWebPartStrings": "lib/webparts/authorization/loc/{locale}.js",
+    "IaSupportWebPartStrings": "lib/webparts/iaSupport/loc/{locale}.js"
   }
 }

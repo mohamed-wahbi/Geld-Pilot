@@ -1,10 +1,10 @@
 import React from 'react'
-import Authorization from './components/Authorization/Authorization'
+import Vierge from './components/Authorization/Vierge/Vierge'
 
 const App = () => {
   return (
     <div>
-      <Authorization/>
+      <Vierge/>
     </div>
   )
 }
