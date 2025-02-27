@@ -3,7 +3,8 @@ import styles from './IaSupport.module.scss';
 const AOS = require("aos");
 import "aos/dist/aos.css";
 
-import { FaRobot } from "react-icons/fa";
+import jsPDF from 'jspdf';
+import { FaFilePdf, FaRobot, FaTrash } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
 import {IoCloseSharp} from "react-icons/io5"
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -50,6 +51,72 @@ const IaSupport: React.FC = () => {
     setSelectedResponses([]);
   };
 
+
+  const toggleSelectResponse = (index: number) => {
+    setSelectedResponses((prev) => {
+      const newSelection = prev.includes(index)
+        ? prev.filter((i) => i !== index) // Supprime l'index s'il est déjà sélectionné
+        : [...prev, index]; // Ajoute l'index s'il n'est pas encore sélectionné
+      return [...newSelection]; // Renvoie un nouvel array pour garantir le bon déclenchement de React
+    });
+  };
+  
+  const deleteSelectedResponses = () => {
+    setChatHistory((prev) => prev.filter((_, index) => !selectedResponses.includes(index)));
+    
+    // Utilisation de la fonction callback pour s'assurer qu'on met bien à jour `selectedResponses`
+    setSelectedResponses(() => []);
+  };
+  
+
+
+  const generatePDF = () => {
+    if (selectedResponses.length === 0) return;
+
+    const doc = new jsPDF();
+    const date = new Date().toLocaleString("fr-FR");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor("#254989");
+    doc.text("Technical Report", 10, 10);
+    doc.setFontSize(12);
+    doc.setTextColor("#27ae87");
+    doc.text(`Date: ${date}`, 10, 20);
+
+    let y = 30;
+    selectedResponses.forEach((index) => {
+      const { question, response } = chatHistory[index];
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor("#c78686");
+      doc.text(`.${question}`, 10, y);
+      y += 7;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      const responseText = doc.splitTextToSize(`_${response}`, 180);
+      doc.text(responseText, 10, y);
+      y += responseText.length * 7 + 10;
+
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+
+    doc.save(`Rapport_Technique_${Date.now()}.pdf`);
+  };
+
+
+
+
+
+
+
+
   React.useEffect(() => {
     AOS.init({ duration: 1500, once: true });
   }, []);
@@ -86,15 +153,15 @@ const IaSupport: React.FC = () => {
         </div>
       </div>
 
-      <div className="DashContent">
+      <div className={styles.DashContent}>
         {activeTab === "partners" && (
-          <div className="TechChatboot">
-            <div className="chatTechHeader">
+          <div className={styles.TechChatboot}>
+            <div className={styles.chatTechHeader}>
               <h3>Hello sir 👋</h3>
               <p>Need A Technical Refresh And A Quick PDF Report? Ask Your Questions To Me 🤔⁉️</p>
               {!togelChatContent && (
                 <button
-                  className="getStartBtn animated"
+                  className={`${styles.getStartBtn} ${styles.animated}`}
                   onClick={() => setTogelChatContent(!togelChatContent)}
                 >
                   ⬇️
@@ -102,34 +169,35 @@ const IaSupport: React.FC = () => {
               )}
             </div>
             {togelChatContent && (
-              <div className="chatbotContainer">
-                <h1 className="title">
-                  <FaRobot className="robotIcon animated" /> SMARTY Assistant
+              <div className={styles.chatbotContainer}>
+                <h1 className={styles.title}>
+                  <FaRobot className={`${styles.robotIcon} ${styles.animated}`}/> SMARTY Assistant
                 </h1>
 
-                <div className="chatBox animatedBox">
+                <div className={`${styles.chatBox} ${styles.animatedBox}`}>
                   {chatHistory.length > 0 && (
-                    <button className="clearBtn" onClick={clearChat}>
+                    <button className={styles.clearBtn} onClick={clearChat}>
                       <IoCloseSharp />
                     </button>
                   )}
                   {chatHistory.map(({ question, response }, index) => (
-                    <div key={index} className="messageGroup">
-                      <div className="message user">👤 {question}</div>
-                      <div className="message bot">
+                    <div key={index} >
+                      <div className={`${styles.message} ${styles.user}`}>👤 {question}</div>
+                      <div className={`${styles.message} ${styles.bot}`}>
                         <input
                           type="checkbox"
                           checked={selectedResponses.indexOf(index) !== -1}
                           style={{ marginRight: "5px" }}
+                          onChange={() => toggleSelectResponse(index)}
                         />
                         🤖 {response}
                       </div>
                     </div>
                   ))}
-                  {isLoading && <div className="loading">⏳ Génération en cours...</div>}
+                  {isLoading && <div className={styles.loading}>⏳ Génération en cours...</div>}
                 </div>
 
-                <div className="inputArea">
+                <div className={styles.inputArea}>
                   <input
                     type="text"
                     placeholder="Écrivez votre message..."
@@ -145,6 +213,20 @@ const IaSupport: React.FC = () => {
                     <IoIosSend />
                   </button>
                 </div>
+                <div className={styles.actions}>
+                {selectedResponses.length > 0 && (
+                  <>
+                    <button className={styles.pdfBtn} onClick={generatePDF}>
+                      <FaFilePdf />{" "} PDF
+                    </button>
+                    <button className={styles.deleteOneBtn} onClick={deleteSelectedResponses}>
+                      <FaTrash />
+                    </button>
+                  </>
+                )}
+
+
+              </div>
               </div>
             )}
           </div>
