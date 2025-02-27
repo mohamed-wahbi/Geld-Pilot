@@ -6,18 +6,33 @@ import "aos/dist/aos.css";
 import jsPDF from 'jspdf';
 import { FaFilePdf, FaRobot, FaTrash } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
-import {IoCloseSharp} from "react-icons/io5"
+import { IoCloseSharp } from "react-icons/io5"
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
 
 const IaSupport: React.FC = () => {
+  const token = localStorage.getItem("token");
+  const [isAdmin, setIsAdmin] = React.useState<boolean | null>(null);
   const [activeTab, setActiveTab] = React.useState<string>("partners");
   const [userInput, setUserInput] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [chatHistory, setChatHistory] = React.useState<{ question: string; response: string }[]>([]);
   const [togelChatContent, setTogelChatContent] = React.useState<boolean>(false);
   const [selectedResponses, setSelectedResponses] = React.useState<number[]>([]);
+
+  React.useEffect(() => {
+    if (token != null) {
+      setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
+      console.log(token)
+      if (isAdmin === false) {
+        window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+      }
+    }
+    if (token == null) {
+      window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+    }
+  }, [token, isAdmin]);
 
   const API_KEY = process.env.REACT_APP_GEMINI_API_KEY || "AIzaSyDVipXK95cVqjfkSMav0PrJcMG1Yb2hQXo";
   const genAI = new GoogleGenerativeAI(API_KEY);
@@ -60,14 +75,14 @@ const IaSupport: React.FC = () => {
       return [...newSelection]; // Renvoie un nouvel array pour garantir le bon déclenchement de React
     });
   };
-  
+
   const deleteSelectedResponses = () => {
     setChatHistory((prev) => prev.filter((_, index) => !selectedResponses.includes(index)));
-    
+
     // Utilisation de la fonction callback pour s'assurer qu'on met bien à jour `selectedResponses`
     setSelectedResponses(() => []);
   };
-  
+
 
 
   const generatePDF = () => {
@@ -171,7 +186,7 @@ const IaSupport: React.FC = () => {
             {togelChatContent && (
               <div className={styles.chatbotContainer}>
                 <h1 className={styles.title}>
-                  <FaRobot className={`${styles.robotIcon} ${styles.animated}`}/> SMARTY Assistant
+                  <FaRobot className={`${styles.robotIcon} ${styles.animated}`} /> SMARTY Assistant
                 </h1>
 
                 <div className={`${styles.chatBox} ${styles.animatedBox}`}>
@@ -214,19 +229,19 @@ const IaSupport: React.FC = () => {
                   </button>
                 </div>
                 <div className={styles.actions}>
-                {selectedResponses.length > 0 && (
-                  <>
-                    <button className={styles.pdfBtn} onClick={generatePDF}>
-                      <FaFilePdf />{" "} PDF
-                    </button>
-                    <button className={styles.deleteOneBtn} onClick={deleteSelectedResponses}>
-                      <FaTrash />
-                    </button>
-                  </>
-                )}
+                  {selectedResponses.length > 0 && (
+                    <>
+                      <button className={styles.pdfBtn} onClick={generatePDF}>
+                        <FaFilePdf />{" "} PDF
+                      </button>
+                      <button className={styles.deleteOneBtn} onClick={deleteSelectedResponses}>
+                        <FaTrash />
+                      </button>
+                    </>
+                  )}
 
 
-              </div>
+                </div>
               </div>
             )}
           </div>
