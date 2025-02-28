@@ -73,3 +73,34 @@ module.exports.getOneClientCtrl = asyncHandler (async (req,res) => {
         client
     })
 })
+
+
+
+
+
+
+/*--------------------------------------------------
+* @desc    delete one clients
+* @router  /api/client/deleteOne/:id
+* @methode DELETE
+* @access  only admin
+----------------------------------------------------*/
+module.exports.deleteOneClientCtrl = asyncHandler (async (req,res) => {
+
+    const client = await Client.find({_id:req.params.id});
+    if(!client){
+        return res.status(400).json({
+            message:"No clients with this id in the DB !"
+        })
+    }
+
+    const deleteClient = await Client.findByIdAndDelete({_id: req.params.id})
+    if(!deleteClient){
+        return res.status(400).json({
+            message: "Client finded but not deleted!"
+        })
+    }
+    res.status(200).json({
+        message:"Client is deleted."
+    })
+})
