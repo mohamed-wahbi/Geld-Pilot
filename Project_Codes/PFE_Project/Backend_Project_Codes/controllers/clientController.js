@@ -52,3 +52,24 @@ module.exports.getAllClientCtrl = asyncHandler (async (req,res) => {
         clients
     })
 })
+
+
+/*--------------------------------------------------
+* @desc    Get one clients
+* @router  /api/client/getOne/:id
+* @methode GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getOneClientCtrl = asyncHandler (async (req,res) => {
+
+    const client = await Client.find({_id:req.params.id});
+    if(!client){
+        return res.status(400).json({
+            message:"No clients with this id in the DB !"
+        })
+    }
+
+    res.status(200).json({
+        client
+    })
+})
