@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import './vierge.css'
 import logo from "../../../assets/logo-removebg-preview.png"
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { MdDeleteOutline } from "react-icons/md";
+import { HiOutlineWrench } from "react-icons/hi2";
+
 
 
 
@@ -67,6 +70,7 @@ const Vierge = () => {
             <table className="table">
               <thead>
                 <tr>
+                  <th>Controle</th>
                   <th>CIN</th>
                   <th>Name</th>
                   <th>Email</th>
@@ -80,7 +84,10 @@ const Vierge = () => {
                 </tr>
               </thead>
               <tbody>
+                
+
                 <tr>
+                  <td className='ctrlCl'><span>⚙️</span><div className='ctrlBtn'><MdDeleteOutline className='deleteLogo' /><HiOutlineWrench className='updateLogo' /></div></td>
                   <td>07498188</td>
                   <td style={{ textTransform: "capitalize", fontWeight: "500" }}>wahbi</td>
                   <td>📧 wahbi</td>
@@ -115,6 +122,7 @@ const Vierge = () => {
                     </select>
                   </td>
                 </tr>
+                
               </tbody>
             </table>
 

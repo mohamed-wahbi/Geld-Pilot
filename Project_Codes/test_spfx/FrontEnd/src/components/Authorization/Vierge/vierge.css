@@ -92,6 +92,58 @@
 
 }
 
+.ctrlCl {
+  cursor: pointer;
+  position: relative;
+}
 
+.ctrlCl span {
+  display: inline-block;
+  transition: transform 0.5s ease-in-out;
+}
+
+.ctrlCl:hover span {
+  transform: rotate(360deg);
+  position: absolute;
+  top: 2px;
+  left: 2px;
   
+
+}
+
+.ctrlBtn {
+  display: none;
+}
+
+.ctrlCl:hover .ctrlBtn {
+  display: inline-block;
+}
+  
+.deleteLogo {
+  font-size: 20px;
+  padding: 3px;
+  cursor: pointer;
+  margin: 0px;
+  margin-top: 3px;
+  margin-right: 2px;
+  color: #2c4f68;
+}
+
+.deleteLogo:hover {
+  color: #ef7411;
+}
+.updateLogo {
+  font-size: 20px;
+  padding: 3px;
+  cursor: pointer;
+  margin: 0px;
+  margin-top: 3px;
+
+  color: #2c4f68ed;
+
+}
+
+.updateLogo:hover {
+  color: #ef7411;
+}
   

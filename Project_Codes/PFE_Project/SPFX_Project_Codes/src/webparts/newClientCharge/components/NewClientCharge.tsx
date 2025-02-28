@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import styles from "./NewClientCharge.module.scss";
 const AOS = require("aos");
 import "aos/dist/aos.css";
+import { MdDeleteOutline } from "react-icons/md";
+import { HiOutlineWrench } from "react-icons/hi2";
+
+
 
 const NewClientCharge: React.FC = () => {
   const [activeTab, setActiveTab] = useState('partners');
@@ -28,6 +32,7 @@ const NewClientCharge: React.FC = () => {
           <table className={styles.table}>
           <thead>
             <tr>
+              <th>Controls</th>
               <th>CIN</th>
               <th>Name</th>
               <th>Email</th>
@@ -42,11 +47,12 @@ const NewClientCharge: React.FC = () => {
           </thead>
           <tbody>
             <tr>
+              <td className={styles.ctrlCl}><span>⚙️</span><div className={styles.ctrlBtn}><MdDeleteOutline className={styles.deleteLogo} /><HiOutlineWrench className={styles.updateLogo} /></div></td>
               <td>07498188</td>
               <td style={{ textTransform: "capitalize", fontWeight: "500" }}>wahbi</td>
               <td>📧 wahbi</td>
               <td>📱 466156116</td>
-              <td> 20 Tunisia Bardo</td>
+              <td>  20 Tunisia Bardo</td>
               <td style={{background: "rgb(247 247 247)"}}>
                 <select>
                   <option>Company</option>
