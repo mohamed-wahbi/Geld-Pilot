@@ -25,7 +25,13 @@ const ClientSchema = new mongoose.Schema({
         enum: ["Active", "Inactive", "Blocked"], 
         default: "Active" 
     }
-});
+},
+
+{
+    timestamps: true
+}
+
+);
 
 // Export du modèle
 const Client = mongoose.model("Client", ClientSchema);
@@ -42,7 +48,8 @@ function CreateClientValidation(obj) {
         paymentMethod: Joi.string().valid("Bank Transfer", "Credit Card", "Cash").required(),
         currency: Joi.string().valid("Dinar", "Dollar", "Euro").required(),
         status: Joi.string().valid("Active", "Inactive", "Blocked")
-    });
+    }
+);
 
     return schema.validate(obj);
 }

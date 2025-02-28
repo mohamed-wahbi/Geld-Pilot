@@ -104,3 +104,43 @@ module.exports.deleteOneClientCtrl = asyncHandler (async (req,res) => {
         message:"Client is deleted."
     })
 })
+
+
+
+
+
+/*--------------------------------------------------
+* @desc    Update one clients
+* @router  /api/client/updateOne/:id
+* @methode PUT
+* @access  only admin
+----------------------------------------------------*/
+module.exports.updateOneClientCtrl = asyncHandler (async (req,res) => {
+
+     // Validation
+     const { error } = UpdateClientValidation(req.body);
+     if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+
+    const client = await Client.find({_id:req.params.id});
+    if(!client){
+        return res.status(400).json({
+            message:"No clients with this id in the DB !"
+        })
+    }
+
+    // Mise à jour du client
+    const updatedClient = await Client.findByIdAndUpdate(
+        req.params.id,
+        req.body, // Les données mises à jour envoyées dans la requête
+        { new: true, runValidators: true } // Retourne l'objet mis à jour et applique les validateurs
+    );
+    
+    res.status(200).json({
+        message: "Client has been updated successfully.",
+        updatedClient
+    });
+
+    
+})
