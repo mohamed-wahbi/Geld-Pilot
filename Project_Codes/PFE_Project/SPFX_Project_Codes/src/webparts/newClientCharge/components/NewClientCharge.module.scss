@@ -1,5 +1,58 @@
-.NewClientChargeComp {
-  width: 85%;
-  height: 50vh;
-  background: rgb(164, 206, 190);
+/* General Styling */
+.DashComp {
+  width: 84%;
+  margin: auto;
+  background: #f8f9fa;
+  padding: 40px 60px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+
+/* Header Styling */
+.headerDash {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+  flex-direction: column;
+}
+
+.titleDash {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleTextDash {
+  text-align: -webkit-center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(90deg, #182936, #f47c28);
+  margin: 0px;
+  font-size: 20px;
+}
+
+.navLinks {
+  display: flex;
+  gap: 20px;
+}
+
+.link {
+  color: #363636;
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.link:hover,
+.link.active {
+  border-bottom: 1px solid #cbc9c9;
+}
+
+.logoImgDash {
+  width: 100px;
+  height: 40px;
+}
+
