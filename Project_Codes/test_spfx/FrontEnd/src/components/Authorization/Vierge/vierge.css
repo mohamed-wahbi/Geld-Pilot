@@ -55,5 +55,43 @@
     width: 100px;
     height: 40px;
   }
+
+  .tableContainer {
+    width: 100%;
+    overflow-x: auto; /* Active le scroll horizontal si nécessaire */
+    white-space: nowrap; /* Empêche le retour à la ligne des cellules */
+  }
+  
+/* Table Styling */
+.table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 10px 10px 10px #d1d1d1;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 15px;
+
+}
+
+.table th {
+  background: #60606085;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  border-bottom: 2px solid #d26f2a;
+
+}
+
+
   
   

@@ -19,17 +19,69 @@ const NewClientCharge: React.FC = () => {
           <img src={require('../assets/logo-removebg-preview.png')} alt='logo' className={styles.logoImgDash} />
         </div>
         <div className={styles.navLinks}>
-          <p className={`${styles.link} ${activeTab === 'partners' ? styles.active:null}`} onClick={() => setActiveTab('partners')}>New Client</p>
-          <p className={`${styles.link} ${activeTab === 'create' ? styles.active:null}`} onClick={() => setActiveTab('create')}>New Charge</p>
+          <p className={`${styles.link} ${activeTab === 'partners' ? styles.active : null}`} onClick={() => setActiveTab('partners')}>New Client</p>
+          <p className={`${styles.link} ${activeTab === 'create' ? styles.active : null}`} onClick={() => setActiveTab('create')}>New Charge</p>
         </div>
       </div>
-      <div >
+      <div className={styles.tableContainer} >
         {activeTab === 'partners' && (
-          <div>1</div>
+          <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>CIN</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Address</th>
+              <th>Client Type</th>
+              <th>Payment Method</th>
+              <th>Used Currencies</th>
+              <th>Registration Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>07498188</td>
+              <td style={{ textTransform: "capitalize", fontWeight: "500" }}>wahbi</td>
+              <td>📧 wahbi</td>
+              <td>📱 466156116</td>
+              <td> 20 Tunisia Bardo</td>
+              <td style={{background: "rgb(247 247 247)"}}>
+                <select>
+                  <option>Company</option>
+                  <option>Individual</option>
+                </select>
+              </td>
+              <td style={{background: "rgb(247 247 247)"}}>
+                <select >
+                  <option>Bank Transfer</option>
+                  <option>Credit Card</option>
+                  <option>Cash</option>
+                </select>
+              </td>
+              <td style={{background: "rgb(247 247 247)"}}>
+                <select>
+                  <option>Dinar</option>
+                  <option>Dollar</option>
+                  <option>Euro</option>
+                </select>
+              </td>
+              <td>15/02/2023</td>
+              <td style={{background: "rgb(247 247 247)"}}>
+                <select>
+                  <option>Active</option>
+                  <option>Inactive</option>
+                  <option>Blocked</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         )}
 
         {activeTab === 'create' && (
-          <div>2</div>
+          <div>Charge</div>
         )}
       </div>
     </div>
