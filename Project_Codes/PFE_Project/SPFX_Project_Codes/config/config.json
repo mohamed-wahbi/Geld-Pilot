@@ -73,6 +73,14 @@
           "manifest": "./src/webparts/iaSupport/IaSupportWebPart.manifest.json"
         }
       ]
+    },
+    "new-client-charge-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/newClientCharge/NewClientChargeWebPart.js",
+          "manifest": "./src/webparts/newClientCharge/NewClientChargeWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -85,6 +93,7 @@
     "RegisterWebPartStrings": "lib/webparts/register/loc/{locale}.js",
     "AccessInfoWebPartStrings": "lib/webparts/accessInfo/loc/{locale}.js",
     "AuthorizationWebPartStrings": "lib/webparts/authorization/loc/{locale}.js",
-    "IaSupportWebPartStrings": "lib/webparts/iaSupport/loc/{locale}.js"
+    "IaSupportWebPartStrings": "lib/webparts/iaSupport/loc/{locale}.js",
+    "NewClientChargeWebPartStrings": "lib/webparts/newClientCharge/loc/{locale}.js"
   }
 }
