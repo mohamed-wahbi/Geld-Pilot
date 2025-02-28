@@ -9,7 +9,7 @@ import axios from 'axios';
 
 // ✅ Définition de l'interface Client
 interface Client {
-  id: string; // Ajoutez l'ID si nécessaire
+  _id: string; // Ajoutez l'ID si nécessaire
   name: string;
   email: string;
   phone: string;
@@ -33,7 +33,11 @@ const NewClientCharge: React.FC = () => {
     AOS.init({ duration: 1500, once: true });
   }, []);
 
-  // -----------------------------Get All Clients--------------------------------------------
+
+
+
+
+// -----------------------------Get All Clients--------------------------------------------
   const fetchClients = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:3320/api/client/getAll");
@@ -42,6 +46,20 @@ const NewClientCharge: React.FC = () => {
       console.error("Erreur lors du fetching des clients :", error);
     }
   };
+// _________________________________________________________________________________________
+
+
+
+// -----------------------------Delete One Client--------------------------------------------
+const DeleteOneClient = async (id:string) => {
+  try {
+    await axios.delete(`http://127.0.0.1:3320/api/client/deleteOne/${id}`);
+    fetchClients()
+  } catch (error) {
+    console.error("Erreur lors du fetching des clients :", error);
+  }
+};
+// _________________________________________________________________________________________
 
 
 
@@ -58,7 +76,7 @@ const NewClientCharge: React.FC = () => {
 
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
-
+// ______________________________________________________________________________
   return (
     <div className={styles.DashComp}>
       <div className={styles.headerDash}>
@@ -91,12 +109,12 @@ const NewClientCharge: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {clients.map((client: Client, index: number) => ( // ✅ Ajout des types explicites
-                <tr key={index}>
+              {clients.map((client: Client) => ( // ✅ Ajout des types explicites
+                <tr key={client._id}>
                   <td className={styles.ctrlCl}>
                     <span>⚙️</span>
                     <div className={styles.ctrlBtn}>
-                      <MdDeleteOutline className={styles.deleteLogo} />
+                      <MdDeleteOutline className={styles.deleteLogo} onClick={()=>DeleteOneClient(client._id)}/>
                       <HiOutlineWrench className={styles.updateLogo} />
                     </div>
                   </td>
