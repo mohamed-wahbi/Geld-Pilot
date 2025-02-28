@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './vierge.css'
 import logo from "../../../assets/logo-removebg-preview.png"
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineWrench } from "react-icons/hi2";
+import axios from 'axios';
 
 
 
@@ -11,6 +12,10 @@ import { HiOutlineWrench } from "react-icons/hi2";
 
 const Vierge = () => {
   const [activeTab, setActiveTab] = useState('partners');
+  const [clients, setClients] = useState([])
+  useEffect(() => {
+    fetchClients()
+  }, [])
 
   // ------------------Token Maneg-----------------------------
   // const token = localStorage.getItem("token");
@@ -30,6 +35,49 @@ const Vierge = () => {
   //   }
   // }, [token, isAdmin]);
   // _________________________________________________________________
+
+
+  const fetchClients = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:3320/api/client/getAll");
+      setClients(response.data.clients)
+    } catch (error) {
+      console.error("Erreur lors du fetching des clients :", error);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,45 +132,48 @@ const Vierge = () => {
                 </tr>
               </thead>
               <tbody>
-                
+                {clients.map((client) => {
+                  return (
+                    <tr key={client._id}>
+                      <td className='ctrlCl'><span>⚙️</span><div className='ctrlBtn'><MdDeleteOutline className='deleteLogo' /><HiOutlineWrench className='updateLogo' /></div></td>
+                      <td> {client.cin} </td>
+                      <td style={{ textTransform: "capitalize", fontWeight: "500" }}> {client.name} </td>
+                      <td>📧 {client.email} </td>
+                      <td>📱 {client.phone} </td>
+                      <td> {client.address} </td>
+                      <td>
+                        <select value={client.clientType}>
+                          <option>Company</option>
+                          <option>Individual</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select value={client.paymentMethod}>
+                          <option>Bank Transfer</option>
+                          <option>Credit Card</option>
+                          <option>Cash</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select value={client.currency}>
+                          <option>Dinar</option>
+                          <option>Dollar</option>
+                          <option>Euro</option>
+                        </select>
+                      </td>
+                      <td> {client.registrationDate} </td>
+                      <td>
+                        <select value={client.status}>
+                          <option>Active</option>
+                          <option>Inactive</option>
+                          <option>Blocked</option>
+                        </select>
+                      </td>
+                    </tr>
+                  )
+                })}
 
-                <tr>
-                  <td className='ctrlCl'><span>⚙️</span><div className='ctrlBtn'><MdDeleteOutline className='deleteLogo' /><HiOutlineWrench className='updateLogo' /></div></td>
-                  <td>07498188</td>
-                  <td style={{ textTransform: "capitalize", fontWeight: "500" }}>wahbi</td>
-                  <td>📧 wahbi</td>
-                  <td>📱 466156116</td>
-                  <td> 20 Tunisia Bardo</td>
-                  <td>
-                    <select>
-                      <option>Company</option>
-                      <option>Individual</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select>
-                      <option>Bank Transfer</option>
-                      <option>Credit Card</option>
-                      <option>Cash</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select>
-                      <option>Dinar</option>
-                      <option>Dollar</option>
-                      <option>Euro</option>
-                    </select>
-                  </td>
-                  <td>15/02/2023</td>
-                  <td>
-                    <select>
-                      <option>Active</option>
-                      <option>Inactive</option>
-                      <option>Blocked</option>
-                    </select>
-                  </td>
-                </tr>
-                
+
               </tbody>
             </table>
 
