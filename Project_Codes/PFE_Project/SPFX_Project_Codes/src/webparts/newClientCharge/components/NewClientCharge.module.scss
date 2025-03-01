@@ -56,13 +56,14 @@
 /* Table Styling */
 .tableContainer {
   width: 100%;
-  overflow-x: auto; /* Active le scroll horizontal si nécessaire */
-  white-space: nowrap; /* Empêche le retour à la ligne des cellules */
+  overflow-x: auto;
+  /* Active le scroll horizontal si nécessaire */
+  white-space: nowrap;
+  /* Empêche le retour à la ligne des cellules */
 }
 
 .table {
   width: 100%;
-  margin-top: 20px;
   border-collapse: collapse;
   background: white;
   border-radius: 5px;
@@ -122,7 +123,7 @@
 .ctrlCl:hover .ctrlBtn {
   display: inline-block;
 }
-  
+
 .deleteLogo {
   font-size: 20px;
   padding: 3px;
@@ -135,6 +136,7 @@
 .deleteLogo:hover {
   color: #ef7411;
 }
+
 .updateLogo {
   font-size: 20px;
   padding: 3px;
@@ -147,7 +149,7 @@
 .updateLogo:hover {
   color: #ef7411;
 }
-  
+
 .editRow {
   background-color: #eeeeeeab;
   display: flex;
@@ -174,4 +176,48 @@
 .ChangeInput {
   padding: 5px 5px;
   border-color: #e4751b59;
+}
+
+
+
+.HeaderTabelCtrl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+}
+
+.ctrlTabBtns {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ctrlTabBtns button {
+  font-size: 30px;
+  cursor: pointer;
+  background-color: transparent;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid transparent;
+
+  width: 40px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: 0.4s;
+
+}
+
+.ctrlTabBtns button:hover {
+  border-color: #cbc9c9;
+}
+
+.searchInput {
+  width: 30%;
+
 }

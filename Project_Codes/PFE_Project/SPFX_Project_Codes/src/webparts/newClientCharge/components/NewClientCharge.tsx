@@ -44,7 +44,7 @@ const NewClientCharge: React.FC = () => {
 
 
 
-// -----------------------------Get All Clients--------------------------------------------
+  // -----------------------------Get All Clients--------------------------------------------
   const fetchClients = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:3320/api/client/getAll");
@@ -53,67 +53,67 @@ const NewClientCharge: React.FC = () => {
       console.error("Erreur in fetching of clients :", error);
     }
   };
-// _________________________________________________________________________________________
+  // _________________________________________________________________________________________
 
 
 
-// -----------------------------Delete One Client--------------------------------------------
-const DeleteOneClient = async (id:string) => {
-  try {
-    await axios.delete(`http://127.0.0.1:3320/api/client/deleteOne/${id}`);
-    fetchClients()
-    notify('Client deleted successfully . ✅')
-  } catch (error) {
-    console.error("Erreur in delete of client !", error);
-  }
-};
-// _________________________________________________________________________________________
+  // -----------------------------Delete One Client--------------------------------------------
+  const DeleteOneClient = async (id: string) => {
+    try {
+      await axios.delete(`http://127.0.0.1:3320/api/client/deleteOne/${id}`);
+      fetchClients()
+      notify('Client deleted successfully . ✅')
+    } catch (error) {
+      console.error("Erreur in delete of client !", error);
+    }
+  };
+  // _________________________________________________________________________________________
 
 
-// -----------------------------Update One Client--------------------------------------------
-// Mettre à jour un client
-const updateClient = async (id: string, updatedData: Partial<Client>) => {
-  if (Object.keys(updatedData).length === 0) {
-    setEditableRow(null)
-    notify("No changes detected ! 🤔" );
-    return;
-  }
-  try {
-    await axios.put(`http://127.0.0.1:3320/api/client/updateOne/${id}`, updatedData);
-    notify("Client updated successfully ! ✅");
-    fetchClients();
-    setEditableRow(null);
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour du client :", error);
-    notify("Erreur lors de la mise à jour du client !");
-  }
-};
+  // -----------------------------Update One Client--------------------------------------------
+  // Mettre à jour un client
+  const updateClient = async (id: string, updatedData: Partial<Client>) => {
+    if (Object.keys(updatedData).length === 0) {
+      setEditableRow(null)
+      notify("No changes detected ! 🤔");
+      return;
+    }
+    try {
+      await axios.put(`http://127.0.0.1:3320/api/client/updateOne/${id}`, updatedData);
+      notify("Client updated successfully ! ✅");
+      fetchClients();
+      setEditableRow(null);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du client :", error);
+      notify("Erreur lors de la mise à jour du client !");
+    }
+  };
 
-const handleEditClick = (client: Client) => {
-  setEditableRow(client._id);
-  setOriginalData(client);
-  setEditedData({});
-};
+  const handleEditClick = (client: Client) => {
+    setEditableRow(client._id);
+    setOriginalData(client);
+    setEditedData({});
+  };
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, field: keyof Client) => {
-  const value = e.target.value;
-  if (value !== originalData[field]) {
-    setEditedData((prev) => ({ ...prev, [field]: value }));
-  } else {
-    setEditedData((prev) => {
-      const updated = { ...prev };
-      delete updated[field];
-      return updated;
-    });
-  }
-};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, field: keyof Client) => {
+    const value = e.target.value;
+    if (value !== originalData[field]) {
+      setEditedData((prev) => ({ ...prev, [field]: value }));
+    } else {
+      setEditedData((prev) => {
+        const updated = { ...prev };
+        delete updated[field];
+        return updated;
+      });
+    }
+  };
 
-const handleSave = () => {
-  if (editableRow) {
-    updateClient(editableRow, editedData);
-  }
-};
-// _________________________________________________________________________________________
+  const handleSave = () => {
+    if (editableRow) {
+      updateClient(editableRow, editedData);
+    }
+  };
+  // _________________________________________________________________________________________
 
 
 
@@ -132,11 +132,11 @@ const handleSave = () => {
 
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
-// ______________________________________________________________________________
+  // ______________________________________________________________________________
 
 
 
-const notify = (text: string) => toast(text, {
+  const notify = (text: string) => toast(text, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -150,11 +150,16 @@ const notify = (text: string) => toast(text, {
 
 
 
+  const reloadClientsDatas = () => {
+    fetchClients()
+    notify("All clients reloaded from the Data Base. ✅")
+  }
+
 
   return (
     <div className={styles.DashComp}>
-            <ToastContainer />
-      
+      <ToastContainer />
+
       <div className={styles.headerDash}>
         <div className={styles.titleDash}>
           <h5 className={styles.titleTextDash}>Client And Monthly Charges Management System</h5>
@@ -166,8 +171,24 @@ const notify = (text: string) => toast(text, {
         </div>
       </div>
 
+      <div className={styles.HeaderTabelCtrl}>
+        <div className={styles.searchInput}>
+          <p>wahbi search</p>
+        </div>
+
+        <div className={styles.ctrlTabBtns}>
+          <button>🆕</button>
+          <button onClick={reloadClientsDatas}>🔄️</button>
+        </div>
+      </div>
+
       <div className={styles.tableContainer}>
+
         {activeTab === 'partners' && (
+
+
+
+
           <table className={styles.table}>
             <thead>
               <tr>
@@ -185,102 +206,104 @@ const notify = (text: string) => toast(text, {
               </tr>
             </thead>
             <tbody>
-            {clients.map((client) => (
-              <tr key={client._id}>
-                <td className={styles.ctrlCl}>
-                  <span>⚙️</span>
-                  <div className={styles.ctrlBtn}>
-                    <MdDeleteOutline className={styles.deleteLogo} onClick={() => DeleteOneClient(client._id)} />
-                    <HiOutlineWrench className={styles.updateLogo} onClick={() => handleEditClick(client)} /> 
-                  </div>
-                </td>
-                <td>💳 {client.cin}</td>
-                <td>
-                  {editableRow === client._id ? (
-                    <input className={styles.ChangeInput} type="text" defaultValue={client.name} onChange={(e) => handleChange(e, "name")} />
-                  ) : (
-                    `🚹 client.name`
-                  )}
-                </td>
+              {clients.map((client) => (
+                <tr key={client._id}>
+                  <td className={styles.ctrlCl}>
+                    <span>⚙️</span>
+                    <div className={styles.ctrlBtn}>
+                      <MdDeleteOutline className={styles.deleteLogo} onClick={() => DeleteOneClient(client._id)} />
+                      <HiOutlineWrench className={styles.updateLogo} onClick={() => handleEditClick(client)} />
+                    </div>
+                  </td>
+                  <td>💳 {client.cin}</td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <input className={styles.ChangeInput} type="text" defaultValue={client.name} onChange={(e) => handleChange(e, "name")} />
+                    ) : (
+                      `🚹 ${client.name}`
+                    )}
+                  </td>
 
 
-                <td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <input className={styles.ChangeInput} type="email" defaultValue={client.email} onChange={(e) => handleChange(e, "email")} />
+                    ) : (
+                      `📧 ${client.email}`
+                    )}
+                  </td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <input className={styles.ChangeInput} type="text" defaultValue={client.phone} onChange={(e) => handleChange(e, "phone")} />
+                    ) : (
+                      `📱 ${client.phone}`
+                    )}
+                  </td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <input className={styles.ChangeInput} type="text" defaultValue={client.address} onChange={(e) => handleChange(e, "address")} />
+                    ) : (
+                      `📍 ${client.address}`
+                    )}
+                  </td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <select defaultValue={client.clientType} onChange={(e) => handleChange(e, "clientType")}>
+                        <option value="Company">Company</option>
+                        <option value="Individual">Individual</option>
+                      </select>
+                    ) : (
+                      client.clientType
+                    )}
+                  </td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <select defaultValue={client.paymentMethod} onChange={(e) => handleChange(e, "paymentMethod")}>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Cash">Cash</option>
+                      </select>
+                    ) : (
+                      client.paymentMethod
+                    )}
+                  </td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <select defaultValue={client.currency} onChange={(e) => handleChange(e, "currency")}>
+                        <option value="Dinar">Dinar</option>
+                        <option value="Dollar">Dollar</option>
+                        <option value="Euro">Euro</option>
+                      </select>
+                    ) : (
+                      client.currency
+                    )}
+                  </td>
+                  <td>📆 {formatDate(client.registrationDate)}</td>
+                  <td>
+                    {editableRow === client._id ? (
+                      <select defaultValue={client.status} onChange={(e) => handleChange(e, "status")}>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Blocked">Blocked</option>
+                      </select>
+                    ) : (
+                      client.status
+                    )}
+                  </td>
+
                   {editableRow === client._id ? (
-                    <input className={styles.ChangeInput} type="email" defaultValue={client.email} onChange={(e) => handleChange(e, "email")} />
-                  ) : (
-                    `📧 client.email`
-                  )}
-                </td>
-                <td>
-                  {editableRow === client._id ? (
-                    <input className={styles.ChangeInput} type="text" defaultValue={client.phone} onChange={(e) => handleChange(e, "phone")} />
-                  ) : (
-                    `📱 ${client.phone}`
-                  )}
-                </td>
-                <td>
-                  {editableRow === client._id ? (
-                    <input className={styles.ChangeInput} type="text" defaultValue={client.address} onChange={(e) => handleChange(e, "address")} />
-                  ) : (
-                    `📍 client.address`
-                  )}
-                </td>
-                <td>
-                  {editableRow === client._id ? (
-                    <select defaultValue={client.clientType} onChange={(e) => handleChange(e, "clientType")}>
-                      <option value="Company">Company</option>
-                      <option value="Individual">Individual</option>
-                    </select>
-                  ) : (
-                    client.clientType
-                  )}
-                </td>
-                <td>
-                  {editableRow === client._id ? (
-                    <select defaultValue={client.paymentMethod} onChange={(e) => handleChange(e, "paymentMethod")}>
-                      <option value="Bank Transfer">Bank Transfer</option>
-                      <option value="Credit Card">Credit Card</option>
-                      <option value="Cash">Cash</option>
-                    </select>
-                  ) : (
-                    client.paymentMethod
-                  )}
-                </td>
-                <td>
-                  {editableRow === client._id ? (
-                    <select defaultValue={client.currency} onChange={(e) => handleChange(e, "currency")}>
-                      <option value="Dinar">Dinar</option>
-                      <option value="Dollar">Dollar</option>
-                      <option value="Euro">Euro</option>
-                    </select>
-                  ) : (
-                    client.currency
-                  )}
-                </td>
-                <td>📆 {formatDate(client.registrationDate)}</td>
-                <td>
-                  {editableRow === client._id ? (
-                    <select defaultValue={client.status} onChange={(e) => handleChange(e, "status")}>
-                      <option value="Active">Active</option>
-                      <option value="Inactive">Inactive</option>
-                      <option value="Blocked">Blocked</option>
-                    </select>
-                  ) : (
-                    client.status
-                  )}
-                </td>
-                
-                {editableRow === client._id ? (
                     <td className={styles.editRow}>
                       <button onClick={handleSave} >✅</button>
                       <button onClick={() => setEditableRow(null)}>⛔</button>
                     </td>
-                  ):null}
-                
-              </tr>
-            ))}
-          </tbody>
+                  ) : null}
+
+                </tr>
+              ))}
+            </tbody>
           </table>
+
+
         )}
 
         {activeTab === 'create' && <div>Charge</div>}

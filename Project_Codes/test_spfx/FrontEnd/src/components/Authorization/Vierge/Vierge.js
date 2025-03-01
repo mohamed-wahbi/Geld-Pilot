@@ -4,9 +4,39 @@ import logo from "../../../assets/logo-removebg-preview.png";
 import { ToastContainer, toast } from "react-toastify";
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineWrench } from "react-icons/hi2";
+import {VocaFlexMWSTn} from 'vecoflextnmws'
+
 import axios from "axios";
 
+
+
+
+
+
+
+
 const Vierge = () => {
+
+
+  const [allFiltredDatas,setAllFiltredDatas] = useState([])
+  const [oneFiltredData,setOneFiltredData] = useState({})
+
+  console.log(allFiltredDatas);// liste des données filtre
+
+  console.log(oneFiltredData)// un ligne de la liste des données filtré
+  
+
+  const getAllFiltredDatas = (datas) => { setAllFiltredDatas(datas) }
+  const getOneFiltredData = (data) => { 
+    setOneFiltredData(data)
+    if(oneFiltredData!={}){
+      alert("tu peux naviger")
+    }
+
+   }
+
+  
+
   const [activeTab, setActiveTab] = useState("partners");
   const [clients, setClients] = useState([]);
   const [editableRow, setEditableRow] = useState(null);
@@ -94,6 +124,33 @@ const Vierge = () => {
       </div>
 
       <div className="authUserTable">
+
+
+      <div className="HeaderTabelCtrl">
+          <div className="searchInput">
+            <VocaFlexMWSTn
+              data={clients}
+              keys={["name","clientType","currency","status"]}
+              lang={"en-US"} 
+              threshold={"0.3"} 
+              allFiltredDatas={getAllFiltredDatas}
+              oneFiltredData={getOneFiltredData}
+              titre={"name"}
+              description={"clientType"} 
+            />
+          </div>
+
+          <div className="ctrlTabBtns">
+            <button>🆕</button>
+            <button>🔄️</button>
+          </div>
+    </div>
+
+    
+
+
+
+
         {activeTab === "partners" && (
           <table className="table">
             <thead>
@@ -112,7 +169,8 @@ const Vierge = () => {
               </tr>
             </thead>
             <tbody>
-              {clients.map((client) => (
+              
+              {(allFiltredDatas.length > 0 ? allFiltredDatas : clients).map((client) => (
                 <tr key={client._id}>
                   <td className="ctrlCl">
                     <span>⚙️</span>
