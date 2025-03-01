@@ -274,6 +274,7 @@ const Vierge = () => {
               )} */}
 
 
+              
 
               {(allFiltredDatas.length > 0 ? allFiltredDatas : clients).map((client) => (
                 <tr key={client._id}>

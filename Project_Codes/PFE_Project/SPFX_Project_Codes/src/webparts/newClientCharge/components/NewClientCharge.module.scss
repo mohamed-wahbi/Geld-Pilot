@@ -218,7 +218,11 @@
 }
 
 .searchInput {
-  width: 30%;
+  width: 40%;
+  z-index: 5;
+  position: absolute;
+  right: 60px;
+  top: 160px;
 
 }
 

@@ -8,8 +8,10 @@ import { HiOutlineWrench } from "react-icons/hi2";
 import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+const {VocaFlexMWSTn} = require('vecoflextnmws')
 
-// ✅ Définition de l'interface Client
+
+
 interface Client {
   _id: string; 
   cin: string
@@ -25,6 +27,25 @@ interface Client {
 }
 
 const NewClientCharge: React.FC = () => {
+
+
+  // -----------------------Filter System--------------------------------
+  const [allFiltredDatas,setAllFiltredDatas] = useState<Client[]>([])
+  const [oneFiltredData,setOneFiltredData] = useState<Client | null>(null)
+
+  console.log(allFiltredDatas);// liste des données filtre
+
+  console.log(oneFiltredData)// un ligne de la liste des données filtré
+  
+
+  const getAllFiltredDatas = (data: Client[]) => { setAllFiltredDatas(data) }
+  const getOneFiltredData = (data : Client) => { setOneFiltredData(data) }
+  // ___________________________________________________________________
+
+
+
+
+
   const [activeTab, setActiveTab] = useState<string>('partners');
   const [clients, setClients] = useState<Client[]>([]); // ✅ Ajout du type Client[]
   const [editableRow, setEditableRow] = useState<string | null>(null);
@@ -227,14 +248,24 @@ const saveNewClient = async () => {
 
       <div className={styles.HeaderTabelCtrl}>
         <div className={styles.searchInput}>
-          <p>wahbi search</p>
+        <VocaFlexMWSTn
+            data={clients}
+            keys={["name","clientType"]}
+            lang={"en-US"} 
+            threshold={"0.4"} 
+            allFiltredDatas={getAllFiltredDatas}
+            oneFiltredData={getOneFiltredData}
+            titre={"name"}
+            description={"description"}
+          />
+
         </div>
 
         <div className={styles.ctrlTabBtns}>
           <button onClick={createNewClient}>🆕</button>
           <button onClick={reloadClientsDatas}>🔄️</button>
         </div>
-      </div>
+      </div> 
 
       <div className={styles.tableContainer}>
 
@@ -324,7 +355,7 @@ const saveNewClient = async () => {
 
 
 
-              {clients.map((client) => (
+              {(allFiltredDatas.length !=0 ? allFiltredDatas : clients).map((client) => (
                 <tr key={client._id}>
                   <td className={styles.ctrlCl}>
                     <span>⚙️</span>
