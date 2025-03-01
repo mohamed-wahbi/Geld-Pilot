@@ -221,3 +221,24 @@
   width: 30%;
 
 }
+
+
+.CreateInput {
+  padding: 5px 5px;
+  border-color: #1be46b59;
+}
+
+.CreateRowStyle {
+  align-items: center;
+    background-color: #eeeeeeab;
+    border-color: #ededed !important;
+    border-style: solid solid none none !important;
+    border-top-right-radius: 10px;
+    border-width: 3px 1px medium medium !important;
+    box-shadow: 5px 5px 8px #ddd;
+    display: flex;
+    justify-content: space-around;
+    margin-left: 0;
+    margin-right: 10px;
+    padding: 5px !important;
+}

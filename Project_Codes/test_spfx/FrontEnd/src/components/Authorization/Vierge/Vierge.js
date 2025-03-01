@@ -4,7 +4,7 @@ import logo from "../../../assets/logo-removebg-preview.png";
 import { ToastContainer, toast } from "react-toastify";
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineWrench } from "react-icons/hi2";
-import {VocaFlexMWSTn} from 'vecoflextnmws'
+import { VocaFlexMWSTn } from 'vecoflextnmws'
 
 import axios from "axios";
 
@@ -18,30 +18,78 @@ import axios from "axios";
 const Vierge = () => {
 
 
-  const [allFiltredDatas,setAllFiltredDatas] = useState([])
-  const [oneFiltredData,setOneFiltredData] = useState({})
+  const [allFiltredDatas, setAllFiltredDatas] = useState([])
+  const [oneFiltredData, setOneFiltredData] = useState({})
 
   console.log(allFiltredDatas);// liste des données filtre
 
   console.log(oneFiltredData)// un ligne de la liste des données filtré
-  
+
+
+
+
 
   const getAllFiltredDatas = (datas) => { setAllFiltredDatas(datas) }
-  const getOneFiltredData = (data) => { 
+  const getOneFiltredData = (data) => {
     setOneFiltredData(data)
-    if(oneFiltredData!={}){
+    if (oneFiltredData != {}) {
       alert("tu peux naviger")
     }
 
-   }
+  }
 
-  
+
 
   const [activeTab, setActiveTab] = useState("partners");
   const [clients, setClients] = useState([]);
   const [editableRow, setEditableRow] = useState(null);
   const [originalData, setOriginalData] = useState({});
   const [editedData, setEditedData] = useState({});
+
+  // ------------------------------Create Client------------------------------------------------
+
+  const [newClientData, setNewClientData] = useState(null); // Stocke le nouveau client
+
+  // // Création d'un nouveau client (affichage d'une ligne vide)
+  // const createNewClient = () => {
+  //   setNewClientData({
+  //     cin: "",
+  //     name: "",
+  //     email: "",
+  //     phone: "",
+  //     address: "",
+  //     clientType: "Individual",
+  //     paymentMethod: "Credit Card",
+  //     currency: "Dollar",
+  //   });
+  // };
+
+
+  // // Mise à jour des données du nouveau client
+  // const handleNewClientChange = (e, field) => {
+  //   setNewClientData((prev) => ({ ...prev, [field]: e.target.value }));
+  // };
+
+  // // Sauvegarde du nouveau client
+  // const saveNewClient = async () => {
+  //   if (!newClientData.name || !newClientData.cin || !newClientData.email) {
+  //     toast.error("Veuillez remplir tous les champs obligatoires !");
+  //     return;
+  //   }
+
+  //   try {
+  //     await axios.post("http://127.0.0.1:3320/api/client/create", newClientData);
+  //     toast.success("Client ajouté avec succès !");
+  //     fetchClients();
+  //     setNewClientData(null);
+  //   } catch (error) {
+  //     console.error("Erreur lors de la création du client :", error);
+  //     toast.error("Erreur lors de la création du client !");
+  //   }
+  // };
+
+  // _____________________________________________________________________________________________
+
 
   // Récupérer les clients
   const fetchClients = async () => {
@@ -63,7 +111,7 @@ const Vierge = () => {
       await axios.put(`http://127.0.0.1:3320/api/client/updateOne/${id}`, updatedData);
       toast.success("Client mis à jour avec succès !");
       fetchClients();
-      
+
     } catch (error) {
       console.error("Erreur lors de la mise à jour du client :", error);
       toast.error("Erreur lors de la mise à jour du client !");
@@ -99,19 +147,6 @@ const Vierge = () => {
   };
 
 
-  const createNewClient = async()=> {
-    try {
-      const newClient = await axios.post("http://127.0.0.1:3320/api/client/create",newClientData)
-      console.log(newClient.data.message)
-      
-    } catch (error) {
-      console.log("error of creating Client!",error)
-    }
-  }
-
-
-
-
   useEffect(() => {
     fetchClients();
   }, []);
@@ -136,27 +171,27 @@ const Vierge = () => {
       <div className="authUserTable">
 
 
-      <div className="HeaderTabelCtrl">
+        <div className="HeaderTabelCtrl">
           <div className="searchInput">
             <VocaFlexMWSTn
               data={clients}
-              keys={["name","clientType","currency","status"]}
-              lang={"en-US"} 
-              threshold={"0.3"} 
+              keys={["name", "clientType", "currency", "status"]}
+              lang={"en-US"}
+              threshold={"0.3"}
               allFiltredDatas={getAllFiltredDatas}
               oneFiltredData={getOneFiltredData}
               titre={"name"}
-              description={"clientType"} 
+              description={"clientType"}
             />
           </div>
 
           <div className="ctrlTabBtns">
-            <button onClick={createNewClient}>🆕</button>
+            <button >🆕</button> {/*ajouter createNewClient function*/}
             <button>🔄️</button>
           </div>
-    </div>
+        </div>
 
-    
+
 
 
 
@@ -179,7 +214,67 @@ const Vierge = () => {
               </tr>
             </thead>
             <tbody>
-              
+
+              {/* Ligne pour ajouter un nouveau client en haut du tableau */}
+              {/* {newClientData && (
+                <tr>
+                  <td>➕</td>
+                  <td>
+                    <input type="text" value={newClientData.cin} onChange={(e) => handleNewClientChange(e, "cin")} />
+                  </td>
+                  <td>
+                    <input type="text" value={newClientData.name} onChange={(e) => handleNewClientChange(e, "name")} />
+                  </td>
+                  <td>
+                    <input type="email" value={newClientData.email} onChange={(e) => handleNewClientChange(e, "email")} />
+                  </td>
+                  <td>
+                    <input type="text" value={newClientData.phone} onChange={(e) => handleNewClientChange(e, "phone")} />
+                  </td>
+                  <td>
+                    <input type="text" value={newClientData.address} onChange={(e) => handleNewClientChange(e, "address")} />
+                  </td>
+                  <td>
+                    <select value={newClientData.clientType} onChange={(e) => handleNewClientChange(e, "clientType")}>
+                      <option>Company</option>
+                      <option>Individual</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select value={newClientData.paymentMethod} onChange={(e) => handleNewClientChange(e, "paymentMethod")}>
+                      <option>Bank Transfer</option>
+                      <option>Credit Card</option>
+                      <option>Cash</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select value={newClientData.currency} onChange={(e) => handleNewClientChange(e, "currency")}>
+                      <option>Dinar</option>
+                      <option>Dollar</option>
+                      <option>Euro</option>
+                    </select>
+                  </td>
+
+                  <td>
+                    <input placeholder="Data time auto" />
+                  </td>
+                  <td>
+                    <select value={newClientData.status} onChange={(e) => handleNewClientChange(e, "status")}>
+                      <option>Active</option>
+                      <option>Inactive</option>
+                      <option>Blocked</option>
+                    </select>
+                  </td>
+
+                  <td>
+                    <button onClick={saveNewClient}>💾 Save</button>
+                    <button onClick={() => setNewClientData(null)}>❌ Cancel</button>
+                  </td>
+                </tr>
+              )} */}
+
+
+
               {(allFiltredDatas.length > 0 ? allFiltredDatas : clients).map((client) => (
                 <tr key={client._id}>
                   <td className="ctrlCl">
@@ -240,7 +335,7 @@ const Vierge = () => {
                       <option>Euro</option>
                     </select>
                   </td>
-                  <td>{client.registrationDate}</td>
+                  <td>{client.createdAt}</td>
                   <td>
                     <select defaultValue={client.status} onChange={(e) => handleChange(e, "status")} disabled={editableRow !== client._id}>
                       <option>Active</option>

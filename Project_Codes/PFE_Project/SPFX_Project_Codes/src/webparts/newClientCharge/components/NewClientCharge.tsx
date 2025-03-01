@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // ✅ Définition de l'interface Client
 interface Client {
-  _id: string; // Ajoutez l'ID si nécessaire
+  _id: string; 
   cin: string
   name: string;
   email: string;
@@ -30,6 +30,56 @@ const NewClientCharge: React.FC = () => {
   const [editableRow, setEditableRow] = useState<string | null>(null);
   const [originalData, setOriginalData] = useState<Partial<Client>>({});
   const [editedData, setEditedData] = useState<Partial<Client>>({});
+
+
+// ------------------------------Create Client------------------------------------------------
+const [newClientData, setNewClientData] = useState<Partial<Client> | null>(null);
+
+// Création d'un nouveau client (affichage d'une ligne vide)
+const createNewClient = () => {
+  setNewClientData({
+    cin: "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    clientType: "Individual",
+    paymentMethod: "Credit Card",
+    currency: "Dollar",
+  });
+};
+
+// Mise à jour des données du nouveau client
+const handleNewClientChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  field: keyof Client
+) => {
+  setNewClientData((prev) =>
+    prev ? { ...prev, [field]: e.target.value } : null
+  );
+};
+
+// Sauvegarde du nouveau client
+const saveNewClient = async () => {
+  if (!newClientData || !newClientData.name || !newClientData.cin || !newClientData.email) {
+    notify("Veuillez remplir tous les champs obligatoires ! ⛔");
+    return;
+  }
+
+  try {
+    await axios.post("http://127.0.0.1:3320/api/client/create", newClientData);
+    notify("Client Created successfully. ✅");
+    fetchClients();
+    setNewClientData(null);
+  } catch (error) {
+    console.error("Erreur lors de la création du client :", error);
+    notify("Erreur of creation client! ⛔");
+  }
+};
+
+// _____________________________________________________________________________________________
+
+
 
 
   useEffect(() => {
@@ -136,6 +186,9 @@ const NewClientCharge: React.FC = () => {
 
 
 
+
+
+// ----------------------------------Notif Alert---------------------------------
   const notify = (text: string) => toast(text, {
     position: "bottom-right",
     autoClose: 5000,
@@ -146,15 +199,16 @@ const NewClientCharge: React.FC = () => {
     theme: "light",
     transition: Bounce,
   });
+// _______________________________________________________________________________
 
 
 
-
+// ---------------------------Reload Btn----------------------------------
   const reloadClientsDatas = () => {
     fetchClients()
     notify("All clients reloaded from the Data Base. ✅")
   }
-
+// _______________________________________________________________________
 
   return (
     <div className={styles.DashComp}>
@@ -177,7 +231,7 @@ const NewClientCharge: React.FC = () => {
         </div>
 
         <div className={styles.ctrlTabBtns}>
-          <button>🆕</button>
+          <button onClick={createNewClient}>🆕</button>
           <button onClick={reloadClientsDatas}>🔄️</button>
         </div>
       </div>
@@ -206,6 +260,70 @@ const NewClientCharge: React.FC = () => {
               </tr>
             </thead>
             <tbody>
+
+              {/* Ligne pour ajouter un nouveau client en haut du tableau */}
+              {newClientData && (
+                <tr>
+                  <td>➕</td>
+                  <td>
+                    <input className={styles.CreateInput} type="text" value={newClientData.cin} onChange={(e) => handleNewClientChange(e, "cin")} />
+                  </td>
+                  <td>
+                    <input className={styles.CreateInput} type="text" value={newClientData.name} onChange={(e) => handleNewClientChange(e, "name")} />
+                  </td>
+                  <td>
+                    <input className={styles.CreateInput} type="email" value={newClientData.email} onChange={(e) => handleNewClientChange(e, "email")} />
+                  </td>
+                  <td>
+                    <input className={styles.CreateInput} type="text" value={newClientData.phone} onChange={(e) => handleNewClientChange(e, "phone")} />
+                  </td>
+                  <td>
+                    <input className={styles.CreateInput} type="text" value={newClientData.address} onChange={(e) => handleNewClientChange(e, "address")} />
+                  </td>
+                  <td>
+                    <select value={newClientData.clientType} onChange={(e) => handleNewClientChange(e, "clientType")}>
+                      <option>Company</option>
+                      <option>Individual</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select value={newClientData.paymentMethod} onChange={(e) => handleNewClientChange(e, "paymentMethod")}>
+                      <option>Bank Transfer</option>
+                      <option>Credit Card</option>
+                      <option>Cash</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select value={newClientData.currency} onChange={(e) => handleNewClientChange(e, "currency")}>
+                      <option>Dinar</option>
+                      <option>Dollar</option>
+                      <option>Euro</option>
+                    </select>
+                  </td>
+
+                  <td>
+                    <input style={{border:"none"}} placeholder="Data time auto" />
+                  </td>
+                  <td>
+                    <select value={newClientData.status} onChange={(e) => handleNewClientChange(e, "status")}>
+                      <option>Active</option>
+                      <option>Inactive</option>
+                      <option>Blocked</option>
+                    </select>
+                  </td>
+
+                  <td className={styles.CreateRowStyle}>
+                    <button style={{border:"none",cursor:"pointer",background:"transparent"}}  onClick={saveNewClient}>💾</button>
+                    <button style={{border:"none",cursor:"pointer",background:"transparent"}} onClick={() => setNewClientData(null)}>❌</button>
+                  </td>
+                </tr>
+              )} 
+
+
+
+
+
+
               {clients.map((client) => (
                 <tr key={client._id}>
                   <td className={styles.ctrlCl}>
