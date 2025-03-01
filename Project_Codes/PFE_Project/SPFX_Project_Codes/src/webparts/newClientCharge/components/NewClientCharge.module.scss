@@ -148,3 +148,30 @@
   color: #ef7411;
 }
   
+.editRow {
+  background-color: #eeeeeeab;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 5px !important;
+  margin-right: 10px;
+  margin-left: 0px;
+  border-top-right-radius: 10px;
+  box-shadow: 5px 5px 8px #dddddd;
+  border-top: 3px solid !important;
+  border-right: 1px solid !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-color: #ededed !important;
+}
+
+.editRow button {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.ChangeInput {
+  padding: 5px 5px;
+  border-color: #e4751b59;
+}
