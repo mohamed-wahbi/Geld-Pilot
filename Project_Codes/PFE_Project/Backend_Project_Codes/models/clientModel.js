@@ -19,8 +19,7 @@ const ClientSchema = new mongoose.Schema({
         enum: ["Dinar", "Dollar", "Euro"], 
         required: true 
     },
-    registrationDate: { type: Date, default: Date.now }, // Date d'inscription par défaut = aujourd'hui
-    status: { 
+        status: { 
         type: String, 
         enum: ["Active", "Inactive", "Blocked"], 
         default: "Active" 

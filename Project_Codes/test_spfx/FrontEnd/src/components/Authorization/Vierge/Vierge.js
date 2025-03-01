@@ -99,6 +99,16 @@ const Vierge = () => {
   };
 
 
+  const createNewClient = async()=> {
+    try {
+      const newClient = await axios.post("http://127.0.0.1:3320/api/client/create",newClientData)
+      console.log(newClient.data.message)
+      
+    } catch (error) {
+      console.log("error of creating Client!",error)
+    }
+  }
+
 
 
 
@@ -141,7 +151,7 @@ const Vierge = () => {
           </div>
 
           <div className="ctrlTabBtns">
-            <button>🆕</button>
+            <button onClick={createNewClient}>🆕</button>
             <button>🔄️</button>
           </div>
     </div>

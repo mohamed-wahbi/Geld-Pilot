@@ -20,7 +20,7 @@ interface Client {
   clientType: string;
   paymentMethod: string;
   currency: string;
-  registrationDate: string;
+  createdAt: string;
   status: string;
 }
 
@@ -278,7 +278,7 @@ const NewClientCharge: React.FC = () => {
                       client.currency
                     )}
                   </td>
-                  <td>📆 {formatDate(client.registrationDate)}</td>
+                  <td>📆 {formatDate(client.createdAt)}</td>
                   <td>
                     {editableRow === client._id ? (
                       <select defaultValue={client.status} onChange={(e) => handleChange(e, "status")}>
