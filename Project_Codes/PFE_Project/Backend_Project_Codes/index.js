@@ -8,6 +8,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoute.js');
 const authorizationUserRoutes = require('./routes/authorizedUserRoute.js');
 const clientRoutes = require('./routes/clientRoute.js');
+const expenseFixRoutes = require('./routes/expenseFixRoute.js');
 
 
 
@@ -22,6 +23,7 @@ app.use(cors());
 app.use('/api/auth',authRoutes);
 app.use('/api/authorization',authorizationUserRoutes);
 app.use('/api/client',clientRoutes);
+app.use('/api/expense-fix',expenseFixRoutes);
 
 
 
