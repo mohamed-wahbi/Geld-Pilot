@@ -45,3 +45,25 @@ module.exports.getAllExpenseFixCtrl = asyncHandler (async (req,res) => {
         Expenses_Fixs: expensesFixs
     })
 })
+
+
+
+/*--------------------------------------------------
+* @desc    Get one ExpenseFix
+* @router  /api/client/getOne/:id
+* @methode GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getOneExpenseFixCtrl = asyncHandler (async (req,res) => {
+
+    const oneExpenseFix = await ExpenseFix.find({_id:req.params.id});
+    if(!oneExpenseFix){
+        return res.status(400).json({
+            message:"No Expense-Fix with this id in the DB !"
+        })
+    }
+
+    res.status(200).json({
+        oneExpenseFix
+    })
+})
