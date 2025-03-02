@@ -11,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 const {VocaFlexMWSTn} = require('vecoflextnmws')
 
 
-
 interface Client {
   _id: string; 
   cin: string
