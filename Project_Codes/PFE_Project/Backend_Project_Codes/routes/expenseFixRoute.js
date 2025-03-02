@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createExpenseFixtCtrl,getAllExpenseFixCtrl, getOneExpenseFixCtrl, deleteOneExpenseFixCtrl} = require ("../controllers/expenseFixController.js")
+const {createExpenseFixtCtrl,getAllExpenseFixCtrl, getOneExpenseFixCtrl, deleteOneExpenseFixCtrl, updateOneExpenseFixCtrl} = require ("../controllers/expenseFixController.js")
 
 //Create ExpenseFix
 router.route("/create").post(createExpenseFixtCtrl)
@@ -15,8 +15,8 @@ router.route("/getOne/:id").get(getOneExpenseFixCtrl)
 router.route("/deleteOne/:id").delete(deleteOneExpenseFixCtrl)
 
 
-// // update one ExpenseFix 
-// router.route("/updateOne/:id").put(updateOneExpenseFixCtrl)
+// update one ExpenseFix 
+router.route("/updateOne/:id").put(updateOneExpenseFixCtrl)
 
 
 module.exports = router;

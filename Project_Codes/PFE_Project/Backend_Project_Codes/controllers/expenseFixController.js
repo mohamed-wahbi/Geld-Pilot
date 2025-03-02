@@ -130,7 +130,7 @@ module.exports.updateOneExpenseFixCtrl = asyncHandler (async (req,res) => {
    
    res.status(200).json({
        message: "Client has been updated successfully.",
-       updatedOneExpenseFix
+    
    });
 
    
