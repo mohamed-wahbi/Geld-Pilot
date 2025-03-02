@@ -50,7 +50,7 @@ module.exports.getAllExpenseFixCtrl = asyncHandler (async (req,res) => {
 
 /*--------------------------------------------------
 * @desc    Get one ExpenseFix
-* @router  /api/client/getOne/:id
+* @router  /api/expense-fix/getOne/:id
 * @methode GET
 * @access  only admin
 ----------------------------------------------------*/
@@ -65,5 +65,33 @@ module.exports.getOneExpenseFixCtrl = asyncHandler (async (req,res) => {
 
     res.status(200).json({
         oneExpenseFix
+    })
+})
+
+
+
+/*--------------------------------------------------
+* @desc    delete one ExpneseFix
+* @router  /api/expense-fix/deleteOne/:id
+* @methode DELETE
+* @access  only admin
+----------------------------------------------------*/
+module.exports.deleteOneExpenseFixCtrl = asyncHandler (async (req,res) => {
+
+    const OneExpenseFix = await ExpenseFix.find({_id:req.params.id});
+    if(!OneExpenseFix){
+        return res.status(400).json({
+            message:"No One Expense Fix with this id in the DB !"
+        })
+    }
+
+    const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({_id: req.params.id})
+    if(!deleteOneExpenseFix){
+        return res.status(400).json({
+            message: "One Expense Fix finded but not deleted!"
+        })
+    }
+    res.status(200).json({
+        message:"One Expense Fix is deleted successfully."
     })
 })
