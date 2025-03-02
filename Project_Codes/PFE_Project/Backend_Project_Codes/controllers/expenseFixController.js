@@ -88,7 +88,7 @@ module.exports.deleteOneExpenseFixCtrl = asyncHandler (async (req,res) => {
     const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({_id: req.params.id})
     if(!deleteOneExpenseFix){
         return res.status(400).json({
-            message: "One Expense Fix finded but not deleted!"
+            message: "One Expense not deleted!"
         })
     }
     res.status(200).json({

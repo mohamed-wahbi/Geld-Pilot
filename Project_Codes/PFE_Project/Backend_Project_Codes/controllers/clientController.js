@@ -97,7 +97,7 @@ module.exports.deleteOneClientCtrl = asyncHandler (async (req,res) => {
     const deleteClient = await Client.findByIdAndDelete({_id: req.params.id})
     if(!deleteClient){
         return res.status(400).json({
-            message: "Client finded but not deleted!"
+            message: "Client not deleted!"
         })
     }
     res.status(200).json({
