@@ -24,3 +24,24 @@ module.exports.createExpenseFixtCtrl = asyncHandler (async (req,res) => {
 
     res.status(201).json({ message: "Expense-Fix created successfully", ExpenseFix});
 })
+
+
+/*--------------------------------------------------
+* @desc    GET All ExpenseFix
+* @router  /api/expense-fix/get_app
+* @methode GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getAllExpenseFixCtrl = asyncHandler (async (req,res) => {
+
+    const expensesFixs = await ExpenseFix.find({});
+    if(expensesFixs.length === 0){
+        return res.status(400).json({
+            message:"No Expenses Fixs in the DB !"
+        })
+    }
+
+    res.status(200).json({
+        Expenses_Fixs: expensesFixs
+    })
+})
