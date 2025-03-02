@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {createExpenseFixtCtrl} = require ("../controllers/expenseFixController.js")
+const {createExpenseFixtCtrl,getAllExpenseFixCtrl} = require ("../controllers/expenseFixController.js")
 
 //Create ExpenseFix
 router.route("/create").post(createExpenseFixtCtrl)
 
-// // get all ExpenseFix
-// router.route("/getAll").get(getAllExpenseFixCtrl)
+// get all ExpenseFix
+router.route("/getAll").get(getAllExpenseFixCtrl)
 
 // // get one ExpenseFix
 // router.route("/getOne/:id").get(getOneExpenseFixCtrl)
