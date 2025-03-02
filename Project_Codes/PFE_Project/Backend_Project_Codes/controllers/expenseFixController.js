@@ -95,3 +95,43 @@ module.exports.deleteOneExpenseFixCtrl = asyncHandler (async (req,res) => {
         message:"One Expense Fix is deleted successfully."
     })
 })
+
+
+
+
+
+/*--------------------------------------------------
+* @desc    Update one Expense Fix
+* @router  /api/expense-fix/updateOne/:id
+* @methode PUT
+* @access  only admin
+----------------------------------------------------*/
+module.exports.updateOneExpenseFixCtrl = asyncHandler (async (req,res) => {
+
+    // Validation
+    const { error } = UpdateExpenseFixValidation(req.body);
+    if (error) {
+       return res.status(400).json({ message: error.details[0].message });
+   }
+
+   const oneExpenseFix = await ExpenseFix.find({_id:req.params.id});
+   if(!oneExpenseFix){
+       return res.status(400).json({
+           message:"No Expense Fix with this id in the DB !"
+       })
+   }
+
+
+   const updatedOneExpenseFix = await ExpenseFix.findByIdAndUpdate(
+       req.params.id,
+       req.body,
+       { new: true, runValidators: true }
+   );
+   
+   res.status(200).json({
+       message: "Client has been updated successfully.",
+       updatedOneExpenseFix
+   });
+
+   
+})
