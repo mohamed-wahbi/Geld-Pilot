@@ -1,11 +1,29 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from "./NewClientCharge.module.scss";
 import Charge from './Childs/Charge';
 import ClientComp from './Childs/Client';
 
 const NewClientCharge: React.FC = () => {
+  const token = localStorage.getItem("token");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+
   const [activeTab, setActiveTab] = useState<string>('partners')
+
+  useEffect(() => {
+      if (token != null) {
+        setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
+        console.log(token)
+        if (isAdmin === false) {
+          window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+        }
+      }
+      if (token == null) {
+        window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+      }
+    }, [token, isAdmin]);
+
+
   return (
     <div className={styles.DashComp}>
       <div className={styles.headerDash}>
