@@ -343,7 +343,7 @@ const Charge: React.FC = () => {
                   {editableRow === charge._id ? (
                     <input className={styles.ChangeInput} type="text" defaultValue={charge.expenseName} onChange={(e) => handleChange(e, "expenseName")} />
                   ) : (
-                    `🚹 ${charge.expenseName}`
+                    `✍️ ${charge.expenseName}`
                   )}
                 </td>
 
@@ -367,7 +367,7 @@ const Charge: React.FC = () => {
                   {editableRow === charge._id ? (
                     <input className={styles.ChangeInput} type="text" defaultValue={charge.amount} onChange={(e) => handleChange(e, "amount")} />
                   ) : (
-                    `📧 ${charge.amount}`
+                    `💷 ${charge.amount}`
                   )}
                 </td>
 
@@ -386,11 +386,11 @@ const Charge: React.FC = () => {
                   {editableRow === charge._id ? (
                     <input className={styles.ChangeInput} type="number" defaultValue={charge.paymentDay} onChange={(e) => handleChange(e, "paymentDay")} />
                   ) : (
-                    `📧 ${charge.paymentDay}`
+                    `📆 ${charge.paymentDay}`
                   )}
                 </td>
 
-                <td>📆 {formatDate(charge.createdAt)}</td>
+                <td>⏱️ {formatDate(charge.createdAt)}</td>
 
 
                 {editableRow === charge._id ? (
