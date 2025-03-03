@@ -10,7 +10,7 @@ const InvoiceSchema = new mongoose.Schema({
     montantRestant: { type: Number, default: montantInitial },
     datePaiementEntreprise: { type: Date, required: true },
     datePaiementClient: { type: Date, default: null },
-    statut: { type: String, enum: ['payé', 'non payé'], default: 'non payé' }
+    statut: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' }
 });
 
 // Avant de sauvegarder, recalculer les montants
@@ -31,7 +31,7 @@ function CreateInvoiceValidation(obj) {
         montantPaye: Joi.number().min(0),
         datePaiementEntreprise: Joi.date().required(),
         datePaiementClient: Joi.date().optional(),
-        statut: Joi.string().valid('payé', 'non payé').default('non payé')
+        statut: Joi.string().valid('paid', 'unpaid').default('unpaid')
     });
     return schema.validate(obj);
 }
@@ -44,7 +44,7 @@ function UpdateInvoiceValidation(obj) {
         montantPaye: Joi.number().min(0),
         datePaiementEntreprise: Joi.date(),
         datePaiementClient: Joi.date().optional(),
-        statut: Joi.string().valid('payé', 'non payé')
+        statut: Joi.string().valid('paid', 'unpaid')
     });
     return schema.validate(obj);
 }

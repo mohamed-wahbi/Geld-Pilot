@@ -1,0 +1,36 @@
+const asyncHandler = require("express-async-handler");
+const { Invoice, CreateInvoiceValidation } = require ("../models/invoiceModel.js");
+
+/*--------------------------------------------------
+* @desc    Create new Invoice
+* @router  /api/invoice/create
+* @methode POST
+* @access  only admin
+----------------------------------------------------*/
+module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
+    // Validation
+    const { error } = CreateInvoiceValidation(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+
+    try {
+        // Création de la facture
+        const invoice =  Invoice.create({
+            id_client: req.body.id_client,
+            montantInitial: req.body.montantInitial,
+            remise: req.body.remise || 0,
+            montantPaye: req.body.montantPaye || 0,
+            datePaiementEntreprise: req.body.datePaiementEntreprise,
+            datePaiementClient: req.body.datePaiementClient,
+            statut: req.body.statut || 'unpaid'
+        });
+
+        res.status(201).json({
+            message: "Invoice created successfully.",
+            invoice
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error, invoice not created.", error: err.message });
+    }
+});
