@@ -22,8 +22,9 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
         const montantRestant = montantApresRemise - montantPaye;
 
         // Déterminer le statut
-        const statut = montantPaye === montantApresRemise ? "paid" : "unpaid";
+        const statut = montantPaye >= montantApresRemise ? "paid" : "unpaid";
 
+    
         // Création de la facture
         const newInvoice = new Invoice({
             id_client,
@@ -31,6 +32,7 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
             remise,
             montantPaye,
             datePaiementEntreprise,
+            datePaiementClient:montantPaye>0?new Date():null,
             montantApresRemise,
             montantRestant,
             statut // Stocker le statut mis à jour
@@ -129,9 +131,9 @@ module.exports.updateOneInvoicesCtrl = asyncHandler(async (req, res) => {
         existingInvoice.montantApresRemise = existingInvoice.montantInitial - (existingInvoice.montantInitial * existingInvoice.remise / 100);
         existingInvoice.montantRestant = existingInvoice.montantApresRemise - existingInvoice.montantPaye;
         existingInvoice.statut = (updateData.montantPaye >= existingInvoice.montantApresRemise)  ? "paid" : "unpaid";
-        existingInvoice.datePaiementClient = existingInvoice.updatedAt
+        existingInvoice.datePaiementClient = new Date();
 
-        // Déterminer le statut
+        
 
         // Sauvegarder les modifications
         const updatedInvoice = await existingInvoice.save();

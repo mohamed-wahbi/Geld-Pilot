@@ -4,10 +4,10 @@ const Joi = require('joi');
 const InvoiceSchema = new mongoose.Schema({
     id_client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
     montantInitial: { type: Number, required: true },
-    remise: { type: Number, default: 0, min: 0, max: 100 }, // En pourcentage
-    montantApresRemise: { type: Number, default: 0 },
-    montantPaye: { type: Number, default: 0, min: 0 },
-    montantRestant: { type: Number, default: 0 },
+    remise: { type: Number, default: null, min: 0, max: 100 }, // En pourcentage
+    montantApresRemise: { type: Number, default: null },
+    montantPaye: { type: Number, default: null, min: 0 },
+    montantRestant: { type: Number, default: null },
     datePaiementEntreprise: { type: Date, required: true },
     datePaiementClient: { type: Date, default: null },
     statut: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' }

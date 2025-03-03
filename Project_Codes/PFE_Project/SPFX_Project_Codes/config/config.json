@@ -81,6 +81,14 @@
           "manifest": "./src/webparts/newClientCharge/NewClientChargeWebPart.manifest.json"
         }
       ]
+    },
+    "invoice-revenue-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/invoiceRevenue/InvoiceRevenueWebPart.js",
+          "manifest": "./src/webparts/invoiceRevenue/InvoiceRevenueWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -94,6 +102,7 @@
     "AccessInfoWebPartStrings": "lib/webparts/accessInfo/loc/{locale}.js",
     "AuthorizationWebPartStrings": "lib/webparts/authorization/loc/{locale}.js",
     "IaSupportWebPartStrings": "lib/webparts/iaSupport/loc/{locale}.js",
-    "NewClientChargeWebPartStrings": "lib/webparts/newClientCharge/loc/{locale}.js"
+    "NewClientChargeWebPartStrings": "lib/webparts/newClientCharge/loc/{locale}.js",
+    "InvoiceRevenueWebPartStrings": "lib/webparts/invoiceRevenue/loc/{locale}.js"
   }
 }
