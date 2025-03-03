@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {createInvoiceCtrl} = require('../controllers/invoiceController.js')
+const {createInvoiceCtrl, getAllInvoicesCtrl} = require('../controllers/invoiceController.js')
 
-//Create client
+//Create invoice
 router.route("/create").post(createInvoiceCtrl)
 
-// // get all clients
-// router.route("/getAll").get(getAllClientCtrl)
+// get all invoices
+router.route("/getAll").get(getAllInvoicesCtrl)
 
 // // get one clients
 // router.route("/getOne/:id").get(getOneClientCtrl)
