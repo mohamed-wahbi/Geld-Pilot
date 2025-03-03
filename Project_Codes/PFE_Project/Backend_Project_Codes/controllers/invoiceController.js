@@ -27,8 +27,7 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
         });
 
         res.status(201).json({
-            message: "Invoice created successfully.",
-            invoice
+            message: "Invoice created successfully."
         });
     } catch (err) {
         res.status(500).json({ message: "Server error, invoice not created.", error: err.message });

@@ -5,9 +5,9 @@ const InvoiceSchema = new mongoose.Schema({
     id_client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
     montantInitial: { type: Number, required: true },
     remise: { type: Number, default: 0, min: 0, max: 100 }, // En pourcentage
-    montantApresRemise: { type: Number, default: montantInitial },
+    montantApresRemise: { type: Number, default: 0 },
     montantPaye: { type: Number, default: 0, min: 0 },
-    montantRestant: { type: Number, default: montantInitial },
+    montantRestant: { type: Number, default: 0 },
     datePaiementEntreprise: { type: Date, required: true },
     datePaiementClient: { type: Date, default: null },
     statut: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' }
