@@ -15,22 +15,31 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
     }
 
     try {
+        const { id_client, montantInitial, remise, montantPaye, datePaiementEntreprise } = req.body;
+
+        // Calcul du montant après remise
+        const montantApresRemise = montantInitial - (montantInitial * remise / 100);
+        const montantRestant = montantApresRemise - montantPaye;
+
+        // Déterminer le statut
+        const statut = montantPaye === montantApresRemise ? "paid" : "unpaid";
+
         // Création de la facture
-        const invoice =  Invoice.create({
-            id_client: req.body.id_client,
-            montantInitial: req.body.montantInitial,
-            remise: req.body.remise || 0,
-            montantPaye: req.body.montantPaye || 0,
-            datePaiementEntreprise: req.body.datePaiementEntreprise,
-            datePaiementClient: req.body.datePaiementClient,
-            statut: req.body.statut || 'unpaid'
+        const newInvoice = new Invoice({
+            id_client,
+            montantInitial,
+            remise,
+            montantPaye,
+            datePaiementEntreprise,
+            montantApresRemise,
+            montantRestant,
+            statut // Stocker le statut mis à jour
         });
 
-        res.status(201).json({
-            message: "Invoice created successfully."
-        });
-    } catch (err) {
-        res.status(500).json({ message: "Server error, invoice not created.", error: err.message });
+        await newInvoice.save();
+        res.status(201).json({ message: "Facture créée avec succès", invoice: newInvoice });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la création de la facture", error: error.message });
     }
 });
 
@@ -62,7 +71,7 @@ module.exports.getAllInvoicesCtrl = asyncHandler(async (req, res) => {
 
 /*--------------------------------------------------
 * @desc    Delete one invoice
-* @router  /api/invoice/deleteOneall
+* @router  /api/invoice/deleteOne
 * @methode DELETE
 * @access  only admin
 ----------------------------------------------------*/
@@ -74,5 +83,57 @@ module.exports.deleteOneInvoicesCtrl = asyncHandler(async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-    
+
+});
+
+
+
+
+/*--------------------------------------------------
+* @desc    Update one invoice
+* @router  /api/invoice/UpdateOne
+* @methode PUT
+* @access  only admin
+----------------------------------------------------*/
+module.exports.updateOneInvoicesCtrl = asyncHandler(async (req, res) => {
+
+    // Validation
+    const { error } = this.updateOneInvoicesCtrl(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+
+
+    try {
+        const { id } = req.params;
+        const { montantInitial, remise, montantPaye, datePaiementClient, statut } = req.body;
+
+        // Calculs côté backend au cas où
+        let montantApresRemise = montantInitial - (montantInitial * remise / 100);
+        let montantRestant = montantApresRemise - montantPaye;
+
+        // Mettre à jour la facture
+        const updatedInvoice = await Invoice.findByIdAndUpdate(
+            id,
+            { 
+                montantInitial,
+                remise,
+                montantApresRemise,
+                montantPaye,
+                montantRestant,
+                datePaiementClient,
+                statut
+            },
+            { new: true }
+        );
+
+        if (!updatedInvoice) {
+            return res.status(404).json({ message: "Facture non trouvée" });
+        }
+
+        res.json(updatedInvoice);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
 });
