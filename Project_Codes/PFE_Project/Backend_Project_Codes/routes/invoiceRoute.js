@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {createInvoiceCtrl, getAllInvoicesCtrl} = require('../controllers/invoiceController.js')
+const {createInvoiceCtrl, getAllInvoicesCtrl, deleteOneInvoicesCtrl} = require('../controllers/invoiceController.js')
 
 //Create invoice
 router.route("/create").post(createInvoiceCtrl)
@@ -11,8 +11,8 @@ router.route("/getAll").get(getAllInvoicesCtrl)
 // // get one clients
 // router.route("/getOne/:id").get(getOneClientCtrl)
 
-// // delete one Client 
-// router.route("/deleteOne/:id").delete(deleteOneClientCtrl)
+// delete one Facture 
+router.route("/deleteOne/:id").delete(deleteOneInvoicesCtrl)
 
 
 // // update one Client 

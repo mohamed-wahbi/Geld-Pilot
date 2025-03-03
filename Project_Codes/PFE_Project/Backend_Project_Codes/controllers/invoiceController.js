@@ -56,3 +56,23 @@ module.exports.getAllInvoicesCtrl = asyncHandler(async (req, res) => {
         invoices
     });
 });
+
+
+
+
+/*--------------------------------------------------
+* @desc    Delete one invoice
+* @router  /api/invoice/deleteOneall
+* @methode DELETE
+* @access  only admin
+----------------------------------------------------*/
+module.exports.deleteOneInvoicesCtrl = asyncHandler(async (req, res) => {
+
+    try {
+        await Invoice.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Facture supprimée' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+    
+});
