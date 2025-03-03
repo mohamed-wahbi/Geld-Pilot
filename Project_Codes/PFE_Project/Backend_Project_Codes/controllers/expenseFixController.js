@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const {ExpenseFix, CreateExpenseFixValidation, UpdateExpenseFixValidation} = require ('../models/ExpenseFixModel.js');
+const { ExpenseFix, CreateExpenseFixValidation, UpdateExpenseFixValidation } = require('../models/ExpenseFixModel.js');
 
 
 
@@ -9,20 +9,20 @@ const {ExpenseFix, CreateExpenseFixValidation, UpdateExpenseFixValidation} = req
 * @methode POST
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.createExpenseFixtCtrl = asyncHandler (async (req,res) => {
+module.exports.createExpenseFixtCtrl = asyncHandler(async (req, res) => {
     // Validation
     const { error } = CreateExpenseFixValidation(req.body);
-     if (error) {
+    if (error) {
         return res.status(400).json({ message: error.details[0].message });
     }
 
     // create client 
     const newExpenseFix = await ExpenseFix.create(req.body)
-    if(!newExpenseFix){
-        return res.status(400).json({message: "Expense-Fix not created!"})
+    if (!newExpenseFix) {
+        return res.status(400).json({ message: "Expense-Fix not created!" })
     }
 
-    res.status(201).json({ message: "Expense-Fix created successfully", ExpenseFix});
+    res.status(201).json({ message: "Expense-Fix created successfully", ExpenseFix });
 })
 
 
@@ -32,12 +32,12 @@ module.exports.createExpenseFixtCtrl = asyncHandler (async (req,res) => {
 * @methode GET
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.getAllExpenseFixCtrl = asyncHandler (async (req,res) => {
+module.exports.getAllExpenseFixCtrl = asyncHandler(async (req, res) => {
 
     const expensesFixs = await ExpenseFix.find({});
-    if(expensesFixs.length === 0){
+    if (expensesFixs.length === 0) {
         return res.status(400).json({
-            message:"No Expenses Fixs in the DB !"
+            message: "No Expenses Fixs in the DB !"
         })
     }
 
@@ -54,12 +54,12 @@ module.exports.getAllExpenseFixCtrl = asyncHandler (async (req,res) => {
 * @methode GET
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.getOneExpenseFixCtrl = asyncHandler (async (req,res) => {
+module.exports.getOneExpenseFixCtrl = asyncHandler(async (req, res) => {
 
-    const oneExpenseFix = await ExpenseFix.find({_id:req.params.id});
-    if(!oneExpenseFix){
+    const oneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
+    if (!oneExpenseFix) {
         return res.status(400).json({
-            message:"No Expense-Fix with this id in the DB !"
+            message: "No Expense-Fix with this id in the DB !"
         })
     }
 
@@ -76,23 +76,23 @@ module.exports.getOneExpenseFixCtrl = asyncHandler (async (req,res) => {
 * @methode DELETE
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.deleteOneExpenseFixCtrl = asyncHandler (async (req,res) => {
+module.exports.deleteOneExpenseFixCtrl = asyncHandler(async (req, res) => {
 
-    const OneExpenseFix = await ExpenseFix.find({_id:req.params.id});
-    if(!OneExpenseFix){
+    const OneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
+    if (!OneExpenseFix) {
         return res.status(400).json({
-            message:"No One Expense Fix with this id in the DB !"
+            message: "No One Expense Fix with this id in the DB !"
         })
     }
 
-    const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({_id: req.params.id})
-    if(!deleteOneExpenseFix){
+    const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({ _id: req.params.id })
+    if (!deleteOneExpenseFix) {
         return res.status(400).json({
             message: "One Expense not deleted!"
         })
     }
     res.status(200).json({
-        message:"One Expense Fix is deleted successfully."
+        message: "One Expense Fix is deleted successfully."
     })
 })
 
@@ -106,32 +106,32 @@ module.exports.deleteOneExpenseFixCtrl = asyncHandler (async (req,res) => {
 * @methode PUT
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.updateOneExpenseFixCtrl = asyncHandler (async (req,res) => {
+module.exports.updateOneExpenseFixCtrl = asyncHandler(async (req, res) => {
 
     // Validation
     const { error } = UpdateExpenseFixValidation(req.body);
     if (error) {
-       return res.status(400).json({ message: error.details[0].message });
-   }
+        return res.status(400).json({ message: error.details[0].message });
+    }
 
-   const oneExpenseFix = await ExpenseFix.find({_id:req.params.id});
-   if(!oneExpenseFix){
-       return res.status(400).json({
-           message:"No Expense Fix with this id in the DB !"
-       })
-   }
+    const oneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
+    if (!oneExpenseFix) {
+        return res.status(400).json({
+            message: "No Expense Fix with this id in the DB !"
+        })
+    }
 
 
-   const updatedOneExpenseFix = await ExpenseFix.findByIdAndUpdate(
-       req.params.id,
-       req.body,
-       { new: true, runValidators: true }
-   );
-   
-   res.status(200).json({
-       message: "Client has been updated successfully.",
-    
-   });
+    const updatedOneExpenseFix = await ExpenseFix.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true, runValidators: true }
+    );
 
-   
+    res.status(200).json({
+        message: "Client has been updated successfully.",
+
+    });
+
+
 })
