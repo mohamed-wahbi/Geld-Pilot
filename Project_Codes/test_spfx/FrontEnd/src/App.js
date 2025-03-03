@@ -12,7 +12,7 @@ const App = () => {
         datePaiementEntreprise: "",
         statut: "unpaid"
     });
-    const [editingInvoice, setEditingInvoice] = useState(null); // Stocke la facture en édition
+    const [editingInvoice, setEditingInvoice] = useState(null);
 
     useEffect(() => {
         fetchInvoices();
@@ -41,7 +41,7 @@ const App = () => {
         const { name, value } = e.target;
         setNewInvoice((prev) => ({
             ...prev,
-            [name]: name === "montantInitial" || name === "remise" || name === "montantPaye" ? parseFloat(value) || 0 : value
+            [name]: ["montantInitial", "remise", "montantPaye"].includes(name) ? parseFloat(value) || 0 : value
         }));
     };
 
@@ -52,9 +52,7 @@ const App = () => {
         }
 
         try {
-            const invoiceData = { ...newInvoice };
-
-            await axios.post("http://127.0.0.1:3320/api/invoice/create", invoiceData);
+            await axios.post("http://127.0.0.1:3320/api/invoice/create", newInvoice);
             fetchInvoices();
             setNewInvoice({
                 id_client: "",
@@ -79,16 +77,16 @@ const App = () => {
     };
 
     const handleEditClick = (invoice) => {
-        setEditingInvoice(invoice); // Remplir le formulaire avec la facture sélectionnée
+        setEditingInvoice({ ...invoice });
     };
 
     const handleUpdate = async () => {
         if (!editingInvoice) return;
 
         try {
-            await axios.put(`http://127.0.0.1:3320/api/invoice/update/${editingInvoice._id}`, editingInvoice);
+            await axios.put(`http://127.0.0.1:3320/api/invoice/updateOne/${editingInvoice._id}`, editingInvoice);
             fetchInvoices();
-            setEditingInvoice(null); // Réinitialiser après mise à jour
+            setEditingInvoice(null);
         } catch (error) {
             console.error("Erreur lors de la mise à jour de la facture :", error.response?.data || error.message);
         }

@@ -97,40 +97,44 @@ module.exports.deleteOneInvoicesCtrl = asyncHandler(async (req, res) => {
 ----------------------------------------------------*/
 module.exports.updateOneInvoicesCtrl = asyncHandler(async (req, res) => {
 
-    // Validation
-    const { error } = this.updateOneInvoicesCtrl(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
-
 
     try {
-        const { id } = req.params;
-        const { montantInitial, remise, montantPaye, datePaiementClient, statut } = req.body;
+        
+        const updateData = req.body; // Contient uniquement les champs envoyés
 
-        // Calculs côté backend au cas où
-        let montantApresRemise = montantInitial - (montantInitial * remise / 100);
-        let montantRestant = montantApresRemise - montantPaye;
-
-        // Mettre à jour la facture
-        const updatedInvoice = await Invoice.findByIdAndUpdate(
-            id,
-            { 
-                montantInitial,
-                remise,
-                montantApresRemise,
-                montantPaye,
-                montantRestant,
-                datePaiementClient,
-                statut
-            },
-            { new: true }
-        );
-
-        if (!updatedInvoice) {
+        // Trouver la facture existante
+        const existingInvoice = await Invoice.findById(req.params.id);
+        if (!existingInvoice) {
             return res.status(404).json({ message: "Facture non trouvée" });
         }
 
+        // Mettre à jour uniquement les champs fournis
+        if (updateData.montantInitial !== undefined) {
+            existingInvoice.montantInitial = updateData.montantInitial;
+        }
+        if (updateData.remise !== undefined) {
+            existingInvoice.remise = updateData.remise;
+        }
+        if (updateData.montantPaye !== undefined) {
+            existingInvoice.montantPaye = updateData.montantPaye;
+        }
+        if (updateData.datePaiementClient !== undefined) {
+            existingInvoice.datePaiementClient = updateData.datePaiementClient;
+        }
+        if (updateData.statut !== undefined) {
+            existingInvoice.statut = updateData.statut;
+        }
+
+        // Recalculer les montants si nécessaire
+        existingInvoice.montantApresRemise = existingInvoice.montantInitial - (existingInvoice.montantInitial * existingInvoice.remise / 100);
+        existingInvoice.montantRestant = existingInvoice.montantApresRemise - existingInvoice.montantPaye;
+        existingInvoice.statut = (updateData.montantPaye >= existingInvoice.montantApresRemise)  ? "paid" : "unpaid";
+        existingInvoice.datePaiementClient = existingInvoice.updatedAt
+
+        // Déterminer le statut
+
+        // Sauvegarder les modifications
+        const updatedInvoice = await existingInvoice.save();
         res.json(updatedInvoice);
     } catch (err) {
         res.status(500).json({ error: err.message });
