@@ -11,6 +11,9 @@ const InvoiceSchema = new mongoose.Schema({
     datePaiementEntreprise: { type: Date, required: true },
     datePaiementClient: { type: Date, default: null },
     statut: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' }
+},
+{
+    timestamps: true
 });
 
 // Avant de sauvegarder, recalculer les montants

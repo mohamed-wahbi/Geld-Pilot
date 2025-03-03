@@ -33,3 +33,26 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Server error, invoice not created.", error: err.message });
     }
 });
+
+
+
+
+/*--------------------------------------------------
+* @desc    Get all invoices
+* @router  /api/invoice/get_all
+* @methode GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getAllInvoicesCtrl = asyncHandler(async (req, res) => {
+    const invoices = await Invoice.find({}).populate('id_client');
+
+    if (invoices.length === 0) {
+        return res.status(400).json({
+            message: "No invoices in the DB!"
+        });
+    }
+
+    res.status(200).json({
+        invoices
+    });
+});
