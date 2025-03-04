@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { Invoice, CreateInvoiceValidation } = require ("../models/invoiceModel.js");
+const { Client } = require("../models/clientModel.js");
 
 /*--------------------------------------------------
 * @desc    Create new Invoice
@@ -17,16 +18,21 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
     try {
         const { id_client, montantInitial, remise, montantPaye, datePaiementEntreprise } = req.body;
 
+        const getOneclientById = await Client.findById({_id:id_client})
+        
+
         // Calcul du montant après remise
         const montantApresRemise = montantInitial - (montantInitial * remise / 100);
         const montantRestant = montantApresRemise - montantPaye;
 
         // Déterminer le statut
-        const statut = montantPaye >= montantApresRemise ? "paid" : "unpaid";
+        const statut = montantPaye >= montantApresRemise ? "discharged" : "unpaid";
+
 
     
         // Création de la facture
         const newInvoice = new Invoice({
+            clientName: getOneclientById.name,
             id_client,
             montantInitial,
             remise,
@@ -39,7 +45,7 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
         });
 
         await newInvoice.save();
-        res.status(201).json({ message: "Facture créée avec succès", invoice: newInvoice });
+        res.status(201).json({ message: "Facture créée avec succès", invoice: newInvoice ,clientName: getOneclientById.name});
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la création de la facture", error: error.message });
     }
@@ -130,7 +136,7 @@ module.exports.updateOneInvoicesCtrl = asyncHandler(async (req, res) => {
         // Recalculer les montants si nécessaire
         existingInvoice.montantApresRemise = existingInvoice.montantInitial - (existingInvoice.montantInitial * existingInvoice.remise / 100);
         existingInvoice.montantRestant = existingInvoice.montantApresRemise - existingInvoice.montantPaye;
-        existingInvoice.statut = (updateData.montantPaye >= existingInvoice.montantApresRemise)  ? "paid" : "unpaid";
+        existingInvoice.statut = (updateData.montantPaye >= existingInvoice.montantApresRemise)  ? "discharged" : "unpaid";
         existingInvoice.datePaiementClient = new Date();
 
         

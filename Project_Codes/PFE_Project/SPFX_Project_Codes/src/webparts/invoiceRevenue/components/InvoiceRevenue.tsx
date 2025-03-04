@@ -4,6 +4,7 @@ import styles from "./InvoiceRevenue.module.scss";
 import InvoiceWebPart from './Childs/InvoiceWebPart';
 
 
+
 const NewClientCharge: React.FC = () => {
   // const token = localStorage.getItem("token");
   // const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -23,6 +24,11 @@ const NewClientCharge: React.FC = () => {
   //     }
   //   }, [token, isAdmin]);
 
+
+
+
+
+  
 
   return (
     <div className={styles.DashComp}>
@@ -51,8 +57,8 @@ const NewClientCharge: React.FC = () => {
         </div>
       </div>
       <div className={styles.tableContainer}>
-        {activeTab === 'partners' && "wahbi"}
-        {activeTab === 'create' && <InvoiceWebPart/> }
+        {activeTab === 'partners' && <InvoiceWebPart/> }
+        {activeTab === 'create' && "Revenues" }
       </div>
     </div>
   );

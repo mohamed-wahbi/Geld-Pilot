@@ -3,6 +3,7 @@ const Joi = require('joi');
 
 const InvoiceSchema = new mongoose.Schema({
     id_client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
+    clientName: { type:String, default:""},
     montantInitial: { type: Number, required: true },
     remise: { type: Number, default: null, min: 0, max: 100 }, // En pourcentage
     montantApresRemise: { type: Number, default: null },
@@ -10,7 +11,7 @@ const InvoiceSchema = new mongoose.Schema({
     montantRestant: { type: Number, default: null },
     datePaiementEntreprise: { type: Date, required: true },
     datePaiementClient: { type: Date, default: null },
-    statut: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' }
+    statut: { type: String, enum: ['discharged', 'unpaid'], default: 'unpaid' }
 },
 {
     timestamps: true
@@ -34,7 +35,7 @@ function CreateInvoiceValidation(obj) {
         montantPaye: Joi.number().min(0),
         datePaiementEntreprise: Joi.date().required(),
         datePaiementClient: Joi.date().optional(),
-        statut: Joi.string().valid('paid', 'unpaid').default('unpaid')
+        statut: Joi.string().valid('discharged', 'unpaid').default('unpaid')
     });
     return schema.validate(obj);
 }
@@ -47,7 +48,7 @@ function UpdateInvoiceValidation(obj) {
         montantPaye: Joi.number().min(0),
         datePaiementEntreprise: Joi.date(),
         datePaiementClient: Joi.date().optional(),
-        statut: Joi.string().valid('paid', 'unpaid')
+        statut: Joi.string().valid('discharged', 'unpaid')
     });
     return schema.validate(obj);
 }
