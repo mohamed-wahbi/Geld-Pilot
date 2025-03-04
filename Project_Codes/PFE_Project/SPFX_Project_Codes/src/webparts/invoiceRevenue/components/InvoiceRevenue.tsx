@@ -1,18 +1,60 @@
 import * as React from 'react';
-const AOS = require("aos");
-import "aos/dist/aos.css";
-import Invoice from './Childs/Invoice';
+import { useState } from 'react';
+import styles from "./InvoiceRevenue.module.scss";
+import InvoiceWebPart from './Childs/InvoiceWebPart';
 
-const InvoiceRevenue: React.FC = () => {
-  React.useEffect(() => {
-    AOS.init({ duration: 1500, once: true });
-  }, []);
+
+const NewClientCharge: React.FC = () => {
+  // const token = localStorage.getItem("token");
+  // const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+
+  const [activeTab, setActiveTab] = useState<string>('partners')
+
+  // useEffect(() => {
+  //     if (token != null) {
+  //       setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
+  //       console.log(token)
+  //       if (isAdmin === false) {
+  //         window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+  //       }
+  //     }
+  //     if (token == null) {
+  //       window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+  //     }
+  //   }, [token, isAdmin]);
+
 
   return (
-    <div>
-      <Invoice />
+    <div className={styles.DashComp}>
+      <div className={styles.headerDash}>
+        <div className={styles.titleDash}>
+          <h5 className={styles.titleTextDash}>
+            Invoices And Monthly Revenues Management System
+          </h5>
+          <img 
+            src={require('../assets/logo-removebg-preview.png')} 
+            alt='logo' 
+            className={styles.logoImgDash} 
+          />
+        </div>
+        <div className={styles.navLinks}>
+          <p 
+            className={`${styles.link} ${activeTab === 'partners' ? styles.active : ''}`} 
+            onClick={() => setActiveTab('partners')}>
+            Invoices
+          </p>
+          <p 
+            className={`${styles.link} ${activeTab === 'create' ? styles.active : ''}`} 
+            onClick={() => setActiveTab('create')}>
+            Revenues
+          </p>
+        </div>
+      </div>
+      <div className={styles.tableContainer}>
+        {activeTab === 'partners' && "wahbi"}
+        {activeTab === 'create' && <InvoiceWebPart/> }
+      </div>
     </div>
   );
 };
-
-export default InvoiceRevenue;
+export default NewClientCharge

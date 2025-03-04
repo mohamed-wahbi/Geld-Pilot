@@ -1,25 +1,41 @@
+import * as React from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import styles from '../../components/InvoiceRevenue.module.scss';
 
+interface Invoice {
+  _id: string;
+  id_client: { name: string } | null;
+  montantInitial: number;
+  remise: number;
+  montantApresRemise: number;
+  montantPaye: number;
+  montantRestant: number;
+  datePaiementEntreprise: string;
+  datePaiementClient: string;
+  statut: string;
+}
 
+interface Client {
+  _id: string;
+  name: string;
+}
 
+const InvoiceWebPart: React.FC = () => {
+  const [addInvoicective, setAddInvoicective] = useState(false);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [editingInvoiceId, setEditingInvoiceId] = useState<string | null>(null);
+  const [editedMontantPaye, setEditedMontantPaye] = useState<{ [key: string]: number }>({});
 
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-
-const App = () => {
-  const [addInvoicective, setAddInvoicective] = useState(false)
-  const [invoices, setInvoices] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [editingInvoiceId, setEditingInvoiceId] = useState(null);
-  const [editedMontantPaye, setEditedMontantPaye] = useState({});
   const [newInvoice, setNewInvoice] = useState({
-        id_client: "",
-        montantInitial: null,
-        remise: null,
-        montantPaye: null,
-        datePaiementEntreprise: "",
-        statut: "unpaid",
-      });
-
+    id_client: '',
+    montantInitial: 0,
+    remise: 0,
+    montantPaye: 0,
+    datePaiementEntreprise: '',
+    statut: 'unpaid',
+  });
 
   useEffect(() => {
     fetchInvoices();
@@ -28,98 +44,93 @@ const App = () => {
 
   const fetchInvoices = useCallback(async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:3320/api/invoice/getAll");
+      const res = await axios.get('http://127.0.0.1:3320/api/invoice/getAll');
       setInvoices(res.data.invoices || []);
     } catch (error) {
-      console.error("Erreur lors de la récupération des factures :", error.response?.data || error.message);
+      console.error('Erreur lors de la récupération des factures :', error);
     }
   }, []);
 
   const fetchClients = useCallback(async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:3320/api/client/getAll");
+      const res = await axios.get('http://127.0.0.1:3320/api/client/getAll');
       setClients(res.data.clients || []);
     } catch (error) {
-      console.error("Erreur lors de la récupération des clients :", error.response?.data || error.message);
+      console.error('Erreur lors de la récupération des clients :', error);
     }
   }, []);
 
-    const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setNewInvoice((prev) => ({
       ...prev,
-      [name]: ["montantInitial", "remise", "montantPaye"].includes(name) ? parseFloat(value) || 0 : value,
+      [name]: ['montantInitial', 'remise', 'montantPaye'].includes(name) ? parseFloat(value) || 0 : value,
     }));
   };
 
-    const handleAddInvoice = async () => {
+
+
+  const handleAddInvoice = async () => {
     if (!newInvoice.id_client) {
-      alert("Veuillez sélectionner un client.");
+      alert('Veuillez sélectionner un client.');
       return;
     }
-
     try {
-      await axios.post("http://127.0.0.1:3320/api/invoice/create", newInvoice);
+      await axios.post('http://127.0.0.1:3320/api/invoice/create', newInvoice);
       fetchInvoices();
       setNewInvoice({
-        id_client: "",
-        montantInitial: null,
-        remise: null,
-        montantPaye: null,
-        datePaiementEntreprise: "",
-        statut: "unpaid",
+        id_client: '',
+        montantInitial: 0,
+        remise: 0,
+        montantPaye: 0,
+        datePaiementEntreprise: '',
+        statut: 'unpaid',
       });
-      setAddInvoicective(false)
+      setAddInvoicective(false);
     } catch (error) {
-      console.error("Erreur lors de l'ajout de la facture :", error.response?.data || error.message);
+      console.error("Erreur lors de l'ajout de la facture :", error);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     try {
       await axios.delete(`http://127.0.0.1:3320/api/invoice/deleteOne/${id}`);
       fetchInvoices();
     } catch (error) {
-      console.error("Erreur lors de la suppression de la facture :", error.response?.data || error.message);
+      console.error('Erreur lors de la suppression de la facture :', error);
     }
   };
 
-
-
-  const handleEditClick = (invoice) => {
+  const handleEditClick = (invoice: Invoice) => {
     setEditingInvoiceId(invoice._id);
-    setEditedMontantPaye((prev) => ({
-      ...prev,
+    setEditedMontantPaye({
+      ...editedMontantPaye,
       [invoice._id]: invoice.montantPaye,
-    }));
+    });
   };
 
-  const handleMontantChange = (e, id) => {
-    setEditedMontantPaye((prev) => ({
-      ...prev,
+  const handleMontantChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    setEditedMontantPaye({
+      ...editedMontantPaye,
       [id]: parseFloat(e.target.value) || 0,
-    }));
+    });
   };
 
-  const handleUpdate = async (id) => {
+  const handleUpdate = async (id: string) => {
     const updatedMontantPaye = editedMontantPaye[id];
-
     try {
       const updatedInvoice = invoices.find((inv) => inv._id === id);
       if (!updatedInvoice) return;
-
-      const updatedData = { montantPaye: updatedMontantPaye };
-
+      const updatedData: Partial<Invoice> = { montantPaye: updatedMontantPaye };
       if (updatedMontantPaye >= updatedInvoice.montantApresRemise) {
         updatedData.datePaiementClient = new Date().toISOString();
         updatedData.statut = "paid";
       }
-
       await axios.put(`http://127.0.0.1:3320/api/invoice/updateOne/${id}`, updatedData);
       fetchInvoices();
       setEditingInvoiceId(null);
     } catch (error) {
-      console.error("Erreur lors de la mise à jour de la facture :", error.response?.data || error.message);
+      console.error("Erreur lors de la mise à jour de la facture :", error);
     }
   };
 
@@ -127,18 +138,18 @@ const App = () => {
     setEditingInvoiceId(null);
   };
 
-  const formatDateTime = (dateString) => {
+  const formatDateTime = (dateString: string | null) => {
     if (!dateString) return "Non payé";
     const date = new Date(dateString);
-    return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()} ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+    return date.toLocaleString('fr-FR');
   };
 
   return (
-    <div>
+    <div className={styles.invoice}>
       <h2>Gestion des Factures</h2>
       <button onClick={() => setAddInvoicective(!addInvoicective)}>Ajouter</button>
 
-      <table border="1">
+      <table>
         <thead>
           <tr>
             <th>Client</th>
@@ -154,7 +165,6 @@ const App = () => {
           </tr>
         </thead>
         <tbody>
-
           {/* pour lajout de nouveau invoice: */}
           {addInvoicective ?
             <tr>
@@ -190,8 +200,6 @@ const App = () => {
             : null
           }
 
-
-
           {invoices.map((invoice) => (
             <tr key={invoice._id}>
               <td>{invoice.id_client?.name || "Inconnu"}</td>
@@ -221,10 +229,14 @@ const App = () => {
                   </>
                 ) : (
                   <>
-                    <button onClick={() => handleEditClick(invoice)}>Modifier</button>
-                    <button onClick={() => handleDelete(invoice._id)}>Supprimer</button>
-                  </>
+                    {invoice.statut === "paid" ? null :
+                      <>
+                        <button onClick={() => handleDelete(invoice._id)}>Supprimer</button>
+                        <button onClick={() => handleEditClick(invoice)}>Modifier</button>
+                      </>
+                    }
 
+                  </>
                 )}
               </td>
             </tr>
@@ -232,9 +244,8 @@ const App = () => {
         </tbody>
       </table>
     </div>
+
   );
 };
 
-export default App;
-
-
+export default InvoiceWebPart;
