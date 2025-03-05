@@ -21,7 +21,36 @@ const App = () => {
 
   return (
     <div>
-      
+      <div>
+        <table border={2}>
+        <thead>
+            <tr>
+              <th>Annee</th>
+              <th>Mois</th>
+              <th>Client</th>
+              <th>nombre Factures Payees</th>
+              <th>montant Total Paye</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              {
+                revenues.map((revenue)=>{
+                  return(
+                  <tr>
+                    <td> {revenue.annee} </td>
+                    <td> {revenue.mois} </td>
+                    <td> {revenue.nomClient} </td>
+                    <td> {revenue.nombreFacturesPayees} </td>
+                    <td> {revenue.montantTotalPaye} </td>
+                  </tr>
+                  )
+                })
+              }
+            
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
