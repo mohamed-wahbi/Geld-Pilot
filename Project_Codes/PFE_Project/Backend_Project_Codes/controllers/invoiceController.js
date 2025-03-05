@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const { Invoice, CreateInvoiceValidation } = require ("../models/invoiceModel.js");
 const { Client } = require("../models/clientModel.js");
+const { generateMonthlyRevenue } = require('../models/RevenueModel.js');
+
 
 /*--------------------------------------------------
 * @desc    Create new Invoice
@@ -45,7 +47,8 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
         });
 
         await newInvoice.save();
-        res.status(201).json({ message: "Facture créée avec succès", invoice: newInvoice ,clientName: getOneclientById.name});
+        await generateMonthlyRevenue(2024,"04");
+        res.status(201).json({ message1: "Facture créée avec succès", message2: "Revenue generated successfully"});
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la création de la facture", error: error.message });
     }
@@ -143,6 +146,7 @@ module.exports.updateOneInvoicesCtrl = asyncHandler(async (req, res) => {
 
         // Sauvegarder les modifications
         const updatedInvoice = await existingInvoice.save();
+        await generateMonthlyRevenue();
         res.json(updatedInvoice);
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -16,7 +16,7 @@ module.exports.getRevenuesCtrl = asyncHandler(async(req,res)=> {
         })
     }
     res.status(200).json({
-        message : "revenues featched !"
+        revenues
     })
 })
 

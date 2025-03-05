@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import styles from "./InvoiceRevenue.module.scss";
 import InvoiceWebPart from './Childs/InvoiceWebPart';
+import RevenueWebPart from './Childs/RevenueWebPart';
 
 
 
@@ -58,7 +59,7 @@ const NewClientCharge: React.FC = () => {
       </div>
       <div className={styles.tableContainer}>
         {activeTab === 'partners' && <InvoiceWebPart/> }
-        {activeTab === 'create' && "Revenues" }
+        {activeTab === 'create' && <RevenueWebPart /> }
       </div>
     </div>
   );
