@@ -5,6 +5,8 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 const AOS = require("aos");
 import "aos/dist/aos.css";
 import axios from 'axios';
+const { VocaFlexMWSTn } = require('vecoflextnmws')
+
 
 
 
@@ -21,55 +23,69 @@ interface Revenue {
 }
 
 const RevenueWebPart: React.FC = () => {
-    const [revenues, setRevenues] = useState<Revenue[]>([]);
-    const [generatRevenueTab, setGeneratRevenueTab] = useState(false);
-    const [annee,setAnnee] = useState("")
-    const [mois,setMois] = useState("")
-      
-    // Featching Data 
-    useEffect(()=> {
-      FeatchingRevenues()
-    },[])
+  const [revenues, setRevenues] = useState<Revenue[]>([]);
+  const [generatRevenueTab, setGeneratRevenueTab] = useState(false);
+  const [annee, setAnnee] = useState("")
+  const [mois, setMois] = useState("")
+
+  // Featching Data 
+  useEffect(() => {
+    FeatchingRevenues()
+  }, [])
+
+  // -----------------------Filter System--------------------------------
+  const [allFiltredDatas, setAllFiltredDatas] = useState<Revenue[]>([])
+  const [oneFiltredData, setOneFiltredData] = useState<Revenue | null>(null)
+
+  console.log(allFiltredDatas);// liste des données filtre
+
+  console.log(oneFiltredData)// un ligne de la liste des données filtré
 
 
-    // -------------------------Featching Revenue--------------------------------
-        const FeatchingRevenues =async ()=> {
-          try {
-            const revenuesData = await axios.get ("http://127.0.0.1:3320/api/revenue/getAll")
-            console.log(revenuesData.data);
-            setRevenues(revenuesData.data.revenues)
-          } catch (error) {
-            console.log ("Error Featching Revenues from DB !")
-          }
-        }
-    // ___________________________________________________________________________
+  const getAllFiltredDatas = (data: Revenue[]) => { setAllFiltredDatas(data) }
+  const getOneFiltredData = (data: Revenue) => { setOneFiltredData(data) }
+  // ___________________________________________________________________
 
 
 
-    // ------------------------------generatedRevenue Function---------------------------------
-    const generatedRevenue = async (annee:string, mois:string) => {
-      try {
-        setAnnee(annee);
-        setMois(mois);
-        await axios.post (`http://127.0.0.1:3320/api/revenue/generate/${annee}/${mois}`)
-        notify("Revenues Generated successfuly. ✅")
-        FeatchingRevenues()
-        setAnnee("");
-        setMois("");
-        setGeneratRevenueTab(false)
-      } catch (error) {
-        setAnnee("");
-        setMois("");
-        notify("Please choose an existing year and month ⛔")
-        notify("year and month format: YYYY-MM 😉")
-
-      }
+  // -------------------------Featching Revenue--------------------------------
+  const FeatchingRevenues = async () => {
+    try {
+      const revenuesData = await axios.get("http://127.0.0.1:3320/api/revenue/getAll")
+      console.log(revenuesData.data);
+      setRevenues(revenuesData.data.revenues)
+    } catch (error) {
+      console.log("Error Featching Revenues from DB !")
     }
+  }
+  // ___________________________________________________________________________
 
-    // ___________________________________________________________________________________________
 
 
-     // ----------------------------------Notif Alert---------------------------------
+  // ------------------------------generatedRevenue Function---------------------------------
+  const generatedRevenue = async (annee: string, mois: string) => {
+    try {
+      setAnnee(annee);
+      setMois(mois);
+      await axios.post(`http://127.0.0.1:3320/api/revenue/generate/${annee}/${mois}`)
+      notify("Revenues Generated successfuly. ✅")
+      FeatchingRevenues()
+      setAnnee("");
+      setMois("");
+      setGeneratRevenueTab(false)
+    } catch (error) {
+      setAnnee("");
+      setMois("");
+      notify("Please choose an existing year and month ⛔")
+      notify("year and month format: YYYY-MM 😉")
+
+    }
+  }
+
+  // ___________________________________________________________________________________________
+
+
+  // ----------------------------------Notif Alert---------------------------------
   const notify = (text: string) => toast(text, {
     position: "bottom-right",
     autoClose: 5000,
@@ -91,32 +107,56 @@ const RevenueWebPart: React.FC = () => {
   return (
     <div className={styles.tableContainer}>
       <ToastContainer />
-      <div className={styles.generateRevenue}>
-        <p>Generat Revenue</p>
-        <button onClick={()=>{
-          setGeneratRevenueTab(!generatRevenueTab);
-          setAnnee("");
-          setMois("")
-          }} >{generatRevenueTab ? "❌" :"🆕" } </button>
-      </div>
-      {
-          generatRevenueTab?
-          <div className={styles.GenerateForm} >
-          <div className={styles.inputGenerateForm}>
-            <label>Year</label>
-            <input placeholder='2025' value={annee} onChange={(e)=>setAnnee(e.target.value)} required/>
-          </div>
-          
-          <div className={styles.inputGenerateForm}>
-            <label>Month</label>
-            <input placeholder='01 - 12' value={mois} onChange={(e)=>setMois(e.target.value)} required/>
-          </div>
-          <div className={styles.btnContent}>
-            <button style={{border:"none"}} onClick={()=>generatedRevenue(annee, mois)}>➕</button>
-          </div>
+
+      <div className={styles.HeaderTabelCtrl}>
+
+        <div className={styles.searchInput}>
+          <VocaFlexMWSTn
+            data={revenues}
+            keys={["annee", "mois", "nomClient"]}
+            lang={"en-US"}
+            threshold={"0.4"}
+            allFiltredDatas={getAllFiltredDatas}
+            oneFiltredData={getOneFiltredData}
+            titre={"nomClient"}
+            description={""}
+          />
         </div>
-        : null
-        }
+
+        <div className={styles.generateRevenue}>
+          <div className={styles.Top}>
+            <p>Generat Revenue</p>
+            <button onClick={() => {
+              setGeneratRevenueTab(!generatRevenueTab);
+              setAnnee("");
+              setMois("")
+            }} >{generatRevenueTab ? "❌" : "🆕"} </button>
+          </div>
+
+          {
+            generatRevenueTab ?
+              <div className={styles.GenerateForm} >
+                <div className={styles.inputGenerateForm}>
+                  <label>Year</label>
+                  <input placeholder='2025' value={annee} onChange={(e) => setAnnee(e.target.value)} required />
+                </div>
+
+                <div className={styles.inputGenerateForm}>
+                  <label>Month</label>
+                  <input placeholder='01 - 12' value={mois} onChange={(e) => setMois(e.target.value)} required />
+                </div>
+                <div className={styles.btnContent}>
+                  <button style={{ border: "none" }} onClick={() => generatedRevenue(annee, mois)}>➕</button>
+                </div>
+              </div>
+              : null
+          }
+        </div>
+
+      </div>
+
+
+
       <div className={styles.TableContent} >
         <table className={styles.table}>
           <thead>
@@ -128,12 +168,12 @@ const RevenueWebPart: React.FC = () => {
           </thead>
           <tbody>
             {
-              revenues.map((revenue)=> {
-                return(
+              (allFiltredDatas.length > 0 ? allFiltredDatas : revenues).map((revenue) => {
+                return (
                   <tr key={revenue._id}>
                     <td>🗓️ {revenue.annee} </td>
                     <td>📆 {revenue.mois} </td>
-                    <td style={{fontWeight: "500"}}>🕴️ {revenue.nomClient} </td>
+                    <td style={{ fontWeight: "500" }}>🕴️ {revenue.nomClient} </td>
                     <td>✍️ {revenue.nombreFacturesPayees} </td>
                     <td>💷 {revenue.montantTotalPaye}</td>
                   </tr>
