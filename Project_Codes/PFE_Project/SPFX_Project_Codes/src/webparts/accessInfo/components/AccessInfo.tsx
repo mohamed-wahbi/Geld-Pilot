@@ -44,7 +44,7 @@ const AccessInfo: React.FC = () => {
 
       </div>
       <button className={styles.homebtn}
-        onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Home.aspx"}}
+        onClick={()=>{window.location.href= "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Home.aspx"}}
       > 🏠 Go Home</button>
     </div>
   );

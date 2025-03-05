@@ -21,11 +21,11 @@ const Authorization: React.FC<IAuthorizationProps> = () => {
       setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
       console.log(token)
       if (isAdmin === false) {
-        window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+        window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
       }
     }
     if (token == null) {
-      window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+      window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
     }
   }, [token, isAdmin]);
 

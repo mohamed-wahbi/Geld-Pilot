@@ -55,7 +55,7 @@ const Login: React.FC = () => {
       } );
       console.log("Login successful:", response.data);
       localStorage.setItem("token", response.data.token);
-      window.location.href="https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Admin_Auth.aspx"
+      window.location.href="https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Admin_Auth.aspx"
     } catch (error: any) {
       console.error("Login error:", error.response?.data || error.message);
       setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
@@ -66,7 +66,7 @@ const Login: React.FC = () => {
     <div className={styles.authComp}>
       <div className={styles.backRight}>
         
-        <div className={styles.miroir} onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/home.aspx"}}></div>
+        <div className={styles.miroir} onClick={()=>{window.location.href= "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Home.aspx"}}></div>
         
         <img src={require("../assets/Tablet login-amico.png")} alt="logo" width={80} className={styles.personLogo} />
       </div>
@@ -108,7 +108,7 @@ const Login: React.FC = () => {
 
           <div>
             <ReCAPTCHA
-              sitekey="6LeGL90qAAAAAGGG1leCj3bWsUevD0256Nil5WFG"
+              sitekey="6LevVOoqAAAAAL_U7bwwn2acjEIjZ6ywGJF8mFKD"
               onChange={handleReCAPTCHAChange}
               onExpired={handleReCAPTCHAExpired}  // Ajout de cette fonction pour détecter l'expiration
             />
@@ -120,7 +120,7 @@ const Login: React.FC = () => {
 
         <p style={{ textAlign: "center", fontSize: "15px" }}>
           New in our platform? <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }}
-          onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Register.aspx"}}   
+          onClick={()=>{window.location.href= "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Register.aspx"}}   
           >Create an account</span>
         </p>
 

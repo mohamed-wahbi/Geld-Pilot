@@ -26,7 +26,7 @@ const Welcome: React.FC = () => {
             <p className={styles.paragraph} data-aos="fade-up">
                 Thanks to its advanced features, it ensures <span style={{color:"#e4bc9c"}}>precise tracking</span> of <span style={{color:"#89a4c1"}}>transactions</span>, <span style={{color:"#e4bc9c"}}>better budget </span> <span style={{color:"#89a4c1"}}>planning</span>, and <span style={{color:"#e4bc9c"}}>in-depth real-time </span><span style={{color:"#89a4c1"}}>financial analysis</span>             </p>
             <button className={styles.getStartedButton} data-aos="flip-left"
-                onClick={() => window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"}
+                onClick={() => window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"}
             >
               Get Started
             </button>

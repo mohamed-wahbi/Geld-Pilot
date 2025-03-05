@@ -81,7 +81,7 @@ const Register: React.FC = () => {
 
       // Redirect after 2 seconds
       setTimeout(() => {
-        window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"; // Change "/login" according to your route
+        window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"; // Change "/login" according to your route
       }, 2000);
 
     } catch (error) {
@@ -92,7 +92,7 @@ const Register: React.FC = () => {
   return (
     <div className={styles.authComp}>
       <div className={styles.backRight}>
-        <div className={styles.miroir} onClick={()=>{window.location.href= "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/home.aspx"}}></div>
+        <div className={styles.miroir} onClick={()=>{window.location.href= "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Home.aspx"}}></div>
         <img src={require("../assets/Tablet login-amico.png")} alt="logo" width={80} className={styles.personLogo} />
       </div>
 
@@ -109,7 +109,7 @@ const Register: React.FC = () => {
           <p>Create an account and start your financial journey.</p>
         </div>
 
-        <div className={styles.infoAccess} onClick={()=>{window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Access_Infos.aspx"}}>
+        <div className={styles.infoAccess} onClick={()=>{window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Access_Infos.aspx"}}>
           <p>Important to read before registration! 🤚</p>
         </div>
 
@@ -140,7 +140,7 @@ const Register: React.FC = () => {
           </div>
 
           <div>
-            <ReCAPTCHA sitekey="6LeGL90qAAAAAGGG1leCj3bWsUevD0256Nil5WFG"
+            <ReCAPTCHA sitekey="6LevVOoqAAAAAL_U7bwwn2acjEIjZ6ywGJF8mFKD"
               onExpired={handleReCAPTCHAExpired}  // Ajout de cette fonction pour détecter l'expiration
               onChange={handleReCAPTCHAChange} />
           </div>
@@ -153,7 +153,7 @@ const Register: React.FC = () => {
 
         <p style={{ textAlign: "center", fontSize: "15px" }}>
           Already have an account? <span style={{ color: "#62b0d3", fontWeight: "bold", cursor: "pointer" }}
-          onClick={() => window.location.href = "https://alightconsulting.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"}
+          onClick={() => window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx"}
           >Sign in</span>
         </p>
 
