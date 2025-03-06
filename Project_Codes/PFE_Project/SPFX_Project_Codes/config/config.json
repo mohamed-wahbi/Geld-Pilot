@@ -89,6 +89,14 @@
           "manifest": "./src/webparts/invoiceRevenue/InvoiceRevenueWebPart.manifest.json"
         }
       ]
+    },
+    "historys-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/historys/HistorysWebPart.js",
+          "manifest": "./src/webparts/historys/HistorysWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -103,6 +111,7 @@
     "AuthorizationWebPartStrings": "lib/webparts/authorization/loc/{locale}.js",
     "IaSupportWebPartStrings": "lib/webparts/iaSupport/loc/{locale}.js",
     "NewClientChargeWebPartStrings": "lib/webparts/newClientCharge/loc/{locale}.js",
-    "InvoiceRevenueWebPartStrings": "lib/webparts/invoiceRevenue/loc/{locale}.js"
+    "InvoiceRevenueWebPartStrings": "lib/webparts/invoiceRevenue/loc/{locale}.js",
+    "HistorysWebPartStrings": "lib/webparts/historys/loc/{locale}.js"
   }
 }
