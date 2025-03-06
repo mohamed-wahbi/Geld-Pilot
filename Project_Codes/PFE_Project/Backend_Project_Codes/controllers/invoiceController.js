@@ -19,8 +19,7 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
     try {
         const { id_client, montantInitial, remise, montantPaye, datePaiementEntreprise } = req.body;
 
-        const getOneclientById = await Client.findById({_id:id_client})
-        
+        const getOneclientById = await Client.findById({ _id: id_client });
 
         // Calcul du montant après remise
         const montantApresRemise = montantInitial - (montantInitial * remise / 100);
@@ -28,9 +27,16 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
 
         // Déterminer le statut
         const statut = montantPaye >= montantApresRemise ? "discharged" : "unpaid";
+        
+        // Déterminer la date de paiement client
+        const datePaiementClient = montantPaye > 0 ? new Date() : null;
 
+        // Déterminer le commentaire de paiement
+        let commentairePaiement = null;
+        if (datePaiementClient) {
+            commentairePaiement = datePaiementClient <= datePaiementEntreprise ? "excellent" : "retard";
+        }
 
-    
         // Création de la facture
         const newInvoice = new Invoice({
             clientName: getOneclientById.name,
@@ -39,18 +45,20 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
             remise,
             montantPaye,
             datePaiementEntreprise,
-            datePaiementClient:montantPaye>0?new Date():null,
+            datePaiementClient,
             montantApresRemise,
             montantRestant,
-            statut // Stocker le statut mis à jour
+            statut,
+            commentairePaiement // Ajout du commentaire
         });
 
         await newInvoice.save();
-        res.status(201).json({ message1: "Facture créée avec succès", message2: "Revenue generated successfully"});
+        res.status(201).json({ message: "Facture créée avec succès", invoice: newInvoice });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la création de la facture", error: error.message });
     }
 });
+
 
 
 
