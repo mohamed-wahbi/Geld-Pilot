@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const InvoiceSchema = new mongoose.Schema({
     id_client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
-    clientName: { type:String, default:""},
+    clientName: { type: String, default: "" },
     montantInitial: { type: Number, required: true },
     remise: { type: Number, default: null, min: 0, max: 100 }, // En pourcentage
     montantApresRemise: { type: Number, default: null },
@@ -11,16 +11,22 @@ const InvoiceSchema = new mongoose.Schema({
     montantRestant: { type: Number, default: null },
     datePaiementEntreprise: { type: Date, required: true },
     datePaiementClient: { type: Date, default: null },
-    statut: { type: String, enum: ['discharged', 'unpaid'], default: 'unpaid' }
+    statut: { type: String, enum: ['discharged', 'unpaid'], default: 'unpaid' },
+    commentairePaiement: { type: String, enum: ['excellent', 'retard'], default: null } // Nouveau champ
 },
-{
-    timestamps: true
-});
+    { timestamps: true }
+);
 
-// Avant de sauvegarder, recalculer les montants
+// Middleware pour calculer les valeurs avant de sauvegarder
 InvoiceSchema.pre('save', function (next) {
     this.montantApresRemise = this.montantInitial - (this.montantInitial * (this.remise / 100));
     this.montantRestant = this.montantApresRemise - this.montantPaye;
+
+    // Déterminer le commentaire de paiement
+    if (this.datePaiementClient) {
+        this.commentairePaiement = this.datePaiementClient <= this.datePaiementEntreprise ? "excellent" : "retard";
+    }
+
     next();
 });
 
@@ -35,7 +41,7 @@ function CreateInvoiceValidation(obj) {
         montantPaye: Joi.number().min(0),
         datePaiementEntreprise: Joi.date().required(),
         datePaiementClient: Joi.date().optional(),
-        statut: Joi.string().valid('discharged', 'unpaid').default('unpaid')
+        statut: Joi.string().valid('discharged', 'unpaid').default('unpaid'),
     });
     return schema.validate(obj);
 }
@@ -48,7 +54,7 @@ function UpdateInvoiceValidation(obj) {
         montantPaye: Joi.number().min(0),
         datePaiementEntreprise: Joi.date(),
         datePaiementClient: Joi.date().optional(),
-        statut: Joi.string().valid('discharged', 'unpaid')
+        statut: Joi.string().valid('discharged', 'unpaid'),
     });
     return schema.validate(obj);
 }
