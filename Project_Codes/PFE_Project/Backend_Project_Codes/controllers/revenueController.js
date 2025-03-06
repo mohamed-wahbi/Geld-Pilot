@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const {Revenue} =  require ("../models/RevenueModel");
 const { Invoice } = require("../models/invoiceModel");
+const { InvoiceHistory } = require("../models/invoiceHistoryModel");
 
 /*--------------------------------------------------
 * @desc    Get All revenues
@@ -28,9 +29,8 @@ module.exports.getRevenuesCtrl = asyncHandler(async(req,res)=> {
 * @methode POST
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.generateRevCtrl = asyncHandler(async(req,res) => {
-
-    const {annee, mois} = req.params
+module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
+    const { annee, mois } = req.params;
 
     try {
         const startDate = new Date(`${annee}-${mois}-01T00:00:00.000Z`);
@@ -42,12 +42,34 @@ module.exports.generateRevCtrl = asyncHandler(async(req,res) => {
             datePaiementEntreprise: { $gte: startDate, $lt: endDate }
         });
 
+        if (invoices.length === 0) {
+            return res.status(400).json({ message: "No paid invoices found for this period!" });
+        }
+
+        // Stocker les factures dans InvoiceHistory
+        const invoicesHistory = invoices.map(invoice => ({
+            id_invoice: invoice._id,
+            id_client: invoice.id_client,
+            clientName: invoice.clientName,
+            montantInitial: invoice.montantInitial,
+            remise: invoice.remise,
+            montantApresRemise: invoice.montantApresRemise,
+            montantPaye: invoice.montantPaye,
+            datePaiementEntreprise: invoice.datePaiementEntreprise,
+            datePaiementClient: invoice.datePaiementClient,
+            commentairePaiement: invoice.commentairePaiement,
+            statut: invoice.statut,
+        }));
+
+        await InvoiceHistory.insertMany(invoicesHistory);
+
+        // Générer les revenus mensuels
         const groupedData = invoices.reduce((acc, invoice) => {
             const key = `${annee}-${mois}-${invoice.id_client}`;
 
             if (!acc[key]) {
                 acc[key] = {
-                    annee:`${annee}`,
+                    annee: `${annee}`,
                     mois: `${mois}`,
                     id_client: invoice.id_client,
                     nomClient: invoice.clientName,
@@ -64,15 +86,17 @@ module.exports.generateRevCtrl = asyncHandler(async(req,res) => {
 
         const revenues = Object.values(groupedData);
         await Revenue.insertMany(revenues);
+
+        // Supprimer les factures archivées du modèle Invoice
+        await Invoice.deleteMany({ statut: 'discharged', datePaiementEntreprise: { $gte: startDate, $lt: endDate } });
+
         res.status(200).json({
-            message: "Revenue Generated successfuly .",
+            message: "Revenue generated and invoices archived successfully.",
             annee,
             mois
-        })
+        });
     } catch (err) {
         console.error("Erreur lors de la génération des revenus mensuels", err);
+        res.status(500).json({ message: "Erreur serveur" });
     }
-
-   
-
-})
+});
