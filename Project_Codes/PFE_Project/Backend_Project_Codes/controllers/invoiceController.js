@@ -37,6 +37,8 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
             commentairePaiement = datePaiementClient <= datePaiementEntreprise ? "excellent" : "retard";
         }
 
+
+
         // Création de la facture
         const newInvoice = new Invoice({
             clientName: getOneclientById.name,

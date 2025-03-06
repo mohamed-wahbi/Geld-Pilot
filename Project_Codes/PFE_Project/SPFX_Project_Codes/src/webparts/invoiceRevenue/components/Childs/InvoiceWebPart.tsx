@@ -18,6 +18,7 @@ interface Invoice {
   montantRestant: number;
   datePaiementEntreprise: string;
   datePaiementClient: string;
+  commentairePaiement: string,
   statut: string;
 }
 
@@ -233,6 +234,7 @@ const InvoiceWebPart: React.FC = () => {
               <th>Remaining Amount</th>
               <th>Company Payment Date</th>
               <th>Client Last Payment Date</th>
+              <th>Payment Comment</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -266,6 +268,7 @@ const InvoiceWebPart: React.FC = () => {
                 </td>
                 <td>Auto Generated</td>
                 <td>Auto Generated</td>
+                <td>Auto Generated</td>
                 <td className={styles.CreateRowStyle}>
                   <button style={{ border: "none", cursor: "pointer", background: "transparent" }} onClick={handleAddInvoice}>💾</button>
                   <button style={{ border: "none", cursor: "pointer", background: "transparent" }} onClick={() => setAddInvoicective(false)}>❌</button>
@@ -276,13 +279,16 @@ const InvoiceWebPart: React.FC = () => {
 
             {(allFiltredDatas.length != 0 ? allFiltredDatas : invoices).map((invoice) => (
               <tr key={invoice._id}>
-                <td className={styles.ctrlCl}>
-                  <span>⚙️</span>
-                  <div className={styles.ctrlBtn}>
-                    <MdDeleteOutline className={styles.deleteLogo} onClick={() => handleDelete(invoice._id)} />
-                    <HiOutlineWrench className={styles.updateLogo} onClick={() => handleEditClick(invoice)} />
-                  </div>
-                </td>
+                {invoice.statut === "discharged" ?<td className={styles.ctrlCl}><p>✅</p></td> :
+                  <td className={styles.ctrlCl}>
+                    <span>⚙️</span>
+                    <div className={styles.ctrlBtn}>
+                      <MdDeleteOutline className={styles.deleteLogo} onClick={() => handleDelete(invoice._id)} />
+                      <HiOutlineWrench className={styles.updateLogo} onClick={() => handleEditClick(invoice)} />
+                    </div>
+                  </td>
+                } 
+
                 <td>{invoice.id_client?.name || "Inconnu"}</td>
                 <td>{invoice.montantInitial.toFixed(2)} DNT</td>
                 <td>{invoice.remise} %</td>
@@ -302,6 +308,7 @@ const InvoiceWebPart: React.FC = () => {
                 <td>{invoice.montantRestant?.toFixed(2)} DNT</td>
                 <td>{formatDateTime(invoice.datePaiementEntreprise)}</td>
                 <td>{formatDateTime(invoice.datePaiementClient)}</td>
+                <td>{invoice.commentairePaiement ? invoice.commentairePaiement : "No Payment Yet"}</td>
                 <td>{invoice.statut}</td>
 
                 {editingInvoiceId === invoice._id ? (

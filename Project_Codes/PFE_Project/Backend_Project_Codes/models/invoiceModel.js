@@ -27,6 +27,10 @@ InvoiceSchema.pre('save', function (next) {
         this.commentairePaiement = this.datePaiementClient <= this.datePaiementEntreprise ? "excellent" : "retard";
     }
 
+    if (this.datePaiementEntreprise < new Date()) {
+        this.commentairePaiement = "retard"
+    }
+
     next();
 });
 
