@@ -11,6 +11,7 @@ const clientRoutes = require('./routes/clientRoute.js');
 const expenseFixRoutes = require('./routes/expenseFixRoute.js');
 const invoiceRoutes = require('./routes/invoiceRoute.js');
 const revenueRoutes = require('./routes/revenueRoute.js');
+const invoiceHistoryRoutes = require('./routes/invoiceHistoryRoute.js');
 
 
 
@@ -28,6 +29,7 @@ app.use('/api/client',clientRoutes);
 app.use('/api/expense-fix',expenseFixRoutes);
 app.use('/api/invoice',invoiceRoutes);
 app.use('/api/revenue',revenueRoutes); 
+app.use('/api/invoice-history',invoiceHistoryRoutes); 
 
 
 

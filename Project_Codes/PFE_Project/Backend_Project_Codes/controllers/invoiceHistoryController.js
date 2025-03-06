@@ -10,7 +10,7 @@ const {InvoiceHistory} = require('../models/invoiceHistoryModel')
 ----------------------------------------------------*/
 module.exports.getAllInvoiceHistory = asyncHandler(async(req,res)=> {
 
-    const invoiceHistoryData = await InvoiceHistory.find({});
+    const invoiceHistoryData = await InvoiceHistory.find();
     if(invoiceHistoryData.length === 0) {
         return res.status(400).json({
             message: "No Invoice History in the DB!"
