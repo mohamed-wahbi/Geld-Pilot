@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import styles from '../../components/InvoiceRevenue.module.scss';
+import styles from '../../InvoiceRevenue.module.scss';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const { VocaFlexMWSTn } = require('vecoflextnmws')
 import { MdDeleteOutline } from "react-icons/md";
 import { HiOutlineWrench } from "react-icons/hi2";
+import CurrencyExchange from './currencyExchange';
 
 interface Invoice {
   _id: string;
-  id_client: { name: string } | null;
+  id_client: {_id: string, name: string, currency: string; } | null;
   montantInitial: number;
   remise: number;
   montantApresRemise: number;
@@ -25,9 +26,11 @@ interface Invoice {
 interface Client {
   _id: string;
   name: string;
+  currency: string;
 }
 
 const InvoiceWebPart: React.FC = () => {
+  const [currencyTab,setCurrencyTab] = useState (false)
   const [addInvoicective, setAddInvoicective] = useState(false);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
@@ -216,10 +219,13 @@ const InvoiceWebPart: React.FC = () => {
         </div>
 
         <div className={styles.ctrlTabBtns}>
+          <button onClick={()=>setCurrencyTab(!currencyTab)}>💱</button>
           <button onClick={() => setAddInvoicective(!addInvoicective)}>🆕</button>
           <button onClick={reloadClientsDatas}>🔄️</button>
+          
         </div>
       </div>
+      {currencyTab? <CurrencyExchange/> : null}
 
       <div className={styles.TableContent}>
         <table className={styles.table}>
@@ -227,6 +233,7 @@ const InvoiceWebPart: React.FC = () => {
             <tr>
               <th>Controls</th>
               <th>Client</th>
+              <th>Used Currencies</th>
               <th>Initial Amount</th>
               <th>Discount (%)</th>
               <th>Amount After Discount</th>
@@ -253,6 +260,7 @@ const InvoiceWebPart: React.FC = () => {
                   ))}
                 </select>
                 </td>
+                <td>Auto Generated</td>
                 <td><input className={styles.CreateInput} type="number" name="montantInitial" placeholder="Montant Initial (€)" onChange={handleChange} value={newInvoice.montantInitial} />
                 </td>
                 <td>
@@ -290,6 +298,8 @@ const InvoiceWebPart: React.FC = () => {
                 } 
 
                 <td>{invoice.id_client?.name || "Inconnu"}</td>
+                <td>{invoice.id_client?.currency || "Inconnu"}</td>
+                
                 <td>{invoice.montantInitial.toFixed(2)} DNT</td>
                 <td>{invoice.remise} %</td>
                 <td>{invoice.montantApresRemise?.toFixed(2)} DNT</td>

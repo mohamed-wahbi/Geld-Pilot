@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import styles from "./InvoiceRevenue.module.scss";
-import InvoiceWebPart from './Childs/InvoiceWebPart';
+import InvoiceWebPart from './Childs/Invoice/InvoiceWebPart';
 import RevenueWebPart from './Childs/RevenueWebPart';
 
 

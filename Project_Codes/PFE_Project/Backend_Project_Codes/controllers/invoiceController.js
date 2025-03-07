@@ -72,7 +72,7 @@ module.exports.createInvoiceCtrl = asyncHandler(async (req, res) => {
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.getAllInvoicesCtrl = asyncHandler(async (req, res) => {
-    const invoices = await Invoice.find({}).populate('id_client',["name"]);
+    const invoices = await Invoice.find({}).populate('id_client',["name","currency"]);
 
     if (invoices.length === 0) {
         return res.status(400).json({
