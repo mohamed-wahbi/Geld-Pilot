@@ -11,4 +11,7 @@ router.route('/login').post(loginCtrl)
 // get all users :
 router.route("/get_all_users").get(getAllUsersCtrl)
 
+
+
+
 module.exports = router;

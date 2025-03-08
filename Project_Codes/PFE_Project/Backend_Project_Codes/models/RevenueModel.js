@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const { Invoice } = require('../models/invoiceModel.js');
-const { types, required } = require('joi');
+
 
 const RevenueSchema = new mongoose.Schema({
     annee: { type: String, required: true },
@@ -9,6 +8,7 @@ const RevenueSchema = new mongoose.Schema({
     nomClient: { type: String, required: true },
     nombreFacturesPayees: { type: Number, default: 0 },
     montantTotalPaye: { type: Number, default: 0 },
+    isConfirmed : {type: Boolean, default: false}
 }, {
     timestamps: true
 });
