@@ -12,6 +12,7 @@ const expenseFixRoutes = require('./routes/expenseFixRoute.js');
 const invoiceRoutes = require('./routes/invoiceRoute.js');
 const revenueRoutes = require('./routes/revenueRoute.js');
 const invoiceHistoryRoutes = require('./routes/invoiceHistoryRoute.js');
+const monthlyExpenseRoutes = require('./routes/monthlyExpenseRoute.js');
 
 
 
@@ -30,6 +31,7 @@ app.use('/api/expense-fix',expenseFixRoutes);
 app.use('/api/invoice',invoiceRoutes);
 app.use('/api/revenue',revenueRoutes); 
 app.use('/api/invoice-history',invoiceHistoryRoutes); 
+app.use('/api/monthly-expense',monthlyExpenseRoutes); 
 
 
 

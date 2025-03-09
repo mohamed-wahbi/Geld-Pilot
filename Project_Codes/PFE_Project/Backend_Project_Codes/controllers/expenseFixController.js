@@ -47,6 +47,32 @@ module.exports.getAllExpenseFixCtrl = asyncHandler(async (req, res) => {
 })
 
 
+/*--------------------------------------------------
+* @desc    GET All ExpenseFix
+* @router  /api/expense-fix/get_app
+* @methode GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getManyExpenseFixCtrl = asyncHandler(async (req, res) => {
+
+    try {
+        let ids = req.query.ids; // Récupération de la liste des _id depuis la requête
+        if (!ids) {
+            return res.status(400).json({ message: "Aucun ID fourni" });
+        }
+        
+        ids = ids.split(','); // Convertir la chaîne en tableau
+
+        const clients = await ExpenseFix.find({ _id: { $in: ids } });
+        res.json(clients);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+
+    
+})
+
+
 
 /*--------------------------------------------------
 * @desc    Get one ExpenseFix

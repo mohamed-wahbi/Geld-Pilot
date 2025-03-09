@@ -498,3 +498,20 @@
     50% { transform: translateX(5px); }
     75% { transform: translateX(-5px); }
   }
+
+
+.confirmeRevenuesBtn {
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  background: #438c43;
+  color: white;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.confirmeRevenuesBtn:hover {
+  background-color: #608d60 ;
+}

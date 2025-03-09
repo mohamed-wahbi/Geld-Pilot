@@ -85,6 +85,29 @@ const RevenueWebPart: React.FC = () => {
   // ___________________________________________________________________________________________
 
 
+
+
+    // ------------------------------generatedRevenue Function---------------------------------
+    const confirmeMonthRevenue = async () => {
+      try {
+        
+        await axios.post(`http://127.0.0.1:3320/api/revenue/confirme`)
+        setRevenues([])
+        FeatchingRevenues()
+        notify("Revenues of this monthe are Confirmed successfuly. ✅")
+        
+        
+      } catch (error) {
+        
+        notify("Please try agan ! ⛔")
+        
+  
+      }
+    }
+  
+    // ___________________________________________________________________________________________
+
+
   // ----------------------------------Notif Alert---------------------------------
   const notify = (text: string) => toast(text, {
     position: "bottom-right",
@@ -154,6 +177,10 @@ const RevenueWebPart: React.FC = () => {
         </div>
 
       </div>
+
+      {revenues.length > 0 ? <div>
+        <button onClick={confirmeMonthRevenue} className={styles.confirmeRevenuesBtn}>✅ Confirme All Revenues</button>
+      </div> : null}
 
 
 

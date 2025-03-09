@@ -97,6 +97,14 @@
           "manifest": "./src/webparts/historys/HistorysWebPart.manifest.json"
         }
       ]
+    },
+    "expenses-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/expenses/ExpensesWebPart.js",
+          "manifest": "./src/webparts/expenses/ExpensesWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -112,6 +120,7 @@
     "IaSupportWebPartStrings": "lib/webparts/iaSupport/loc/{locale}.js",
     "NewClientChargeWebPartStrings": "lib/webparts/newClientCharge/loc/{locale}.js",
     "InvoiceRevenueWebPartStrings": "lib/webparts/invoiceRevenue/loc/{locale}.js",
-    "HistorysWebPartStrings": "lib/webparts/historys/loc/{locale}.js"
+    "HistorysWebPartStrings": "lib/webparts/historys/loc/{locale}.js",
+    "ExpensesWebPartStrings": "lib/webparts/expenses/loc/{locale}.js"
   }
 }
