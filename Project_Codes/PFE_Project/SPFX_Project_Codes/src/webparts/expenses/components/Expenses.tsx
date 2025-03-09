@@ -1,43 +1,60 @@
 import * as React from 'react';
-import styles from './Expenses.module.scss';
-import type { IExpensesProps } from './IExpensesProps';
-import { escape } from '@microsoft/sp-lodash-subset';
+import { useState, useEffect } from 'react';
+import styles from '../components/Expenses.module.scss';
+import MonthlyCharge from './Childs/MonthlyCharge';
+import Charge from './Childs/Charge';
 
-export default class Expenses extends React.Component<IExpensesProps> {
-  public render(): React.ReactElement<IExpensesProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      hasTeamsContext,
-      userDisplayName
-    } = this.props;
+const NewClientCharge: React.FC = () => {
+  const token = localStorage.getItem("token");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
-    return (
-      <section className={`${styles.expenses} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>
-          <img alt="" src={isDarkTheme ? require('../assets/welcome-dark.png') : require('../assets/welcome-light.png')} className={styles.welcomeImage} />
-          <h2>Well done, {escape(userDisplayName)}!</h2>
-          <div>{environmentMessage}</div>
-          <div>Web part property value: <strong>{escape(description)}</strong></div>
+  const [activeTab, setActiveTab] = useState<string>('partners')
+
+  useEffect(() => {
+      if (token != null) {
+        setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
+        console.log(token)
+        if (isAdmin === false) {
+          window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+        }
+      }
+      if (token == null) {
+        window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+      }
+    }, [token, isAdmin]);
+
+
+  return (
+    <div className={styles.DashComp}>
+      <div className={styles.headerDash}>
+        <div className={styles.titleDash}>
+          <h5 className={styles.titleTextDash}>
+            Expenses Management System
+          </h5>
+          <img 
+            src={require('../assets/logo-removebg-preview.png')} 
+            alt='logo' 
+            className={styles.logoImgDash} 
+          />
         </div>
-        <div>
-          <h3>Welcome to SharePoint Framework!</h3>
-          <p>
-            The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
+        <div className={styles.navLinks}>
+          <p 
+            className={`${styles.link} ${activeTab === 'partners' ? styles.active : ''}`} 
+            onClick={() => setActiveTab('partners')}>
+            Expenses
           </p>
-          <h4>Learn more about SPFx development:</h4>
-          <ul className={styles.links}>
-            <li><a href="https://aka.ms/spfx" target="_blank" rel="noreferrer">SharePoint Framework Overview</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-graph" target="_blank" rel="noreferrer">Use Microsoft Graph in your solution</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-teams" target="_blank" rel="noreferrer">Build for Microsoft Teams using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-viva" target="_blank" rel="noreferrer">Build for Microsoft Viva Connections using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-store" target="_blank" rel="noreferrer">Publish SharePoint Framework applications to the marketplace</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-api" target="_blank" rel="noreferrer">SharePoint Framework API reference</a></li>
-            <li><a href="https://aka.ms/m365pnp" target="_blank" rel="noreferrer">Microsoft 365 Developer Community</a></li>
-          </ul>
+          <p 
+            className={`${styles.link} ${activeTab === 'create' ? styles.active : ''}`} 
+            onClick={() => setActiveTab('create')}>
+            Monthly Expenses
+          </p>
         </div>
-      </section>
-    );
-  }
-}
+      </div>
+      <div className={styles.tableContainer}>
+        {activeTab === 'partners' && <Charge />}
+        {activeTab === 'create' && <MonthlyCharge />}
+      </div>
+    </div>
+  );
+};
+export default NewClientCharge
