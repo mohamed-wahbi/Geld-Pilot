@@ -35,6 +35,9 @@ const MonthlyCharge: React.FC = () => {
   const [editableData, setEditableData] = useState<Record<string, Partial<MonthlyExpense>>>({});
   const [createOneTab, setCreateOneTab] = useState<boolean>(false);
 
+  const [generatMonthlyExpenseTab, setGeneratMonthlyExpenseTab] = useState(false);
+
+
   // Input fields for creating a new charge
   const [expenseName, setExpenseName] = useState<string>('');
   const [expenseType, setExpenseType] = useState<string>('');
@@ -78,28 +81,75 @@ const MonthlyCharge: React.FC = () => {
     );
   };
 
-  // Handle charge registration
+  // // Handle charge registration
+  // const RegisterOneNewCharge = async () => {
+  //   if (!year || !month || !expenseName || !expenseType || !actualAmount) {
+  //     alert("Veuillez remplir tous les champs !");
+  //     return;
+  //   }
+  //   try {
+  //     const response = await axios.post(
+  //       "http://127.0.0.1:3320/api/monthly-expense/create",
+  //       { year, month, expenseName, expenseType, estimatedAmount, actualAmount, covredDay }
+  //     );
+  //     console.log("Charge créée avec succès", response.data);
+  //     setExpenseName("")
+  //     setExpenseType("")
+  //     setEstimatedAmount("")
+  //     setActualAmount("")
+  //     setCovredDay("")
+  //     fetchMonthlyExpenses();
+  //   } catch (error) {
+  //     console.error("Erreur lors de la création de la charge mensuelle", error);
+  //   }
+  // };
+
+
+
+  // Fonction pour afficher les charges sélectionnées
   const RegisterOneNewCharge = async () => {
-    if (!year || !month || !expenseName || !expenseType || !actualAmount) {
-      alert("Veuillez remplir tous les champs !");
+    if (selectedCharges.length === 0) {
+      alert("Veuillez sélectionner au moins une charge.");
       return;
     }
+
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:3320/api/monthly-expense/create",
-        { year, month, expenseName, expenseType, estimatedAmount, actualAmount, covredDay }
+      const response = await axios.get(
+        `http://127.0.0.1:3320/api/expense-fix/getmany?ids=${selectedCharges.join(",")}`
       );
-      console.log("Charge créée avec succès", response.data);
-      setExpenseName("")
-      setExpenseType("")
-      setEstimatedAmount("")
-      setActualAmount("")
-      setCovredDay("")
-      fetchMonthlyExpenses();
+
+      if (Array.isArray(response.data)) {
+        const chargesIds = response.data.map((item) => item._id);
+
+        if (!month || !year || chargesIds.length === 0) {
+          alert("Veuillez remplir tous les champs et sélectionner au moins une charge.");
+          return;
+        }
+
+        console.log("date :", year, "___", month);
+        console.log("Charges sélectionnées :", chargesIds);
+
+        const createMonthlyCharge = await axios.post(
+          "http://127.0.0.1:3320/api/monthly-expense/create",
+          { month, year, expenseIds: chargesIds } // Utilisez "expenseIds" au lieu de "chargesById"
+        );
+
+        console.log(createMonthlyCharge.data);
+        setYear("")
+        setMonth("")
+        setSelectedCharges([])
+        setGeneratMonthlyExpenseTab(false)
+        fetchMonthlyExpenses();
+      } else {
+        console.error("Réponse inattendue :", response.data);
+      }
     } catch (error) {
-      console.error("Erreur lors de la création de la charge mensuelle", error);
+      console.error("Erreur lors de la récupération des charges :", error);
+    } finally {
     }
   };
+
+
 
   // Handle editing of monthly charge
   const handleEditClick = (item: MonthlyExpense) => {
@@ -131,7 +181,7 @@ const MonthlyCharge: React.FC = () => {
     if (!data) {
       setEditableRow(null)
       return;
-    } 
+    }
 
     try {
       await axios.put(`http://127.0.0.1:3320/api/monthly-expense/updateOne/${id}`, data);
@@ -142,7 +192,7 @@ const MonthlyCharge: React.FC = () => {
       setCovredDay("")
       setEditableRow(null);
       fetchMonthlyExpenses();
-      
+
     } catch (error) {
       console.error("Erreur lors de la mise à jour de la charge mensuelle", error);
     }
@@ -171,79 +221,137 @@ const MonthlyCharge: React.FC = () => {
   const getAllFiltredDatas = (data: MonthlyExpense[]) => { setAllFiltredDatas(data) }
   const getOneFiltredData = (data: MonthlyExpense) => { setOneFiltredData(data) }
   // ___________________________________________________________________
+
+
+
+
+
+
+
+
+
+  const CreateManualyCharge = async () => {
+    if (!year || !month || !expenseName || !expenseType || !actualAmount) {
+      alert("Veuillez remplir tous les champs !");
+      return;
+    }
+
+    try {
+      const payload = {
+        year,
+        month,
+        expenseName,
+        expenseType,
+        estimatedAmount,
+        actualAmount,
+        covredDay,
+      };
+
+      const res = await axios.post(
+        "http://127.0.0.1:3320/api/monthly-expense/createManuel",
+        payload
+      );
+
+      console.log(res.data.message);
+      fetchMonthlyExpenses(); // Mettre à jour la liste après ajout
+      setCreateOneTab(false); // Fermer le formulaire après soumission
+      setYear("")
+      setMonth("")
+    } catch (error) {
+      console.error("Erreur lors de la création :", error);
+    }
+  };
+
+
+
+  const reloadChargesDatas = () => { fetchMonthlyExpenses() }
+
+
+
+
+
+
+
   return (
     <div className={styles.tableContainer}>
       <div className={styles.HeaderTabelCtrl}>
-        <div className={styles.searchInput}>
-          <VocaFlexMWSTn
-            data={''}
-            keys={['']}
-            lang={'en-US'}
-            threshold={'0.4'}
-            allFiltredDatas={getAllFiltredDatas}
-            oneFiltredData={getOneFiltredData}
-            titre={'expenseName'}
-            description={'expenseType'}
-          />
-        </div>
-
-        <div className={styles.generateRevenue}>
-          <div className={styles.Top}>
-            <p>Generate Monthly Expenses</p>
-            <button
-              style={{ borderRadius: "5px" }}
-              onClick={() => setCreateOneTab(!createOneTab)}
-            >
-              {createOneTab ? '❌' : '🆕'}
-            </button>
+        <div className={styles.headerTopContent}>
+          <div className={styles.searchInput}>
+            <VocaFlexMWSTn
+              data={''}
+              keys={['']}
+              lang={'en-US'}
+              threshold={'0.4'}
+              allFiltredDatas={getAllFiltredDatas}
+              oneFiltredData={getOneFiltredData}
+              titre={'expenseName'}
+              description={'expenseType'}
+            />
           </div>
 
-          {createOneTab && (
-            <div className={styles.GenerateForm}>
-              <div className={styles.inputGenerateForm}>
-                <label>Year</label>
-                <input
-                  style={{ marginLeft: "15px" }}
-                  placeholder="2025"
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className={styles.inputGenerateForm}>
-                <label>Month</label>
-                <input
-                  placeholder="01 - 12"
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  required
-                />
-              </div>
-
-              <ul className={styles.inputGenerateFormUl}>
-                {charges.map((charge) => (
-                  <li key={charge._id}>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleChargeSelection(charge._id)}
-                      checked={selectedCharges.includes(charge._id)}
-                    />
-                    {charge.expenseName}
-                  </li>
-                ))}
-              </ul>
-
-              <div className={styles.btnContent}>
-                <button
-                  style={{ border: 'none', margin: "0px 10px", borderRadius: "5px" }}
-                  onClick={RegisterOneNewCharge}
-                >
-                  ➕
-                </button>
-              </div>
+          <div className={styles.generateRevenue}>
+            <div className={styles.Top}>
+              <p>Generate Monthly Expenses</p>
+              <button onClick={() => {
+                setGeneratMonthlyExpenseTab(!generatMonthlyExpenseTab);
+                setYear("");
+                setMonth("")
+                setSelectedCharges([])
+              }} >{generatMonthlyExpenseTab ? "❌" : "🆕"} </button>
             </div>
-          )}
+
+            {generatMonthlyExpenseTab && (
+              <div className={styles.GenerateForm}>
+                <div className={styles.inputGenerateForm}>
+                  <label>Year</label>
+                  <input
+                    style={{ marginLeft: "15px" }}
+                    placeholder="2025"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className={styles.inputGenerateForm}>
+                  <label>Month</label>
+                  <input
+                    placeholder="01 - 12"
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <ul className={styles.inputGenerateFormUl}>
+                  {charges.map((charge) => (
+                    <li key={charge._id}>
+                      <input
+                        type="checkbox"
+                        onChange={() => handleChargeSelection(charge._id)}
+                        checked={selectedCharges.includes(charge._id)}
+                      />
+                      {charge.expenseName}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className={styles.btnContent}>
+                  <button
+                    style={{ border: 'none', margin: "0px 10px", borderRadius: "5px" }}
+                    onClick={RegisterOneNewCharge}
+                  >
+                    ➕
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.ctrlTabBtns}>
+          <button onClick={() => setCreateOneTab(!createOneTab)}>🆕</button>
+          <button onClick={reloadChargesDatas}>🔄️</button>
         </div>
       </div>
 
@@ -260,10 +368,54 @@ const MonthlyCharge: React.FC = () => {
               <th>Montant Réel (€)</th>
               <th>Cavred Day</th>
               <th>Statut Charge</th>
-              
+
             </tr>
           </thead>
           <tbody>
+
+
+            {/* new monthlyExpenses */}
+            {createOneTab ?
+              <tr>
+                <td>➕</td>
+                <td><input className={styles.CreateInput} value={year} placeholder="Année" onChange={(e) => setYear(e.target.value)} /></td>
+                <td><input className={styles.CreateInput} value={month} placeholder="Mois" onChange={(e) => setMonth(e.target.value)} /></td>
+                <td><input className={styles.CreateInput} value={expenseName} placeholder="Nom Charge" onChange={(e) => setExpenseName(e.target.value)} /></td>
+                <td>
+                  <select value={expenseType} onChange={(e) => setExpenseType(e.target.value)}>
+                    <option value="">Sélectionner un type</option>
+                    <option value="Payroll">Payroll</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Training">Training</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Travel">Travel</option>
+                    <option value="HR">HR</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </td>
+                <td><input className={styles.CreateInput} type="number" value={estimatedAmount} placeholder="Montant Prévisionnel" onChange={(e) => setEstimatedAmount(e.target.value)} /></td>
+                <td><input className={styles.CreateInput} type="number" value={actualAmount} placeholder="Montant Réel" onChange={(e) => setActualAmount(e.target.value)} /></td>
+                <td><input className={styles.CreateInput} value={covredDay} placeholder="Cavred Day" onChange={(e) => setCovredDay(e.target.value)} /></td>
+                <td>Auto Generated</td>
+                <td className={styles.CreateRowStyle}>
+                  <button style={{ border: "none", cursor: "pointer", background: "transparent" }} onClick={CreateManualyCharge}>💾</button>
+                  <button style={{ border: "none", cursor: "pointer", background: "transparent" }} onClick={() => setCreateOneTab(false)}>❌</button>
+                </td>
+
+
+
+              </tr>
+
+              : null
+            }
+
+
+
+
+
+
+
+
             {monthlyExpenses.map((item) => (
               <tr key={item._id}>
                 <td className={styles.ctrlCl}>
@@ -273,7 +425,7 @@ const MonthlyCharge: React.FC = () => {
                     <HiOutlineWrench className={styles.updateLogo} onClick={() => handleEditClick(item)} />
                   </div>
                 </td>
-               
+
                 <td>{item.year}</td>
                 <td>{item.month}</td>
                 <td>{item.expenseName}</td>
@@ -313,7 +465,7 @@ const MonthlyCharge: React.FC = () => {
                     item.covredDay
                   )}
                 </td>
-                
+
                 <td>{item.chargeStatus}</td>
                 {editableRow === item._id ? (
                   <td className={styles.editRow}>

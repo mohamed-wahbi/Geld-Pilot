@@ -205,12 +205,8 @@
 
 
 
-.HeaderTabelCtrl {
-  display: flex;
-  justify-content: end;
-  align-items: center;
+.HeaderTabelCtrl { 
   padding: 10px 15px;
-
   position: sticky;
   top: 0;
   z-index: 2;
@@ -252,7 +248,7 @@
   position: absolute;
   top: 4px;
   left: 2px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 
@@ -284,7 +280,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 5px;
 
 }
@@ -294,14 +290,14 @@
   border-bottom: 1px solid #d0d0d0;
   display: flex;
   justify-content: space-around;
-  width: 100%;
+  width: 90%;
   height: 46px;
   border-radius: 10px;
 
 }
 
 .generateRevenue p {
-  margin-right: 15px;
+  margin-right: 0px;
   font-size: 16px;
   font-weight: 600;
   color: #3a576c;
@@ -313,6 +309,7 @@
   transition: 0.4s;
   background-color: transparent;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .generateRevenue button:hover {
@@ -379,4 +376,11 @@
 
 .btnContent button:hover {
   background-color: #bfd2e1;
+}
+
+.headerTopContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
 }
