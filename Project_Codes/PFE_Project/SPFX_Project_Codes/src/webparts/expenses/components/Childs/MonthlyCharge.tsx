@@ -418,13 +418,15 @@ const MonthlyCharge: React.FC = () => {
 
             {monthlyExpenses.map((item) => (
               <tr key={item._id}>
+                {item.covredDay ?<td className={styles.ctrlCl}><span>✅</span></td>:
                 <td className={styles.ctrlCl}>
                   <span>⚙️</span>
                   <div className={styles.ctrlBtn}>
                     <MdDeleteOutline className={styles.deleteLogo} onClick={() => deleteOneMonthlyChargesById(item._id)} />
                     <HiOutlineWrench className={styles.updateLogo} onClick={() => handleEditClick(item)} />
                   </div>
-                </td>
+                </td> }
+                
 
                 <td>{item.year}</td>
                 <td>{item.month}</td>
