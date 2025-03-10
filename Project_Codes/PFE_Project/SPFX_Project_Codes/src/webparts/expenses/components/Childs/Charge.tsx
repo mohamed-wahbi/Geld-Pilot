@@ -241,7 +241,7 @@ const Charge: React.FC = () => {
     <div className={styles.tableContainer}>
       <ToastContainer />
 
-      <div className={styles.HeaderTabelCtrl}>
+      <div className={styles.HeaderTabelCtrl} style={{display: "flex", justifyContent: "flex-end"}}>
         <div className={styles.searchInput}>
           <VocaFlexMWSTn
             data={charges}
