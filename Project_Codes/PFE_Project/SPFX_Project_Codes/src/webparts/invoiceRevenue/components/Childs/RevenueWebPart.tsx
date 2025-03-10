@@ -161,7 +161,7 @@ const RevenueWebPart: React.FC = () => {
               <div className={styles.GenerateForm} >
                 <div className={styles.inputGenerateForm}>
                   <label>Year</label>
-                  <input placeholder='2025' value={annee} onChange={(e) => setAnnee(e.target.value)} required />
+                  <input style={{ marginLeft: "15px" }} placeholder='2025' value={annee} onChange={(e) => setAnnee(e.target.value)} required />
                 </div>
 
                 <div className={styles.inputGenerateForm}>

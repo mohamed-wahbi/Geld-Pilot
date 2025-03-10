@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styles from '../components/Expenses.module.scss';
 import MonthlyCharge from './Childs/MonthlyCharge';
 import Charge from './Childs/Charge';
+import Results from './Childs/Results';
 
 const NewClientCharge: React.FC = () => {
   const token = localStorage.getItem("token");
@@ -48,11 +49,18 @@ const NewClientCharge: React.FC = () => {
             onClick={() => setActiveTab('create')}>
             Monthly Expenses
           </p>
+
+          <p 
+            className={`${styles.link} ${activeTab === 'result' ? styles.active : ''}`} 
+            onClick={() => setActiveTab('result')}>
+            Monthly Expenses Results
+          </p>
         </div>
       </div>
       <div className={styles.tableContainer}>
         {activeTab === 'partners' && <Charge />}
         {activeTab === 'create' && <MonthlyCharge />}
+        {activeTab === 'result' && <Results />}
       </div>
     </div>
   );
