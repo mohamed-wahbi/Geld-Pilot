@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const monthlyExpenseResultSchema = new mongoose.Schema({
     month: { type: String, required: true },
-    year: { type: Number, required: true },
+    year: { type: String, required: true },
     isConfirmed: { type: Boolean, default: false },
     expenseType: {
       type: String,

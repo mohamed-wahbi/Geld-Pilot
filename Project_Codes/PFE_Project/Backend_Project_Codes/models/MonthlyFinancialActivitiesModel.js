@@ -3,8 +3,8 @@ const Joi = require("joi");
 
 const MonthlyFinancialActivitiesSchema = new mongoose.Schema(
   {
-    year: { type: Number, required: true }, // Année
-    month: { type: Number, required: true, min: 1, max: 12 }, // Mois
+    year: { type: String, required: true }, // Année
+    month: { type: String, required: true }, // Mois
     bankFund: { type: Number, required: true }, // Fonds bancaires
 
     // Liste des revenus et calcul du total des revenus
@@ -81,8 +81,8 @@ const MonthlyFinancialActivities = mongoose.model("MonthlyFinancialActivities", 
 // Validation Joi pour la création
 function CreateMonthlyActivityValidation(obj) {
   const schema = Joi.object({
-    year: Joi.number().integer().min(2000).max(2100).required(),
-    month: Joi.number().integer().min(1).max(12).required(),
+    year: Joi.string().pattern(/^(200[0-9]|20[1-9][0-9]|2100)$/).required(),
+    month: Joi.string().pattern(/^(0?[1-9]|1[0-2])$/).required(),
     bankFund: Joi.number().min(0).required(),
     revenuesList: Joi.array().items(Joi.string().hex().length(24)).default([]), // IDs des revenus
     expensesList: Joi.array().items(Joi.string().hex().length(24)).default([]), // IDs des dépenses
@@ -94,8 +94,8 @@ function CreateMonthlyActivityValidation(obj) {
 // Validation Joi pour la mise à jour
 function UpdateMonthlyActivityValidation(obj) {
   const schema = Joi.object({
-    year: Joi.number().integer().min(2000).max(2100),
-    month: Joi.number().integer().min(1).max(12),
+    year: Joi.string().pattern(/^(200[0-9]|20[1-9][0-9]|2100)$/),
+    month: Joi.string().pattern(/^(0?[1-9]|1[0-2])$/),
     bankFund: Joi.number().min(0),
     revenuesList: Joi.array().items(Joi.string().hex().length(24)),
     expensesList: Joi.array().items(Joi.string().hex().length(24)),

@@ -1,13 +1,12 @@
 const asyncHandler = require("express-async-handler");
-
-
-
-
+const { MonthlyFinancialActivities, CreateMonthlyActivityValidation } = require("../models/MonthlyFinancialActivitiesModel.js");
+const {Revenue} = require("../models/RevenueModel.js");
+const {MonthlyExpenseResult} = require("../models/MonthlyExpenseResultModel.js");
 
 /*--------------------------------------------------
-* @desc    Create Monthly Financial Activitys
-* @router  /api/monthly-financial-activitie/create
-* @methode POST
+* @desc    Create Monthly Financial Activities
+* @route   /api/monthly-financial-activity/create
+* @method  POST
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, res) => {
@@ -39,14 +38,14 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
 
         // 🔹 5. Déterminer le statut financier
         let financialStatus = "Critical";
-        let comment = "Financial situation is critical, no profit.";
+        let comment = "La situation financière est critique, aucun bénéfice.";
 
         if (rest > 0) {
             financialStatus = "Good";
-            comment = "Financial situation is stable and profitable.";
+            comment = "La situation financière est stable et rentable.";
         } else if (rest < 0) {
             financialStatus = "Bad";
-            comment = "Financial situation is negative, losses recorded.";
+            comment = "La situation financière est négative, pertes enregistrées.";
         }
 
         // 🔹 6. Création de l'activité financière
@@ -58,8 +57,8 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
             expensesList,
             totalRevenue,
             totalExpenses,
-            rest,
-            globalRest,
+            rest: totalRevenue - totalExpenses,
+            globalRest: (totalRevenue - totalExpenses) + bankFund ,
             financialStatus,
             comment,
         });
@@ -74,4 +73,4 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
     } catch (err) {
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
     }
-})
+});

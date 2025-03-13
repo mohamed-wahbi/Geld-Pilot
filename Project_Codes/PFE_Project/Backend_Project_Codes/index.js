@@ -15,7 +15,7 @@ const invoiceHistoryRoutes = require('./routes/invoiceHistoryRoute.js');
 const monthlyExpenseRoutes = require('./routes/monthlyExpenseRoute.js');
 const monthlyExpenseResultRoutes = require('./routes/MonthlyExpenseResultRoute.js');
 const monthlyExpenseHistoryRoutes = require('./routes/monthlyExpenseHistoryRoute.js');
-
+const monthlyFinancialActivitiesRoutes = require('./routes/MonthlyFinancialActivitiesRoute.js');
 
 
 
@@ -38,6 +38,7 @@ app.use('/api/invoice-history',invoiceHistoryRoutes);
 app.use('/api/monthly-expense',monthlyExpenseRoutes); 
 app.use('/api/monthly-expense-result',monthlyExpenseResultRoutes); 
 app.use('/api/monthly-expense-history',monthlyExpenseHistoryRoutes); 
+app.use('/api/monthly-financial-activitie',monthlyFinancialActivitiesRoutes); 
 
 
 
