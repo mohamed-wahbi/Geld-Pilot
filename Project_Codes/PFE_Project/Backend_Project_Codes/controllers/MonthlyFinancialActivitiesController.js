@@ -3,6 +3,9 @@ const { MonthlyFinancialActivities, CreateMonthlyActivityValidation } = require(
 const {Revenue} = require("../models/RevenueModel.js");
 const {MonthlyExpenseResult} = require("../models/MonthlyExpenseResultModel.js");
 
+
+
+
 /*--------------------------------------------------
 * @desc    Create Monthly Financial Activities
 * @route   /api/monthly-financial-activity/create
@@ -73,4 +76,26 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
     } catch (err) {
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
     }
+});
+
+
+
+
+/*--------------------------------------------------
+* @desc    Get All Monthly Financial Activities
+* @route   /api/monthly-financial-activity/getAll
+* @method  GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getAllMonthlyFinancialActivitysCtrl = asyncHandler(async (req, res) => {
+    const getAll = await MonthlyFinancialActivities.find({})
+    if (!getAll){
+        return res.status(400).json({
+            message: "DB is empty!"
+        })
+    }
+
+    res.status(200).json({
+        monthlyFinancialActivitiesData : getAll
+    })
 });
