@@ -34,7 +34,7 @@ const Filter: React.FC = () => {
       <div className={styles.HeaderTabelCtrl} style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
         <div className={styles.generateRevenue}>
           <div className={styles.Top}>
-            <p>Generate Monthly Activities</p>
+            <p>Filter Monthly Activities</p>
             <button onClick={() => {
               setGeneratMonthlyActivitiesTab(!generatMonthlyActivitiesTab);
               setYear("");

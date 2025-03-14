@@ -60,13 +60,13 @@ MonthlyFinancialActivitiesSchema.pre("save", async function (next) {
     // Déterminer le statut financier
     if (this.rest > 0) {
       this.financialStatus = "Good";
-      this.comment = "La situation financière est stable et rentable.";
+      this.comment = "The financial situation is stable and profitable.";
     } else if (this.rest === 0) {
       this.financialStatus = "Critical";
-      this.comment = "La situation financière est critique, aucun bénéfice.";
+      this.comment = "The financial situation is critical, no profit.";
     } else {
       this.financialStatus = "Bad";
-      this.comment = "La situation financière est négative, pertes enregistrées.";
+      this.comment = "The financial situation is negative, losses recorded.";
     }
 
     next();
