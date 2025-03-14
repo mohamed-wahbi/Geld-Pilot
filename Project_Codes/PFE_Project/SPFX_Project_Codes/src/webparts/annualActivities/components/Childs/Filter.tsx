@@ -31,7 +31,7 @@ const Filter: React.FC = () => {
       <div className={styles.HeaderTabelCtrl} style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
         <div className={styles.generateRevenue}>
           <div className={styles.Top}>
-            <p>Filter Monthly Activities</p>
+            <p>Filter Annual Activities</p>
             <button onClick={() => {
               setGeneratMonthlyActivitiesTab(!generatMonthlyActivitiesTab);
               setYear("");
@@ -75,7 +75,7 @@ const Filter: React.FC = () => {
           <div className={styles.accordionContent}>
             <Accordion defaultActiveKey="0">
               <Accordion.Item eventKey="0">
-                <Accordion.Header><p>Monthly Financial Activities List</p></Accordion.Header>
+                <Accordion.Header><p>Annual Financial Activities List</p></Accordion.Header>
                 <Accordion.Body>
                   <div className={styles.TableContent}>
                     <table className={styles.table}>

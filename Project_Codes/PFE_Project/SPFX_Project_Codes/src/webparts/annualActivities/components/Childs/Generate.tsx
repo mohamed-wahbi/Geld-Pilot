@@ -7,7 +7,6 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 interface LatestActivities {
   _id: string;
   year: string;
-  month: string;
   bankFund: number;
   totalRevenue: number;
   totalExpenses: number;
@@ -18,9 +17,9 @@ interface LatestActivities {
 }
 
 const Generate: React.FC = () => {
-  const [generatMonthlyActivitiesTab, setGeneratMonthlyActivitiesTab] = useState(false);
+  const [generatAnnualActivitiesTab, setGeneratAnnualActivitiesTab] = useState(false);
   const [year, setYear] = useState<string>("");
-  const [month, setMonth] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const [bankFund, setBankFund] = useState<number | null>(null);
   const [latestActivities, setLatestActivities] = useState<LatestActivities | null>(null);
 
@@ -28,43 +27,45 @@ const Generate: React.FC = () => {
     getLatest();
   }, []);
 
-  // -------------------- Fetch Latest Financial Activity --------------------
+  // -------------------- Fetch Latest Annual Financial Activity --------------------
   const getLatest = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:3320/api/monthly-financial-activitie/latest");
+      const response = await axios.get("http://127.0.0.1:3320/api/annual-financial-activitie/latest");
       if (response.data.latestActivity) {
         setLatestActivities(response.data.latestActivity);
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des activités financières:", error);
+      console.error("Erreur lors de la récupération des activités financières annuelle:", error);
     }
   };
 
   // -------------------- Generate Monthly Financial Activity --------------------
   const generatedMonthlyActivitiesResults = async () => {
-    if (!year || !month || bankFund === null) {
+    if (!year || bankFund === null) {
       notify("All inputs are required ⛔");
       return;
     }
 
     try {
-      await axios.post("http://127.0.0.1:3320/api/monthly-financial-activitie/create", {
+      await axios.post("http://127.0.0.1:3320/api/annual-financial-activitie/create", {
         year,
-        month,
-        bankFund,
+        bankFund
       });
 
-      notify("Monthly Activities created successfully ✅");
+      notify("Annual Activities created successfully ✅");
       setBankFund(null);
+      setErrorMsg("");
       setYear("");
-      setMonth("");
-      setGeneratMonthlyActivitiesTab(false);
+      setGeneratAnnualActivitiesTab(false);
       getLatest(); // Refresh latest activities
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
-        notify("Monthly Activities already exists ⛔");
+        console.log(error.response.data.message)
+        setErrorMsg(error.response.data.message)
+        
+
       } else {
-        notify("Error creating Monthly Activities ⛔");
+        setErrorMsg(error.response.data.message);
       }
       console.error("Erreur lors de la création de l'activité financière:", error);
     }
@@ -91,20 +92,19 @@ const Generate: React.FC = () => {
       <div className={styles.HeaderTabelCtrl} style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
         <div className={styles.generateRevenue}>
           <div className={styles.Top}>
-            <p>Generate Monthly Activities</p>
+            <p>Generate Annual Activities</p>
             <button
               onClick={() => {
-                setGeneratMonthlyActivitiesTab(!generatMonthlyActivitiesTab);
+                setGeneratAnnualActivitiesTab(!generatAnnualActivitiesTab);
                 setYear("");
-                setMonth("");
                 setBankFund(null);
               }}
             >
-              {generatMonthlyActivitiesTab ? "❌" : "🆕"}
+              {generatAnnualActivitiesTab ? "❌" : "🆕"}
             </button>
           </div>
 
-          {generatMonthlyActivitiesTab && (
+          {generatAnnualActivitiesTab && (
             <div className={styles.GenerateForm}>
               <div className={styles.inputGenerateForm}>
                 <label>Year</label>
@@ -113,16 +113,6 @@ const Generate: React.FC = () => {
                   placeholder="2025"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className={styles.inputGenerateForm}>
-                <label>Month</label>
-                <input
-                  placeholder="01 - 12"
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
                   required
                 />
               </div>
@@ -148,14 +138,15 @@ const Generate: React.FC = () => {
         </div>
       </div>
 
+      {errorMsg?<p style={{color:"red"}}>{errorMsg}</p>:null}
+
       {/* ---- Latest Financial Activity Table ---- */}
       <div className={styles.TableContent} >
-        <p>The Last Generated Monthly Financial Activities:</p>
+        <p>The Last Generated Annual Financial Activities:</p>
         <table className={styles.table}>
           <thead>
             <tr>
               <th>Year</th>
-              <th>Month</th>
               <th>Bank Fund</th>
               <th>Total Revenue</th>
               <th>Total Expenses</th>
@@ -169,7 +160,6 @@ const Generate: React.FC = () => {
             {latestActivities ? (
               <tr>
                 <td>{latestActivities.year}</td>
-                <td>{latestActivities.month}</td>
                 <td>{latestActivities.bankFund}</td>
                 <td>{latestActivities.totalRevenue}</td>
                 <td>{latestActivities.totalExpenses}</td>
