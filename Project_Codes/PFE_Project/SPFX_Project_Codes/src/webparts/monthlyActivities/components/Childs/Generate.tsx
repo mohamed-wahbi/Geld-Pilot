@@ -150,6 +150,7 @@ const Generate: React.FC = () => {
 
       {/* ---- Latest Financial Activity Table ---- */}
       <div className={styles.TableContent} >
+        <p>The Last Generated Monthly Financial Activities:</p>
         <table className={styles.table}>
           <thead>
             <tr>
