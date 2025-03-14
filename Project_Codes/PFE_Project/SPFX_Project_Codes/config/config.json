@@ -113,6 +113,14 @@
           "manifest": "./src/webparts/monthlyActivities/MonthlyActivitiesWebPart.manifest.json"
         }
       ]
+    },
+    "annual-activities-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/annualActivities/AnnualActivitiesWebPart.js",
+          "manifest": "./src/webparts/annualActivities/AnnualActivitiesWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -130,6 +138,7 @@
     "InvoiceRevenueWebPartStrings": "lib/webparts/invoiceRevenue/loc/{locale}.js",
     "HistorysWebPartStrings": "lib/webparts/historys/loc/{locale}.js",
     "ExpensesWebPartStrings": "lib/webparts/expenses/loc/{locale}.js",
-    "MonthlyActivitiesWebPartStrings": "lib/webparts/monthlyActivities/loc/{locale}.js"
+    "MonthlyActivitiesWebPartStrings": "lib/webparts/monthlyActivities/loc/{locale}.js",
+    "AnnualActivitiesWebPartStrings": "lib/webparts/annualActivities/loc/{locale}.js"
   }
 }
