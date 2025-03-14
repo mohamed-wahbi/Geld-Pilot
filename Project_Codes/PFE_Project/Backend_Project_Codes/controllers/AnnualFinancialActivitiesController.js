@@ -102,3 +102,35 @@ module.exports.getLatestAnnualFinancialActivityCtrl = asyncHandler(async (req, r
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
+
+
+
+
+/*--------------------------------------------------
+* @desc    Get One Annual Financial Activities
+* @route   /api/annual-financial-activity/getOne
+* @method  POST
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getOneAnnualFinancialActivitysCtrl = asyncHandler(async (req, res) => {
+    const { year } = req.body;
+
+    // Vérifier que year et month sont fournis
+    if (!year) {
+        return res.status(400).json({ message: "Year required!" });
+    }
+
+    try {
+        // Récupérer les données avec un filtre sur l'année et le mois
+        const getOne = await AnnualFinancialActivities.findOne({ year })
+        .populate("monthlyFinancialActivitiesList") 
+
+        if (!getOne) {
+            return res.status(404).json({ message: "No result with this date!" });
+        }
+
+        res.status(200).json({getOneAnnualActivitie:getOne});
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
