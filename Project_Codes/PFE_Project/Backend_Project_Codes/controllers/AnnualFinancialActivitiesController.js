@@ -8,18 +8,31 @@ const { MonthlyFinancialActivities } = require("../models/MonthlyFinancialActivi
 * @method  POST
 * @access  only admin
 ----------------------------------------------------*/
-const createAnnualFinancialActivity = asyncHandler(async (req, res) => {
+module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res) => {
   // Validate request body
   const { error } = CreateAnnualActivityValidation(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { year, bankFund } = req.body;
 
+
+// Verifier si cette année et déja generé:
+  const annualActivityVerification = await AnnualFinancialActivities.find({year})
+  if(annualActivityVerification.length>0){
+    return res.status(400).json({
+        message: "Annual activities for this year have already been generated."
+    })
+  }
+
   // Fetch all monthly financial activities for the given year
   const monthlyActivities = await MonthlyFinancialActivities.find({ year });
 
   if (!monthlyActivities.length) {
     return res.status(404).json({ message: "No monthly financial records found for the specified year." });
+  }
+
+  if (monthlyActivities.length !== 12) {
+    return res.status(404).json({ message: "All 12 months must be present for the annual report." });
   }
 
   // Calculate totals
@@ -62,4 +75,3 @@ const createAnnualFinancialActivity = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { createAnnualFinancialActivity };
