@@ -75,3 +75,30 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
   });
 });
 
+
+
+
+
+/*--------------------------------------------------
+* @desc    Get the latest Monthly Financial Activity
+* @route   /api/monthly-financial-activity/latest
+* @method  GET
+* @access  only admin
+----------------------------------------------------*/
+module.exports.getLatestAnnualFinancialActivityCtrl = asyncHandler(async (req, res) => {
+    try {
+        const latestActivity = await AnnualFinancialActivities.findOne().sort({ createdAt: -1 });
+
+        if (!latestActivity) {
+            return res.status(404).json({
+                message: "No financial activity found!"
+            });
+        }
+
+        res.status(200).json({
+            latestActivity
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+});
