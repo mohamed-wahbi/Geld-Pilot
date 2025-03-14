@@ -14,8 +14,8 @@ const { VocaFlexMWSTn } = require('vecoflextnmws')
 interface Revenue {
   _id: string,
   id_client: string,
-  annee: string,
-  mois: string,
+  year: string,
+  month: string,
   nomClient: string,
   nombreFacturesPayees: string,
   montantTotalPaye: string,
@@ -25,8 +25,8 @@ interface Revenue {
 const RevenueWebPart: React.FC = () => {
   const [revenues, setRevenues] = useState<Revenue[]>([]);
   const [generatRevenueTab, setGeneratRevenueTab] = useState(false);
-  const [annee, setAnnee] = useState("")
-  const [mois, setMois] = useState("")
+  const [month, setMonth] = useState("")
+  const [year, setYear] = useState("")
 
   // Featching Data 
   useEffect(() => {
@@ -63,19 +63,19 @@ const RevenueWebPart: React.FC = () => {
 
 
   // ------------------------------generatedRevenue Function---------------------------------
-  const generatedRevenue = async (annee: string, mois: string) => {
+  const generatedRevenue = async (year: string, month: string) => {
     try {
-      setAnnee(annee);
-      setMois(mois);
-      await axios.post(`http://127.0.0.1:3320/api/revenue/generate/${annee}/${mois}`)
+      setYear(year);
+      setMonth(month);
+      await axios.post(`http://127.0.0.1:3320/api/revenue/generate/${year}/${month}`)
       notify("Revenues Generated successfuly. ✅")
       FeatchingRevenues()
-      setAnnee("");
-      setMois("");
+      setYear("");
+      setMonth("");
       setGeneratRevenueTab(false)
     } catch (error) {
-      setAnnee("");
-      setMois("");
+      setYear("");
+      setMonth("");
       notify("Please choose an existing year and month ⛔")
       notify("year and month format: YYYY-MM 😉")
 
@@ -136,7 +136,7 @@ const RevenueWebPart: React.FC = () => {
         <div className={styles.searchInput}>
           <VocaFlexMWSTn
             data={revenues}
-            keys={["annee", "mois", "nomClient"]}
+            keys={["year", "month", "nomClient"]}
             lang={"en-US"}
             threshold={"0.4"}
             allFiltredDatas={getAllFiltredDatas}
@@ -151,8 +151,8 @@ const RevenueWebPart: React.FC = () => {
             <p>Generat Revenue</p>
             <button onClick={() => {
               setGeneratRevenueTab(!generatRevenueTab);
-              setAnnee("");
-              setMois("")
+              setYear("");
+              setMonth("")
             }} >{generatRevenueTab ? "❌" : "🆕"} </button>
           </div>
 
@@ -161,15 +161,15 @@ const RevenueWebPart: React.FC = () => {
               <div className={styles.GenerateForm} >
                 <div className={styles.inputGenerateForm}>
                   <label>Year</label>
-                  <input style={{ marginLeft: "15px" }} placeholder='2025' value={annee} onChange={(e) => setAnnee(e.target.value)} required />
+                  <input style={{ marginLeft: "15px" }} placeholder='2025' value={year} onChange={(e) => setYear(e.target.value)} required />
                 </div>
 
                 <div className={styles.inputGenerateForm}>
                   <label>Month</label>
-                  <input placeholder='01 - 12' value={mois} onChange={(e) => setMois(e.target.value)} required />
+                  <input placeholder='01 - 12' value={month} onChange={(e) => setMonth(e.target.value)} required />
                 </div>
                 <div className={styles.btnContent}>
-                  <button style={{ border: "none" }} onClick={() => generatedRevenue(annee, mois)}>➕</button>
+                  <button style={{ border: "none" }} onClick={() => generatedRevenue(year, month)}>➕</button>
                 </div>
               </div>
               : null
@@ -187,8 +187,8 @@ const RevenueWebPart: React.FC = () => {
       <div className={styles.TableContent} >
         <table className={styles.table}>
           <thead>
-            <th>Annee</th>
-            <th>Mois</th>
+            <th>Year</th>
+            <th>Month</th>
             <th>Client</th>
             <th>nombre Factures Payees</th>
             <th>montant Total Paye</th>
@@ -198,8 +198,8 @@ const RevenueWebPart: React.FC = () => {
               (allFiltredDatas.length > 0 ? allFiltredDatas : revenues).map((revenue) => {
                 return (
                   <tr key={revenue._id}>
-                    <td>🗓️ {revenue.annee} </td>
-                    <td>📆 {revenue.mois} </td>
+                    <td>🗓️ {revenue.year} </td>
+                    <td>📆 {revenue.month} </td>
                     <td style={{ fontWeight: "500" }}>🕴️ {revenue.nomClient} </td>
                     <td>✍️ {revenue.nombreFacturesPayees} </td>
                     <td>💷 {revenue.montantTotalPaye}</td>

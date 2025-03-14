@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.route("/getAll").get(getRevenuesCtrl)
 
-router.route("/generate/:annee/:mois").post(generateRevCtrl)
+router.route("/generate/:year/:month").post(generateRevCtrl)
 router.route("/confirme").post(confirmeRevenueCtrl)
 
 
