@@ -56,10 +56,10 @@ module.exports.confirmeRevenueCtrl = asyncHandler(async(req,res)=> {
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
-    const { annee, mois } = req.params;
+    const { year, month } = req.params;
 
     try {
-        const startDate = new Date(`${annee}-${mois}-01T00:00:00.000Z`);
+        const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
         const endDate = new Date(startDate);
         endDate.setMonth(endDate.getMonth() + 1);
 
@@ -91,12 +91,12 @@ module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
 
         // Générer les revenus mensuels
         const groupedData = invoices.reduce((acc, invoice) => {
-            const key = `${annee}-${mois}-${invoice.id_client}`;
+            const key = `${year}-${month}-${invoice.id_client}`;
 
             if (!acc[key]) {
                 acc[key] = {
-                    annee: `${annee}`,
-                    mois: `${mois}`,
+                    year: `${year}`,
+                    month: `${month}`,
                     id_client: invoice.id_client,
                     nomClient: invoice.clientName,
                     nombreFacturesPayees: 0,
@@ -118,8 +118,8 @@ module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
 
         res.status(200).json({
             message: "Revenue generated and invoices archived successfully.",
-            annee,
-            mois
+            year,
+            month
         });
     } catch (err) {
         console.error("Erreur lors de la génération des revenus mensuels", err);

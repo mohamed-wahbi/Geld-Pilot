@@ -179,9 +179,7 @@ const results: React.FC = () => {
 
             </div>
 
-            {
-                
-            }
+           
             {chargeResults.length > 0 ? <div>
                 <button onClick={confirmeMonthChargeResult} className={styles.confirmeRevenuesBtn}>✅ Confirme All Expenses</button>
             </div> : null}

@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 
 const RevenueSchema = new mongoose.Schema({
-    annee: { type: String, required: true },
-    mois: { type: String, required: true },
+    year: { type: String, required: true },
+    month: { type: String, required: true },
     id_client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
     nomClient: { type: String, required: true },
     nombreFacturesPayees: { type: Number, default: 0 },
