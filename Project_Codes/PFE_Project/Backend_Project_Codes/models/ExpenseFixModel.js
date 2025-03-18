@@ -15,6 +15,10 @@ const expenseFixSchema = new mongoose.Schema({
     required: true,
   },
   paymentDay: { type: Number, min: 1, max: 31, required: true },
+  dataverseId: {
+    type: String,
+    default:""
+}
 }, { timestamps: true });
 
 const ExpenseFix = mongoose.model("ExpenseFix", expenseFixSchema);

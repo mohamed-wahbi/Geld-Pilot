@@ -1,5 +1,33 @@
 const asyncHandler = require("express-async-handler");
 const { ExpenseFix, CreateExpenseFixValidation, UpdateExpenseFixValidation } = require('../models/ExpenseFixModel.js');
+const axios = require('axios')
+
+
+
+
+
+
+// ---------------------------------Token Auto Generate-----------------------------------------
+
+require("dotenv").config()
+const { tanentId, clientId, clientSecret, url } = process.env
+
+const getAccessToken = async () => {
+    const tokenResponse = await axios.post(
+        `https://login.microsoftonline.com/${tanentId}/oauth2/token`,
+        new URLSearchParams({
+            grant_type: "client_credentials",
+            client_id: `${clientId}`,
+            client_secret: `${clientSecret}`,
+            resource: `${url}`
+        })
+    );
+    return tokenResponse.data.access_token;
+};
+
+// ___________________________________________________________________________________________
+
+
 
 
 
@@ -10,20 +38,89 @@ const { ExpenseFix, CreateExpenseFixValidation, UpdateExpenseFixValidation } = r
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.createExpenseFixtCtrl = asyncHandler(async (req, res) => {
-    // Validation
-    const { error } = CreateExpenseFixValidation(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
 
-    // create client 
-    const newExpenseFix = await ExpenseFix.create(req.body)
-    if (!newExpenseFix) {
-        return res.status(400).json({ message: "Expense-Fix not created!" })
-    }
 
-    res.status(201).json({ message: "Expense-Fix created successfully", ExpenseFix });
-})
+
+    try {
+            // 1️⃣ Validation des données
+            const { error } = CreateExpenseFixValidation(req.body);
+            if (error) {
+                return res.status(400).json({ message: error.details[0].message });
+            }
+    
+    
+            // 3️⃣ Obtenir un token pour Dataverse
+            const token = await getAccessToken();
+    
+            // 4️⃣ Préparer et envoyer les données vers Dataverse
+            const data = {
+                cr604_expensename: req.body.expenseName,
+                cr604_expensetype: req.body.expenseType,
+                cr604_amount: req.body.amount,
+                cr604_status: req.body.status,
+            };
+    
+            const dataverseResponse = await axios.post(
+                `${url}/api/data/v9.0/cr604_expensefix_gps`,
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            // 5️⃣ Extraire l'ID de Dataverse depuis l'en-tête `location`
+            const locationHeader = dataverseResponse.headers.location;
+            if (!locationHeader) {
+                return res.status(500).json({ message: "Client créé sur Dataverse, mais impossible de récupérer son ID." });
+            }
+            const dataverseId = locationHeader.match(/\((.*?)\)/)[1];
+    
+            // 6️⃣ Enregistrer le client dans MongoDB
+            const newCharge = new ExpenseFix({
+                expenseName: req.body.expenseName,
+                expenseType: req.body.expenseType,
+                amount: req.body.amount,
+                status: req.body.status,
+                paymentDay: req.body.paymentDay,
+                dataverseId: dataverseId // Ajout de l’ID Dataverse
+            });
+    
+            await newCharge.save();
+    
+            // 7️⃣ Réponse finale
+            res.status(201).json({
+                message: "Charge créé avec succès dans MongoDB et Dataverse.",
+            });
+    
+        } catch (error) {
+            res.status(500).json({
+                message: "Erreur interne du serveur",
+            });
+        }
+
+
+
+
+
+
+
+//     // Validation
+//     const { error } = CreateExpenseFixValidation(req.body);
+//     if (error) {
+//         return res.status(400).json({ message: error.details[0].message });
+//     }
+
+//     // create client 
+//     const newExpenseFix = await ExpenseFix.create(req.body)
+//     if (!newExpenseFix) {
+//         return res.status(400).json({ message: "Expense-Fix not created!" })
+//     }
+
+//     res.status(201).json({ message: "Expense-Fix created successfully", ExpenseFix });
+ })
 
 
 /*--------------------------------------------------
