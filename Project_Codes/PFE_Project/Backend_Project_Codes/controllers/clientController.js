@@ -225,32 +225,73 @@ module.exports.deleteOneClientCtrl = asyncHandler(async (req, res) => {
 * @methode PUT
 * @access  only admin
 ----------------------------------------------------*/
+
 module.exports.updateOneClientCtrl = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
 
-    // Validation
-    const { error } = UpdateClientValidation(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
+        // 1️⃣ Vérifier si le client existe en MongoDB
+        const client = await Client.findById(id);
+        if (!client) {
+            return res.status(404).json({ message: "Client non trouvé dans MongoDB." });
+        }
+
+        // 2️⃣ Vérifier si l'ID Dataverse existe
+        const dataverseId = client.dataverseId;
+        if (!dataverseId) {
+            return res.status(400).json({ message: "ID Dataverse introuvable pour ce client." });
+        }
+
+        // 3️⃣ Mettre à jour MongoDB
+        const updatedClient = await Client.findByIdAndUpdate(
+            id,
+            {
+                name: req.body.name || client.name,
+                email: req.body.email || client.email,
+                phone: req.body.phone || client.phone,
+                address: req.body.address || client.address,
+
+                clientType: req.body.clientType || client.clientType,
+                paymentMethod: req.body.paymentMethod || client.paymentMethod,
+                currency: req.body.currency || client.currency,
+                status: req.body.status || client.status,
+            },
+            { new: true, runValidators: true } // Retourne l'objet mis à jour avec validation
+        );
+
+        // 4️⃣ Obtenir un token valide pour Dataverse
+        const token = await getAccessToken();
+
+        // 5️⃣ Mettre à jour l'entrée dans Dataverse
+        const data = {
+            cr604_name: req.body.name || client.name,
+            cr604_email: req.body.email || client.email,
+            cr604_phone: req.body.phone || client.phone,
+            cr604_address: req.body.address || client.address,
+            cr604_clienttype: req.body.clientType || client.clientType,
+            cr604_paymentmethod: req.body.paymentMethod || client.paymentMethod,
+            cr604_currency: req.body.currency || client.currency,
+            cr604_status: req.body.status || client.status,
+        };
+
+        await axios.patch(
+            `https://org712f6530.crm4.dynamics.com/api/data/v9.0/cr604_client_gps(${dataverseId})`,
+            data,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        res.status(200).json({
+            message: "Client mis à jour avec succès dans MongoDB et Dataverse.",
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Erreur lors de la mise à jour.",
+        });
     }
-
-    const client = await Client.find({ _id: req.params.id });
-    if (!client) {
-        return res.status(400).json({
-            message: "No clients with this id in the DB !"
-        })
-    }
-
-    // Mise à jour du client
-    const updatedClient = await Client.findByIdAndUpdate(
-        req.params.id,
-        req.body, // Les données mises à jour envoyées dans la requête
-        { new: true, runValidators: true } // Retourne l'objet mis à jour et applique les validateurs
-    );
-
-    res.status(200).json({
-        message: "Client has been updated successfully.",
-        updatedClient
-    });
-
-
-})
+});
