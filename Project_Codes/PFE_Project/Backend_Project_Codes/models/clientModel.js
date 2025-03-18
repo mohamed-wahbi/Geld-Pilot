@@ -23,6 +23,10 @@ const ClientSchema = new mongoose.Schema({
         type: String, 
         enum: ["Active", "Inactive", "Blocked"], 
         default: "Active" 
+    },
+    dataverseId: {
+        type: String,
+        default:""
     }
 },
 

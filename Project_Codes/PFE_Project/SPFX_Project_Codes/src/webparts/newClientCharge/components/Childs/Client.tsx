@@ -154,6 +154,7 @@ const ClientComp: React.FC = () => {
       clientType: "Individual",
       paymentMethod: "Credit Card",
       currency: "Dollar",
+      status:"Active"
     });
   };
 
