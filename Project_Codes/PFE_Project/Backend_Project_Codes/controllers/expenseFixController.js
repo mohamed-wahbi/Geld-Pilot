@@ -222,30 +222,6 @@ module.exports.deleteOneExpenseFixCtrl = asyncHandler(async (req, res) => {
                 message: "Erreur lors de la suppression.",
             });
         }
-
-
-
-
-
-
-
-
-    // const OneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
-    // if (!OneExpenseFix) {
-    //     return res.status(400).json({
-    //         message: "No One Expense Fix with this id in the DB !"
-    //     })
-    // }
-
-    // const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({ _id: req.params.id })
-    // if (!deleteOneExpenseFix) {
-    //     return res.status(400).json({
-    //         message: "One Expense not deleted!"
-    //     })
-    // }
-    // res.status(200).json({
-    //     message: "One Expense Fix is deleted successfully."
-    // })
 })
 
 
@@ -259,31 +235,102 @@ module.exports.deleteOneExpenseFixCtrl = asyncHandler(async (req, res) => {
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.updateOneExpenseFixCtrl = asyncHandler(async (req, res) => {
+     try {
+            const { id } = req.params;
+    
+            // 1️⃣ Vérifier si le charge existe en MongoDB
+            const charge = await ExpenseFix.findById(id);
+            if (!charge) {
+                return res.status(404).json({ message: "Charge non trouvé dans MongoDB." });
+            }
+    
+            // 2️⃣ Vérifier si l'ID Dataverse existe
+            const dataverseId = charge.dataverseId;
+            if (!dataverseId) {
+                return res.status(400).json({ message: "ID Dataverse introuvable pour ce charge." });
+            }
+    
+            // 3️⃣ Mettre à jour MongoDB
+            const updatedClient = await ExpenseFix.findByIdAndUpdate(
+                id,
+                {
 
-    // Validation
-    const { error } = UpdateExpenseFixValidation(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
+                    expenseName: req.body.expenseName || charge.expenseName,
+                    expenseType: req.body.expenseType || charge.expenseType,
+                    amount: req.body.amount || charge.amount,
+                    status: req.body.status || charge.status,
+                    paymentDay: req.body.paymentDay || charge.paymentDay,
+       
+                },
+                { new: true, runValidators: true } // Retourne l'objet mis à jour avec validation
+            );
+    
+            // 4️⃣ Obtenir un token valide pour Dataverse
+            const token = await getAccessToken();
+    
+            // 5️⃣ Mettre à jour l'entrée dans Dataverse
+            const data = {
 
-    const oneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
-    if (!oneExpenseFix) {
-        return res.status(400).json({
-            message: "No Expense Fix with this id in the DB !"
-        })
-    }
+                cr604_expensename: req.body.expenseName || charge.expenseName,
+                cr604_expensetype: req.body.expenseType || charge.expenseType,
+                cr604_amount:      req.body.amount      || charge.amount,
+                cr604_status:      req.body.status      || charge.status
+            };
+    
+            await axios.patch(
+                `https://org712f6530.crm4.dynamics.com/api/data/v9.0/cr604_expensefix_gps(${dataverseId})`,
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            res.status(200).json({
+                message: "Charge mis à jour avec succès dans MongoDB et Dataverse.",
+            });
+    
+        } catch (error) {
+            res.status(500).json({
+                message: "Erreur lors de la mise à jour.",
+            });
+        }
 
 
-    const updatedOneExpenseFix = await ExpenseFix.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true, runValidators: true }
-    );
 
-    res.status(200).json({
-        message: "Client has been updated successfully.",
 
-    });
+
+
+
+
+
+
+    // // Validation
+    // const { error } = UpdateExpenseFixValidation(req.body);
+    // if (error) {
+    //     return res.status(400).json({ message: error.details[0].message });
+    // }
+
+    // const oneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
+    // if (!oneExpenseFix) {
+    //     return res.status(400).json({
+    //         message: "No Expense Fix with this id in the DB !"
+    //     })
+    // }
+
+
+    // const updatedOneExpenseFix = await ExpenseFix.findByIdAndUpdate(
+    //     req.params.id,
+    //     req.body,
+    //     { new: true, runValidators: true }
+    // );
+
+    // res.status(200).json({
+    //     message: "Client has been updated successfully.",
+
+    // });
 
 
 })
