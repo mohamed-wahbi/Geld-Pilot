@@ -113,6 +113,7 @@ module.exports.createClientCtrl = asyncHandler(async (req, res) => {
         });
     }
 });
+// _______________________________________________________________________________________________
 
 
 
@@ -185,40 +186,6 @@ module.exports.deleteOneClientCtrl = asyncHandler(async (req, res) => {
             message: "Client not deleted!"
         })
     }
-
-
-
-        // --------------------------Datavers Client DeleteOne------------------------
-
-        const token = await getAccessToken();  // 🔹 Obtenir un token valide
-
-        // 2️⃣ Envoi des données vers Dataverse
-        const data = {
-            cr604_cin: req.body.cin,
-            cr604_name: req.body.name,  
-            cr604_email: req.body.email,
-            cr604_phone: req.body.phone,
-            cr604_address: req.body.address,  
-            cr604_clienttype: req.body.clientType,
-            cr604_paymentmethod: req.body.paymentMethod,
-            cr604_currency: req.body.currency,  
-            cr604_status: req.body.status,
-        };
-    
-        const dataverseResponse = await axios.post(
-            `${url}/api/data/v9.0/cr604_client_gps`,
-            data,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-    
-    // _____________________________________________________________________________________
-
-
 
 
 
