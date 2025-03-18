@@ -11,8 +11,6 @@ const axios = require('axios')
 require("dotenv").config()
 const { tanentId, clientId, clientSecret, url } = process.env
 
-
-
 const getAccessToken = async () => {
     const tokenResponse = await axios.post(
         `https://login.microsoftonline.com/${tanentId}/oauth2/token`,
@@ -225,7 +223,6 @@ module.exports.deleteOneClientCtrl = asyncHandler(async (req, res) => {
 * @methode PUT
 * @access  only admin
 ----------------------------------------------------*/
-
 module.exports.updateOneClientCtrl = asyncHandler(async (req, res) => {
     try {
         const { id } = req.params;
