@@ -172,27 +172,48 @@ module.exports.getOneClientCtrl = asyncHandler(async (req, res) => {
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.deleteOneClientCtrl = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
 
-    const client = await Client.find({ _id: req.params.id });
-    if (!client) {
-        return res.status(400).json({
-            message: "No clients with this id in the DB !"
-        })
+        // 1️⃣ Vérifier si le client existe dans MongoDB
+        const client = await Client.findById(id);
+        if (!client) {
+            return res.status(404).json({ message: "Client non trouvé dans MongoDB." });
+        }
+
+        // 2️⃣ Vérifier si l'ID Dataverse existe
+        const dataverseId = client.dataverseId;
+        if (!dataverseId) {
+            return res.status(400).json({ message: "ID Dataverse introuvable pour ce client." });
+        }
+
+        // 3️⃣ Obtenir un token valide pour Dataverse
+        const token = await getAccessToken();
+
+        // 4️⃣ Supprimer l'enregistrement dans Dataverse
+        await axios.delete(
+            `https://org712f6530.crm4.dynamics.com/api/data/v9.0/cr604_client_gps(${dataverseId})`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        // 5️⃣ Supprimer l'enregistrement dans MongoDB
+        await Client.findByIdAndDelete(id);
+
+        res.status(200).json({
+            message: "Client supprimé de MongoDB et Dataverse.",
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erreur lors de la suppression.",
+        });
     }
-
-    const deleteClient = await Client.findByIdAndDelete({ _id: req.params.id })
-    if (!deleteClient) {
-        return res.status(400).json({
-            message: "Client not deleted!"
-        })
-    }
-
-
-
-    res.status(200).json({
-        message: "Client is deleted."
-    })
-})
+});
 
 
 
