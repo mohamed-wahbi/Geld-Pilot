@@ -38,9 +38,6 @@ const getAccessToken = async () => {
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.createExpenseFixtCtrl = asyncHandler(async (req, res) => {
-
-
-
     try {
             // 1️⃣ Validation des données
             const { error } = CreateExpenseFixValidation(req.body);
@@ -101,25 +98,6 @@ module.exports.createExpenseFixtCtrl = asyncHandler(async (req, res) => {
             });
         }
 
-
-
-
-
-
-
-//     // Validation
-//     const { error } = CreateExpenseFixValidation(req.body);
-//     if (error) {
-//         return res.status(400).json({ message: error.details[0].message });
-//     }
-
-//     // create client 
-//     const newExpenseFix = await ExpenseFix.create(req.body)
-//     if (!newExpenseFix) {
-//         return res.status(400).json({ message: "Expense-Fix not created!" })
-//     }
-
-//     res.status(201).json({ message: "Expense-Fix created successfully", ExpenseFix });
  })
 
 
@@ -201,22 +179,73 @@ module.exports.getOneExpenseFixCtrl = asyncHandler(async (req, res) => {
 ----------------------------------------------------*/
 module.exports.deleteOneExpenseFixCtrl = asyncHandler(async (req, res) => {
 
-    const OneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
-    if (!OneExpenseFix) {
-        return res.status(400).json({
-            message: "No One Expense Fix with this id in the DB !"
-        })
-    }
 
-    const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({ _id: req.params.id })
-    if (!deleteOneExpenseFix) {
-        return res.status(400).json({
-            message: "One Expense not deleted!"
-        })
-    }
-    res.status(200).json({
-        message: "One Expense Fix is deleted successfully."
-    })
+
+    try {
+            const { id } = req.params;
+    
+            // 1️⃣ Vérifier si le charge existe dans MongoDB
+            const charge = await ExpenseFix.findById(id);
+            if (!charge) {
+                return res.status(404).json({ message: "Charge non trouvé dans MongoDB." });
+            }
+    
+            // 2️⃣ Vérifier si l'ID Dataverse existe
+            const dataverseId = charge.dataverseId;
+            if (!dataverseId) {
+                return res.status(400).json({ message: "ID Dataverse introuvable pour ce charge." });
+            }
+    
+            // 3️⃣ Obtenir un token valide pour Dataverse
+            const token = await getAccessToken();
+    
+            // 4️⃣ Supprimer l'enregistrement dans Dataverse
+            await axios.delete(
+                `https://org712f6530.crm4.dynamics.com/api/data/v9.0/cr604_expensefix_gps(${dataverseId})`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            // 5️⃣ Supprimer l'enregistrement dans MongoDB
+            await ExpenseFix.findByIdAndDelete(id);
+    
+            res.status(200).json({
+                message: "Charge supprimé de MongoDB et Dataverse.",
+            });
+    
+        } catch (error) {
+            return res.status(500).json({
+                message: "Erreur lors de la suppression.",
+            });
+        }
+
+
+
+
+
+
+
+
+    // const OneExpenseFix = await ExpenseFix.find({ _id: req.params.id });
+    // if (!OneExpenseFix) {
+    //     return res.status(400).json({
+    //         message: "No One Expense Fix with this id in the DB !"
+    //     })
+    // }
+
+    // const deleteOneExpenseFix = await ExpenseFix.findByIdAndDelete({ _id: req.params.id })
+    // if (!deleteOneExpenseFix) {
+    //     return res.status(400).json({
+    //         message: "One Expense not deleted!"
+    //     })
+    // }
+    // res.status(200).json({
+    //     message: "One Expense Fix is deleted successfully."
+    // })
 })
 
 
