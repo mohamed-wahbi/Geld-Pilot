@@ -1,7 +1,38 @@
 const asyncHandler = require("express-async-handler");
-const {MonthlyExpenseHistory} = require ('../models/MonthlyExpenseHistoryModel.js')
+const { MonthlyExpenseHistory } = require('../models/MonthlyExpenseHistoryModel.js')
 const { MonthlyExpense } = require("../models/monthlyExpenseModel.js");
 const { MonthlyExpenseResult } = require("../models/MonthlyExpenseResultModel.js");
+const axios = require('axios')
+
+
+
+
+
+// ---------------------------------Token Auto Generate-----------------------------------------
+
+require("dotenv").config()
+const { tanentId, clientId, clientSecret, url } = process.env
+
+const getAccessToken = async () => {
+    const tokenResponse = await axios.post(
+        `https://login.microsoftonline.com/${tanentId}/oauth2/token`,
+        new URLSearchParams({
+            grant_type: "client_credentials",
+            client_id: `${clientId}`,
+            client_secret: `${clientSecret}`,
+            resource: `${url}`
+        })
+    );
+    return tokenResponse.data.access_token;
+};
+
+// ___________________________________________________________________________________________
+
+
+
+
+
+
 
 /*--------------------------------------------------
 * @desc    Generate Monthly Expenses Result and Archive History
@@ -11,6 +42,8 @@ const { MonthlyExpenseResult } = require("../models/MonthlyExpenseResultModel.js
 ----------------------------------------------------*/
 module.exports.monthExpensResManuelyCtrl = asyncHandler(async (req, res) => {
     const { year, month } = req.params;
+    // 3️⃣ Obtenir un token pour Dataverse
+    const token = await getAccessToken();
 
     try {
         // Convertir `year` en Number
@@ -72,6 +105,43 @@ module.exports.monthExpensResManuelyCtrl = asyncHandler(async (req, res) => {
                 covredDay: expense.covredDay || null,
             }));
 
+
+            // Étape 4: Insérer les dépenses dans MonthlyExpenseHistory
+            const insertDataIntoDataverse = expensesToArchive.map(expense => ({
+                cr604_covredday: expense.covredDay.toString(), // Convertir en string si nécessaire
+                cr604_expensename: expense.expenseName,
+                cr604_year: expense.year.toString(), // Correction ici
+                cr604_expensetype: expense.expenseType,
+                cr604_estimatedamount: expense.estimatedAmount.toString(), // Si nécessaire
+                cr604_actualamount: expense.actualAmount.toString(), // Si nécessaire
+                cr604_chargestatus: expense.chargeStatus,
+                cr604_month: expense.month.toString(), // Correction ici
+            }));
+            
+            try {
+                // Envoyer chaque objet individuellement avec `Promise.all`
+                const responses = await Promise.all(
+                    insertDataIntoDataverse.map(data =>
+                        axios.post(
+                            `${url}/api/data/v9.0/cr604_expense_result_gps`,
+                            data,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json",
+                                },
+                            }
+                        )
+                    )
+                );
+            
+            } catch (error) {
+                console.error("Erreur lors de l'insertion dans Dataverse:", error.response?.data || error);
+            }
+            
+            
+
+
             await MonthlyExpenseHistory.insertMany(historyToInsert);
 
             // Étape 5: Supprimer les dépenses utilisées pour générer MonthlyExpenseResult
@@ -105,16 +175,16 @@ module.exports.monthExpensResManuelyCtrl = asyncHandler(async (req, res) => {
 * @methode Get
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.getAllMonthlyExpenseResultCtrl = asyncHandler(async(req,res)=> {
-    const getAll = await MonthlyExpenseResult.find({isConfirmed:false})
-    if(!getAll){
+module.exports.getAllMonthlyExpenseResultCtrl = asyncHandler(async (req, res) => {
+    const getAll = await MonthlyExpenseResult.find({ isConfirmed: false })
+    if (!getAll) {
         return res.status(400).json({
-            message : "No Monthly Expense Result in the DB"
+            message: "No Monthly Expense Result in the DB"
         })
     }
 
     res.status(200).json({
-        MonthlyExpenseResultDatas :getAll
+        MonthlyExpenseResultDatas: getAll
     })
 })
 
@@ -127,16 +197,16 @@ module.exports.getAllMonthlyExpenseResultCtrl = asyncHandler(async(req,res)=> {
 * @methode Get
 * @access  only admin
 ----------------------------------------------------*/
-module.exports.getAllConfirmedMonthlyExpenseResultCtrl = asyncHandler(async(req,res)=> {
-    const getAll = await MonthlyExpenseResult.find({isConfirmed:true})
-    if(!getAll){
+module.exports.getAllConfirmedMonthlyExpenseResultCtrl = asyncHandler(async (req, res) => {
+    const getAll = await MonthlyExpenseResult.find({ isConfirmed: true })
+    if (!getAll) {
         return res.status(400).json({
-            message : "No Monthly Expense Result in the DB"
+            message: "No Monthly Expense Result in the DB"
         })
     }
 
     res.status(200).json({
-        MonthlyExpenseResultDatas :getAll
+        MonthlyExpenseResultDatas: getAll
     })
 })
 
