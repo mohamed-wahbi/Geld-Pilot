@@ -184,6 +184,42 @@ module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
         }, {});
 
         const revenues = Object.values(groupedData);
+
+
+
+        // Étape 5: inserer les donnee au dataverse :
+        const insertRevenueResultsDataIntoDataverse = revenues.map(revenue => ({
+            cr604_year: revenue.year,
+            cr604_nomclient: revenue.nomClient,
+            cr604_montanttotalpaye: revenue.montantTotalPaye,
+            cr604_nombrefacturespayees: revenue.nombreFacturesPayees,
+            cr604_month: revenue.month,
+        }));
+
+        try {
+            // Envoyer chaque objet individuellement avec `Promise.all` With creation of the Revenue_GP dataverse Tabel
+            const responses = await Promise.all(
+                insertRevenueResultsDataIntoDataverse.map(data =>
+                    axios.post(
+                        `${url}/api/data/v9.0/cr604_revenue_results_gps`,
+                        data,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    )
+                )
+            );
+
+        } catch (error) {
+            res.status(404).json({
+                message: "Erreur lors de l'insertion dans Dataverse"
+            })
+        }
+
+
         await Revenue.insertMany(revenues);
 
         // Supprimer les factures archivées du modèle Invoice
@@ -195,7 +231,6 @@ module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
             month
         });
     } catch (err) {
-        console.error("Erreur lors de la génération des revenus mensuels", err);
         res.status(500).json({ message: "Erreur serveur" });
     }
 });
