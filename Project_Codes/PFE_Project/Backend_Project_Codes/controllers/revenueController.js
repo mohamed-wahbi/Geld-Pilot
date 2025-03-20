@@ -136,7 +136,7 @@ module.exports.generateRevCtrl = asyncHandler(async (req, res) => {
         }));
 
         try {
-            // Envoyer chaque objet individuellement avec `Promise.all`
+            // Envoyer chaque objet individuellement avec `Promise.all` With creation of the Revenue_GP dataverse Tabel
             const responses = await Promise.all(
                 insertDataIntoDataverse.map(data =>
                     axios.post(
