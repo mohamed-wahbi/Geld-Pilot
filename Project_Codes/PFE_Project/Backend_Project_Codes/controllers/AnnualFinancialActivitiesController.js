@@ -1,6 +1,39 @@
 const asyncHandler = require("express-async-handler");
 const { AnnualFinancialActivities, CreateAnnualActivityValidation } = require("../models/AnnualFinancialActivitiesModel.js");
 const { MonthlyFinancialActivities } = require("../models/MonthlyFinancialActivitiesModel.js");
+const axios = require('axios')
+
+
+
+
+
+
+// ---------------------------------Token Auto Generate-----------------------------------------
+
+require("dotenv").config()
+const { tanentId, clientId, clientSecret, url } = process.env
+
+const getAccessToken = async () => {
+  const tokenResponse = await axios.post(
+    `https://login.microsoftonline.com/${tanentId}/oauth2/token`,
+    new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: `${clientId}`,
+      client_secret: `${clientSecret}`,
+      resource: `${url}`
+    })
+  );
+  return tokenResponse.data.access_token;
+};
+
+// ___________________________________________________________________________________________
+
+
+
+
+
+
+
 
 /*--------------------------------------------------
 * @desc    Create Annual Financial Activities
@@ -9,6 +42,10 @@ const { MonthlyFinancialActivities } = require("../models/MonthlyFinancialActivi
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res) => {
+
+  // 3️⃣ Obtenir un token pour Dataverse
+  const token = await getAccessToken();
+
   // Validate request body
   const { error } = CreateAnnualActivityValidation(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -16,11 +53,11 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
   const { year, bankFund } = req.body;
 
 
-// Verifier si cette année et déja generé:
-  const annualActivityVerification = await AnnualFinancialActivities.find({year})
-  if(annualActivityVerification.length>0){
+  // Verifier si cette année et déja generé:
+  const annualActivityVerification = await AnnualFinancialActivities.find({ year })
+  if (annualActivityVerification.length > 0) {
     return res.status(400).json({
-        message: "Annual activities for this year have already been generated."
+      message: "Annual activities for this year have already been generated."
     })
   }
 
@@ -66,6 +103,38 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
     monthlyFinancialActivitiesList: monthlyActivities.map(activity => activity._id),
   });
 
+
+
+
+
+  // 4️⃣ Préparer et envoyer les données vers Dataverse
+  const data = {
+    cr604_year: year,
+    cr604_bankfund: bankFund,
+    cr604_totalrevenue: totalRevenue,
+    cr604_totalexpenses: totalExpenses,
+    cr604_rest: totalRevenue - totalExpenses,
+    cr604_globalrest: (totalRevenue - totalExpenses) + bankFund,
+    cr604_financialstatus: financialStatus,
+  };
+
+  const dataverseResponse = await axios.post(
+    `${url}/api/data/v9.0/cr604_annual_financial_activities_gps`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+
+
+
+
+
+
   // Save to the database
   await annualActivity.save();
 
@@ -86,21 +155,21 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.getLatestAnnualFinancialActivityCtrl = asyncHandler(async (req, res) => {
-    try {
-        const latestActivity = await AnnualFinancialActivities.findOne().sort({ createdAt: -1 });
+  try {
+    const latestActivity = await AnnualFinancialActivities.findOne().sort({ createdAt: -1 });
 
-        if (!latestActivity) {
-            return res.status(404).json({
-                message: "No financial activity found!"
-            });
-        }
-
-        res.status(200).json({
-            latestActivity
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!latestActivity) {
+      return res.status(404).json({
+        message: "No financial activity found!"
+      });
     }
+
+    res.status(200).json({
+      latestActivity
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
 });
 
 
@@ -113,24 +182,24 @@ module.exports.getLatestAnnualFinancialActivityCtrl = asyncHandler(async (req, r
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.getOneAnnualFinancialActivitysCtrl = asyncHandler(async (req, res) => {
-    const { year } = req.body;
+  const { year } = req.body;
 
-    // Vérifier que year et month sont fournis
-    if (!year) {
-        return res.status(400).json({ message: "Year required!" });
+  // Vérifier que year et month sont fournis
+  if (!year) {
+    return res.status(400).json({ message: "Year required!" });
+  }
+
+  try {
+    // Récupérer les données avec un filtre sur l'année et le mois
+    const getOne = await AnnualFinancialActivities.findOne({ year })
+      .populate("monthlyFinancialActivitiesList")
+
+    if (!getOne) {
+      return res.status(404).json({ message: "No result with this date!" });
     }
 
-    try {
-        // Récupérer les données avec un filtre sur l'année et le mois
-        const getOne = await AnnualFinancialActivities.findOne({ year })
-        .populate("monthlyFinancialActivitiesList") 
-
-        if (!getOne) {
-            return res.status(404).json({ message: "No result with this date!" });
-        }
-
-        res.status(200).json({getOneAnnualActivitie:getOne});
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
+    res.status(200).json({ getOneAnnualActivitie: getOne });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
