@@ -83,6 +83,8 @@ function CreateAnnualActivityValidation(obj) {
     year: Joi.number().integer().min(2000).max(2100).required(),
     bankFund: Joi.number().min(0).required(),
     monthlyFinancialActivitiesList: Joi.array().items(Joi.string().hex().length(24)).default([]),
+    facteurExterne: Joi.number().optional() // Ajout de cette ligne
+
   });
 
   return schema.validate(obj);

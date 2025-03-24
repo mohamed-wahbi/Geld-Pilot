@@ -21,6 +21,8 @@ const Generate: React.FC = () => {
   const [year, setYear] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [bankFund, setBankFund] = useState<number | null>(null);
+  const [facteurExterne, setFacteurExterne] = useState<number | null>(null);
+  
   const [latestActivities, setLatestActivities] = useState<LatestActivities | null>(null);
 
   useEffect(() => {
@@ -49,11 +51,13 @@ const Generate: React.FC = () => {
     try {
       await axios.post("http://127.0.0.1:3320/api/annual-financial-activitie/create", {
         year,
-        bankFund
+        bankFund,
+        facteurExterne
       });
 
       notify("Annual Activities created successfully ✅");
       setBankFund(null);
+      setFacteurExterne(null)
       setErrorMsg("");
       setYear("");
       setGeneratAnnualActivitiesTab(false);
@@ -98,6 +102,7 @@ const Generate: React.FC = () => {
                 setGeneratAnnualActivitiesTab(!generatAnnualActivitiesTab);
                 setYear("");
                 setBankFund(null);
+                setFacteurExterne(null)
               }}
             >
               {generatAnnualActivitiesTab ? "❌" : "🆕"}
@@ -124,6 +129,17 @@ const Generate: React.FC = () => {
                   value={bankFund ?? ""}
                   type="number"
                   onChange={(e) => setBankFund(Number(e.target.value))}
+                  required
+                />
+              </div>
+
+              <div className={styles.inputGenerateForm}>
+                <label>Bad External Facts</label>
+                <input
+                  placeholder="1000"
+                  value={facteurExterne ?? ""}
+                  type="number"
+                  onChange={(e) => setFacteurExterne(Number(e.target.value))}
                   required
                 />
               </div>

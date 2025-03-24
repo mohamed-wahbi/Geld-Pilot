@@ -9,8 +9,6 @@ router.route('/create').post(createAuthorizationCrtl)
 router.route('/get_all').get(getAllAuthCtrl)
 
 // delete one Authorization :
-router.route("/delete_one/:id").delete(deleteOneAuthorizationCrtl
-     
-)
+router.route("/delete_one/:id").delete(deleteOneAuthorizationCrtl)
 
 module.exports= router

@@ -22,6 +22,7 @@ const Generate: React.FC = () => {
   const [year, setYear] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [bankFund, setBankFund] = useState<number | null>(null);
+  const [facteurExterne, setFacteurExterne] = useState<number | null>(null);
   const [latestActivities, setLatestActivities] = useState<LatestActivities | null>(null);
 
   useEffect(() => {
@@ -52,12 +53,14 @@ const Generate: React.FC = () => {
         year,
         month,
         bankFund,
+        facteurExterne
       });
 
       notify("Monthly Activities created successfully ✅");
       setBankFund(null);
       setYear("");
       setMonth("");
+      setFacteurExterne(null);
       setGeneratMonthlyActivitiesTab(false);
       getLatest(); // Refresh latest activities
     } catch (error: any) {
@@ -86,7 +89,7 @@ const Generate: React.FC = () => {
   return (
     <div>
       <ToastContainer />
-      
+
       {/* ---- Generate Monthly Activities Section ---- */}
       <div className={styles.HeaderTabelCtrl} style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
         <div className={styles.generateRevenue}>
@@ -97,6 +100,7 @@ const Generate: React.FC = () => {
                 setGeneratMonthlyActivitiesTab(!generatMonthlyActivitiesTab);
                 setYear("");
                 setMonth("");
+                setFacteurExterne(null);
                 setBankFund(null);
               }}
             >
@@ -134,6 +138,18 @@ const Generate: React.FC = () => {
                   value={bankFund ?? ""}
                   type="number"
                   onChange={(e) => setBankFund(Number(e.target.value))}
+                  required
+                />
+              </div>
+
+
+              <div className={styles.inputGenerateForm}>
+                <label>External Bad Facts</label>
+                <input
+                  placeholder="1 or 2.."
+                  value={facteurExterne ?? ""}
+                  type="number"
+                  onChange={(e) => setFacteurExterne(Number(e.target.value))}
                   required
                 />
               </div>

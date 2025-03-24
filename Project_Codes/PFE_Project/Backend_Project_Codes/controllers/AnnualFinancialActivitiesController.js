@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { AnnualFinancialActivities, CreateAnnualActivityValidation } = require("../models/AnnualFinancialActivitiesModel.js");
 const { MonthlyFinancialActivities } = require("../models/MonthlyFinancialActivitiesModel.js");
 const axios = require('axios')
-
+const { AnnualFinanceTrainML } = require('../models/PredictionsModels/AnnualFinance.js')
 
 
 
@@ -34,91 +34,84 @@ const getAccessToken = async () => {
 
 
 
-
 /*--------------------------------------------------
 * @desc    Create Annual Financial Activities
 * @route   /api/annual-financial-activity/create
 * @method  POST
 * @access  only admin
 ----------------------------------------------------*/
+
 module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res) => {
 
-  // 3️⃣ Obtenir un token pour Dataverse
+  // 1️⃣ Obtenir un token pour Dataverse
   const token = await getAccessToken();
 
-  // Validate request body
+  // 2️⃣ Validation des données d'entrée
   const { error } = CreateAnnualActivityValidation(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { year, bankFund } = req.body;
+  const { year, bankFund, facteurExterne } = req.body;
 
-
-  // Verifier si cette année et déja generé:
-  const annualActivityVerification = await AnnualFinancialActivities.find({ year })
-  if (annualActivityVerification.length > 0) {
+  // 3️⃣ Vérifier si les activités annuelles existent déjà pour cette année
+  const annualActivityVerification = await AnnualFinancialActivities.findOne({ year });
+  if (annualActivityVerification) {
     return res.status(400).json({
       message: "Annual activities for this year have already been generated."
-    })
+    });
   }
 
-  // Fetch all monthly financial activities for the given year
+  // 4️⃣ Récupérer les activités mensuelles
   const monthlyActivities = await MonthlyFinancialActivities.find({ year });
-
-  if (!monthlyActivities.length) {
-    return res.status(404).json({ message: "No monthly financial records found for the specified year." });
-  }
 
   if (monthlyActivities.length !== 12) {
     return res.status(404).json({ message: "All 12 months must be present for the annual report." });
   }
 
-  // Calculate totals
+  // 5️⃣ Calcul des totaux annuels
   const totalRevenue = monthlyActivities.reduce((sum, activity) => sum + (activity.totalRevenue || 0), 0);
   const totalExpenses = monthlyActivities.reduce((sum, activity) => sum + (activity.totalExpenses || 0), 0);
-  const rest = totalRevenue - totalExpenses;
-  const globalRest = rest + bankFund;
+  const soldeAnnuel = totalRevenue - totalExpenses;
+  const globalRest = soldeAnnuel + bankFund;
 
-  // Determine financial status
+  // 6️⃣ Déterminer le statut financier
   let financialStatus = "Critical";
   let comment = "The financial situation is critical, no profit.";
 
-  if (rest > 0) {
+  if (soldeAnnuel > 0) {
     financialStatus = "Good";
     comment = "The financial situation is stable and profitable.";
-  } else if (rest < 0) {
+  } else if (soldeAnnuel < 0) {
     financialStatus = "Bad";
     comment = "The financial situation is negative, losses recorded.";
   }
 
-  // Create a new annual financial activity
+  // 7️⃣ Enregistrer l'activité financière annuelle
   const annualActivity = new AnnualFinancialActivities({
     year,
     bankFund,
     totalRevenue,
     totalExpenses,
-    rest,
+    soldeAnnuel,
     globalRest,
     financialStatus,
     comment,
     monthlyFinancialActivitiesList: monthlyActivities.map(activity => activity._id),
   });
 
+  await annualActivity.save();
 
-
-
-
-  // 4️⃣ Préparer et envoyer les données vers Dataverse
+  // 8️⃣ Envoyer les données vers Dataverse
   const data = {
     cr604_year: year,
     cr604_bankfund: bankFund,
     cr604_totalrevenue: totalRevenue,
     cr604_totalexpenses: totalExpenses,
-    cr604_rest: totalRevenue - totalExpenses,
-    cr604_globalrest: (totalRevenue - totalExpenses) + bankFund,
+    cr604_rest: soldeAnnuel,
+    cr604_globalrest: globalRest,
     cr604_financialstatus: financialStatus,
   };
 
-  const dataverseResponse = await axios.post(
+  await axios.post(
     `${url}/api/data/v9.0/cr604_annual_financial_activities_gps`,
     data,
     {
@@ -129,20 +122,37 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
     }
   );
 
+  // 9️⃣ Récupération des données de l'année précédente
+  const previousYearData = await AnnualFinancialActivities.findOne({ year: (parseInt(year) - 1).toString() });
 
+  let croissanceRevenu = 0, croissanceCharges = 0;
+  if (previousYearData) {
+    croissanceRevenu = ((totalRevenue - previousYearData.totalRevenue) / (previousYearData.totalRevenue || 1)) * 100;
+    croissanceCharges = ((totalExpenses - previousYearData.totalExpenses) / (previousYearData.totalExpenses || 1)) * 100;
+  }
 
+  // 🔟 Enregistrer les données dans le modèle d'entraînement ML
+  const newAnnualPrediction = new AnnualFinanceTrainML({
+    annee: year,
+    revenuAnnuel: totalRevenue,
+    chargesAnnuelles: totalExpenses,
+    croissanceRevenu,
+    croissanceCharges,
+    soldeAnnuel,
+    facteurExterne,
+    reussiteAnnuelle: soldeAnnuel > 0 ? 1 : 0
+  });
 
+  await newAnnualPrediction.save();
 
-
-
-  // Save to the database
-  await annualActivity.save();
-
+  // ✅ Réponse finale
   res.status(201).json({
     message: "Annual Financial Activity created successfully",
-    annualActivity,
+    currentYearData: annualActivity,
   });
+
 });
+
 
 
 

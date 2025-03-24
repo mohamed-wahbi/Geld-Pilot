@@ -86,6 +86,8 @@ function CreateMonthlyActivityValidation(obj) {
     bankFund: Joi.number().min(0).required(),
     revenuesList: Joi.array().items(Joi.string().hex().length(24)).default([]), // IDs des revenus
     expensesList: Joi.array().items(Joi.string().hex().length(24)).default([]), // IDs des dépenses
+    facteurExterne: Joi.number().optional() // Ajout de cette ligne
+
   });
 
   return schema.validate(obj);
@@ -99,6 +101,8 @@ function UpdateMonthlyActivityValidation(obj) {
     bankFund: Joi.number().min(0),
     revenuesList: Joi.array().items(Joi.string().hex().length(24)),
     expensesList: Joi.array().items(Joi.string().hex().length(24)),
+    facteurExterne: Joi.number().optional() // Ajout de cette ligne
+
   }).min(1);
 
   return schema.validate(obj);

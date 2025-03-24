@@ -21,6 +21,10 @@ const annualFinancialActivitiesRoutes = require('./routes/AnnualFinancialActivit
 const testRoute = require ("./routes/testRoute.js")
 
 
+const PredictionsRoutes = require ("./routes/PredictionRoutes/predictionRoute.js")
+
+
+
 
 
 //middlwaere :
@@ -44,6 +48,7 @@ app.use('/api/monthly-expense-history',monthlyExpenseHistoryRoutes);
 app.use('/api/monthly-financial-activitie',monthlyFinancialActivitiesRoutes); 
 app.use('/api/annual-financial-activitie',annualFinancialActivitiesRoutes); 
 app.use('/api/test',testRoute); 
+app.use('/api',PredictionsRoutes); 
 
 
 

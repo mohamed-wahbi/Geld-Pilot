@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { MonthlyFinancialActivities, CreateMonthlyActivityValidation } = require("../models/MonthlyFinancialActivitiesModel.js");
 const { Revenue } = require("../models/RevenueModel.js");
 const { MonthlyExpenseResult } = require("../models/MonthlyExpenseResultModel.js");
+const { MonthlyFinanceTrainML } = require("../models/PredictionsModels/MonthlyFinance.js")
 const axios = require('axios')
 
 
@@ -48,7 +49,7 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
         const { error } = CreateMonthlyActivityValidation(req.body);
         if (error) return res.status(400).json({ message: error.details[0].message });
 
-        const { year, month, bankFund } = req.body;
+        const { year, month, bankFund , facteurExterne} = req.body;
 
         // 🔹 2. Vérifier si une activité pour ce mois et cette année existe déjà
         const existingActivity = await MonthlyFinancialActivities.findOne({ year, month });
@@ -135,9 +136,57 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
         // 🔹 7. Enregistrement dans la base de données
         await newActivity.save();
 
+        // Convertir en nombre pour éviter les problèmes de format
+        let prevMonth = parseInt(month) - 1;
+        let prevYear = parseInt(year);
+
+        if (prevMonth === 0) { // Si on est en janvier, on passe à décembre de l'année précédente
+            prevMonth = 12;
+            prevYear -= 1;
+        }
+
+        // Recherche du mois précédent
+        const previousMonth = await MonthlyFinancialActivities.findOne({
+            year: prevYear.toString(),  // Convertir en string si nécessaire
+            month: prevMonth.toString().padStart(2, "0") // S'assurer d'avoir "01", "02", etc.
+        })
+
+
+        let croissanceRevenu = 0, croissanceCharges = 0;
+        if (previousMonth) {
+            croissanceRevenu = ((totalRevenue - previousMonth.totalRevenue) / (previousMonth.totalRevenue || 1)) * 100;
+            croissanceCharges = ((totalExpenses - previousMonth.totalExpenses) / (previousMonth.totalExpenses || 1)) * 100;
+        }
+
+
+
+        // Calcul du solde annuel et du facteur externe
+        const yearlyData = await MonthlyFinancialActivities.find({ year });
+        const soldeAnnuel = yearlyData.reduce((sum, entry) => sum + entry.rest, 0);
+        console.log(yearlyData.map(entry => ({ mois: entry.month, rest: entry.rest })));
+
+        // Définition du succès annuel
+        const reussiteAnnuelle = totalRevenue > totalExpenses ? 1 : 0;
+
+        // Création de l'entrée dans le modèle de prédiction
+        const newPrediction = new MonthlyFinanceTrainML({
+            mois: parseInt(month),
+            annee: parseInt(year),
+            revenuTotal: totalRevenue,
+            chargesTotal: totalExpenses,
+            croissanceRevenu,
+            croissanceCharges,
+            soldeAnnuel,
+            facteurExterne,
+            reussiteAnnuelle
+        });
+
+        await newPrediction.save();
+
         res.status(201).json({
             message: "Financial activity created successfully.",
             data: newActivity,
+            yearlyData
         });
     } catch (err) {
         res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
