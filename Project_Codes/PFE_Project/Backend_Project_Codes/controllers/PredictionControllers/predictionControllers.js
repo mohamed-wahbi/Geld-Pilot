@@ -116,6 +116,21 @@ module.exports.getLastPredictionResultsCtrl = asyncHandler(async (req, res) => {
 
 
 
+module.exports.getAllPredictionResultsCtrl = asyncHandler(async (req, res) => {
+    try {
+        const allPredictionResult = await PredictionResults.find();
+
+        if (!allPredictionResult) {
+            return res.status(404).json({
+                message: "No predicted results yet in the DB!"
+            });
+        }
+
+        res.json(allPredictionResult);
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la récupération des prédictions" });
+    }
+});
 
 
 
