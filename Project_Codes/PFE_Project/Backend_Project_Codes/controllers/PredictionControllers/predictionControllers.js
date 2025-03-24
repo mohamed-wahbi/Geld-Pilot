@@ -57,6 +57,11 @@ module.exports.getAnnualFinanceCtrl = asyncHandler(async (req, res) => {
 })
 
 
+
+
+
+
+// _______________________________Generate Prediction Results_____________________________
 module.exports.createPredictionResultsCtrl = asyncHandler(async(req,res)=> {
     try {
         const {annee,mois} = req.body
@@ -77,11 +82,33 @@ module.exports.createPredictionResultsCtrl = asyncHandler(async(req,res)=> {
         const newPrediction = new PredictionResults(predictionData);
         await newPrediction.save();
 
-        res.json({ message: "Prédiction sauvegardée" });
+        res.json(
+            { message: "Prédiction sauvegardée" }
+        );
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de la prédiction" });
     }
 })
+// __________________________________________________________________________________________
+
+
+
+module.exports.getLastPredictionResultsCtrl = asyncHandler(async (req, res) => {
+    try {
+        const lastPredictionResult = await PredictionResults.findOne().sort({ createdAt: -1 }); // Trier par date de création décroissante
+
+        if (!lastPredictionResult) {
+            return res.status(404).json({
+                message: "No predicted results yet in the DB!"
+            });
+        }
+
+        res.json(lastPredictionResult);
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la récupération de la dernière prédiction" });
+    }
+});
+
 
 
 

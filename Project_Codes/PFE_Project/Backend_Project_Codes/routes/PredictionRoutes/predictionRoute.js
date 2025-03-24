@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {createMonthlyFinanceCtrl,createAnnualFinanceCtrl,getAnnualFinanceCtrl,getMonthlyFinanceCtrl,createPredictionResultsCtrl} = require ('../../controllers/PredictionControllers/predictionControllers.js')
+const {createMonthlyFinanceCtrl,createAnnualFinanceCtrl,getAnnualFinanceCtrl,getMonthlyFinanceCtrl,createPredictionResultsCtrl, getLastPredictionResultsCtrl} = require ('../../controllers/PredictionControllers/predictionControllers.js')
 
 
 router.route('/monthly-finance/create').post(createMonthlyFinanceCtrl)
@@ -12,7 +12,8 @@ router.route('/annual-finance/getAll').get(getAnnualFinanceCtrl)
 
 
 
-router.route('/prediction/create').get(createPredictionResultsCtrl)
+router.route('/prediction/create').post(createPredictionResultsCtrl)
+router.route('/prediction/get_last_result').get(getLastPredictionResultsCtrl)
 
 
 

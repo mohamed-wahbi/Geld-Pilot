@@ -9,6 +9,9 @@ const PredictionResultsSchema = new mongoose.Schema({
     resteAnnuel: Number, // somme des restes mensuels
     resteGlobal: Number, // resteAnnuel + fond bancaire
     situation: String // "Good", "Bad" ou "Critic"
+},
+{
+    timestamps:true
 });
 
 const PredictionResults = mongoose.model("PredictionResults", PredictionResultsSchema);
