@@ -34,6 +34,16 @@ def get_finance_data():
 
 
 
+# Modification de la route Flask pour récupérer annee et mois depuis la requête
+@app.route("/predict", methods=["GET"])
+def predict():
+    annee = request.args.get("annee")
+    mois = request.args.get("mois")
+
+    if not annee or not mois:
+        return jsonify({"error": "L'année et le mois sont requis"}), 400
+
+    return jsonify(annee,mois)
 
 if __name__ == "__main__":
     app.run(port=5001, debug=False)
