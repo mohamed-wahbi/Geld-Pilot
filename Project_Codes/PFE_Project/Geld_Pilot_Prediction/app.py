@@ -112,7 +112,7 @@ def predict():
     if not annee or not mois:
         return jsonify({"error": "L'année et le mois sont requis"}), 400
 
-    prediction_result = train_and_predict(int(annee), int(mois))  # Conversion en entier
+    prediction_result = train_and_predict(int(annee), int(mois),int(fondBanc))  # Conversion en entier
     return jsonify(prediction_result)
 
 if __name__ == "__main__":
