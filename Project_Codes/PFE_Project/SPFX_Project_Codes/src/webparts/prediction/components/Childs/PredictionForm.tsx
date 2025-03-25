@@ -50,6 +50,7 @@ interface PredictionResult {
 const PredictionForm: React.FC = () => {
   const [year, setYear] = useState<number | null>(null);
   const [month, setMonth] = useState<number | null>(null);
+  const [fondBanc, setFondBanc] = useState<number | null>(null);
   const [generatMonthlyActivitiesTab, setGeneratMonthlyActivitiesTab] =
     useState(false);
   const [predictionResltData, setPredictionResltData] =
@@ -174,12 +175,13 @@ const PredictionForm: React.FC = () => {
       >
         <div className={styles.generateRevenue}>
           <div className={styles.Top}>
-            <p>Filter Monthly Activities</p>
+            <p>Generate Predictions</p>
             <button
               onClick={() => {
                 setGeneratMonthlyActivitiesTab(!generatMonthlyActivitiesTab);
                 setYear(null);
                 setMonth(null);
+                setFondBanc(null)
               }}
             >
               {generatMonthlyActivitiesTab ? "❌" : "🆕"}
@@ -207,6 +209,17 @@ const PredictionForm: React.FC = () => {
                   onChange={(e) => setMonth(Number(e.target.value))}
                   min={1}
                   max={12}
+                  required
+                />
+              </div>
+
+              <div className={styles.inputGenerateForm}>
+                <label>Fond Bank</label>
+                <input
+                  type="number"
+                  placeholder="10000"
+                  value={fondBanc ?? ""}
+                  onChange={(e) => setFondBanc(Number(e.target.value))}
                   required
                 />
               </div>

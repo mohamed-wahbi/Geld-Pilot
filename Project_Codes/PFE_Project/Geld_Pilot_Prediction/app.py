@@ -33,7 +33,7 @@ def get_finance_data():
     return df_monthly, df_annual
 
 
-def train_and_predict(annee, mois):
+def train_and_predict(annee, mois, fondBanc):
     df_monthly, df_annual = get_finance_data()
 
     # Vérification si l'année existe dans les données
@@ -78,7 +78,7 @@ def train_and_predict(annee, mois):
     # Calcul du reste mensuel, annuel et global
     reste_mensuel = float(revenu_estime - charges_estimees)
     reste_annuel = float(reste_mensuel * 12)  # Simplification
-    fond_bancaire = 10000  # Ex. fond restant en banque
+    fond_bancaire = fondBanc  # Ex. fond restant en banque
     reste_global = float(reste_annuel + fond_bancaire)
 
     # Détermination de la situation financière
@@ -107,6 +107,7 @@ def train_and_predict(annee, mois):
 def predict():
     annee = request.args.get("annee")
     mois = request.args.get("mois")
+    fondBanc = request.args.get("fondBanc")
 
     if not annee or not mois:
         return jsonify({"error": "L'année et le mois sont requis"}), 400

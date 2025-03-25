@@ -64,7 +64,7 @@ module.exports.getAnnualFinanceCtrl = asyncHandler(async (req, res) => {
 // _______________________________Generate Prediction Results_____________________________
 module.exports.createPredictionResultsCtrl = asyncHandler(async(req,res)=> {
     try {
-        const {annee,mois} = req.body
+        const {annee,mois,fondBanc} = req.body
 
         if (!annee || !mois) {
             return res.status(400).json({ error: "L'année et le mois sont requis" });
@@ -72,7 +72,7 @@ module.exports.createPredictionResultsCtrl = asyncHandler(async(req,res)=> {
 
          // 1️⃣ Appel de l'API Flask avec les paramètres annee et mois
          const response = await axios.get(`http://127.0.0.1:5001/predict`, {
-            params: { annee, mois }
+            params: { annee, mois,fondBanc }
         });
 
         // 2️⃣ Récupération des résultats
