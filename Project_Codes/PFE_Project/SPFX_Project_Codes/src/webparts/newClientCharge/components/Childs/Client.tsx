@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react'; const AOS = require("aos");
+import { useEffect, useState } from 'react'; 
+const AOS = require("aos");
 import "aos/dist/aos.css";
 import styles from "../../components/NewClientCharge.module.scss";
 import { ToastContainer, toast, Bounce } from 'react-toastify';

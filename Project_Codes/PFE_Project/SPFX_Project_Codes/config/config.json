@@ -121,6 +121,14 @@
           "manifest": "./src/webparts/annualActivities/AnnualActivitiesWebPart.manifest.json"
         }
       ]
+    },
+    "prediction-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/prediction/PredictionWebPart.js",
+          "manifest": "./src/webparts/prediction/PredictionWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -139,6 +147,7 @@
     "HistorysWebPartStrings": "lib/webparts/historys/loc/{locale}.js",
     "ExpensesWebPartStrings": "lib/webparts/expenses/loc/{locale}.js",
     "MonthlyActivitiesWebPartStrings": "lib/webparts/monthlyActivities/loc/{locale}.js",
-    "AnnualActivitiesWebPartStrings": "lib/webparts/annualActivities/loc/{locale}.js"
+    "AnnualActivitiesWebPartStrings": "lib/webparts/annualActivities/loc/{locale}.js",
+    "PredictionWebPartStrings": "lib/webparts/prediction/loc/{locale}.js"
   }
 }

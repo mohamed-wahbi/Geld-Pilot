@@ -134,6 +134,25 @@ module.exports.getAllPredictionResultsCtrl = asyncHandler(async (req, res) => {
 
 
 
+module.exports.deleteOnePredictionResultsCtrl = asyncHandler(async (req, res) => {
+    try {
+        const getOneResult = await PredictionResults.findById({_id:req.params.id});
+
+        if (!getOneResult) {
+            return res.status(404).json({
+                message: "No predicted results yet in the DB!"
+            });
+        }
+
+        await PredictionResults.findByIdAndDelete({_id:req.params.id})
+
+        res.json({message: " result deleted ."});
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la récupération et supprission des prédictions" });
+    }
+});
+
+
 
 
 
