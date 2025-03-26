@@ -88,6 +88,7 @@ const PredictionForm: React.FC = () => {
         {
           annee: year,
           mois: month,
+          fondBanc:fondBanc
         }
       );
 
