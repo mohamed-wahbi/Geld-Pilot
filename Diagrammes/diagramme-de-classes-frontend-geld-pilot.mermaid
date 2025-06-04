@@ -1,0 +1,385 @@
+classDiagram
+    class Application {
+        #45;name: String
+        #45;version: String
+        #43;initialize()
+        #43;render()
+        #43;handleErrors()
+    }
+    
+    class Page {
+        #45;id: String
+        #45;title: String
+        #45;url: String
+        #45;webParts: Array
+        #43;render()
+        #43;load()
+        #43;unload()
+    }
+    
+    class HomePage {
+        #45;id: "home"
+        #45;title: "Accueil"
+    }
+    
+    class LoginPage {
+        #45;id: "login"
+        #45;title: "Connexion"
+    }
+    
+    class RegisterPage {
+        #45;id: "register"
+        #45;title: "Inscription"
+    }
+    
+    class AccessInfoPage {
+        #45;id: "access_info"
+        #45;title: "Informations d'accès"
+    }
+    
+    class AdminDashboardPage {
+        #45;id: "admin_dashboard"
+        #45;title: "Tableau de bord Admin"
+    }
+    
+    class AdminClientsChargesPage {
+        #45;id: "admin_clients_charges"
+        #45;title: "Gestion Clients et Charges"
+    }
+    
+    class AdminIASupportPage {
+        #45;id: "admin_ia_support"
+        #45;title: "Support IA"
+    }
+    
+    class AdminPredictionPage {
+        #45;id: "admin_prediction"
+        #45;title: "Prédictions Admin"
+    }
+    
+    class VisitorDashboardPage {
+        #45;id: "visitor_dashboard"
+        #45;title: "Tableau de bord Visiteur"
+    }
+    
+    class AdminInvoiceRevenuesPage {
+        #45;id: "admin_invoice_revenues"
+        #45;title: "Factures et Revenus"
+    }
+    
+    class AdminExpensesPage {
+        #45;id: "admin_expenses"
+        #45;title: "Gestion des Dépenses"
+    }
+    
+    class HistoryPage {
+        #45;id: "history"
+        #45;title: "Historique"
+    }
+    
+    class AdminMonthlyActivityPage {
+        #45;id: "admin_monthly_activity"
+        #45;title: "Activité Mensuelle"
+    }
+    
+    class AdminAnnualActivityPage {
+        #45;id: "admin_annual_activity"
+        #45;title: "Activité Annuelle"
+    }
+    
+    class WebPart {
+        #45;id: String
+        #45;title: String
+        #45;description: String
+        #45;interfaces: Array
+        #43;initialize()
+        #43;render()
+        #43;getPropertyPaneConfiguration()
+    }
+    
+    class WelcomeWebPart {
+        #45;message: String
+        #43;navigateToLogin()
+    }
+    
+    class InfoWebPart {
+        #45;generalInfo: Array
+        #43;displayInfo()
+    }
+    
+    class FooterWebPart {
+        #45;contactInfo: Object
+        #45;quickLinks: Array
+        #43;navigateToPage(pageId)
+    }
+    
+    class LoginWebPart {
+        #45;formFields: Array
+        #43;validateRecaptcha()
+        #43;authenticate()
+        #43;navigateToRegister()
+        #43;navigateToDashboard(userRole)
+    }
+    
+    class RegisterWebPart {
+        #45;formFields: Array
+        #43;validateForm()
+        #43;register()
+        #43;navigateToLogin()
+        #43;navigateToAccessInfo()
+    }
+    
+    class AccessInfoWebPart {
+        #45;documentation: String
+        #43;sendRequestViaOutlook()
+        #43;navigateToHome()
+    }
+    
+    class AuthorizationWebPart {
+        #45;authorizations: Array
+        #43;createAuthorization()
+        #43;viewAuthorizations()
+        #43;updateAuthorizationStatus(id, status)
+    }
+    
+    class ClientsChargesWebPart {
+        #45;clients: Array
+        #45;charges: Array
+        #43;addClient()
+        #43;addCharge()
+        #43;filterData(criteria)
+        #43;voiceCommandFilter()
+    }
+    
+    class IASupportWebPart {
+        #45;interfaces: Array
+        #43;switchInterface(interfaceId)
+    }
+    
+    class TechnicalSupportInterface {
+        #45;chatHistory: Array
+        #43;sendMessage()
+        #43;generatePdfReport()
+    }
+    
+    class GeldbotInterface {
+        #45;chatHistory: Array
+        #43;sendMessage()
+        #43;queryData()
+    }
+    
+    class PredictionWebPart {
+        #45;predictions: Array
+        #45;filters: Object
+        #43;generatePrediction()
+        #43;filterResults()
+        #43;voiceCommandFilter()
+    }
+    
+    class PowerBIDashboardWebPart {
+        #45;dashboardUrl: String
+        #45;filters: Object
+        #43;refreshDashboard()
+        #43;applyFilters()
+    }
+    
+    class InvoiceRevenueWebPart {
+        #45;invoices: Array
+        #45;revenues: Array
+        #43;createInvoice()
+        #43;generateRevenue()
+        #43;processPayment()
+        #43;filterData(criteria)
+        #43;voiceCommandFilter()
+    }
+    
+    class ExpensesWebPart {
+        #45;expenses: Array
+        #45;monthlyCoverage: Object
+        #43;addExpense()
+        #43;generateCoverageReport()
+        #43;filterData(criteria)
+        #43;voiceCommandFilter()
+    }
+    
+    class HistoryWebPart {
+        #45;interfaces: Array
+        #43;switchInterface(interfaceId)
+    }
+    
+    class ChargeHistoryInterface {
+        #45;yearlyCharges: Array
+        #45;monthlyCharges: Array
+        #43;viewChargesByYear(year)
+        #43;viewChargesByMonth(year, month)
+    }
+    
+    class InvoiceHistoryInterface {
+        #45;clientInvoices: Array
+        #43;viewInvoicesByClient(clientId)
+        #43;viewInvoicesByPeriod(startDate, endDate)
+    }
+    
+    class MonthlyActivityWebPart {
+        #45;interfaces: Array
+        #43;switchInterface(interfaceId)
+    }
+    
+    class GenerateMonthlyResultInterface {
+        #45;monthlyResults: Object
+        #43;generateResults(year, month)
+        #43;exportResults()
+    }
+    
+    class RetrieveMonthlyDataInterface {
+        #45;monthlyData: Object
+        #43;retrieveData(year, month)
+        #43;exportData()
+    }
+    
+    class AnnualActivityWebPart {
+        #45;interfaces: Array
+        #43;switchInterface(interfaceId)
+    }
+    
+    class GenerateAnnualResultInterface {
+        #45;annualResults: Object
+        #43;generateResults(year)
+        #43;exportResults()
+    }
+    
+    class RetrieveAnnualDataInterface {
+        #45;annualData: Object
+        #43;retrieveData(year)
+        #43;exportData()
+    }
+    
+    class SPFxContext {
+        #45;webUrl: String
+        #45;pageContext: Object
+        #43;getSPHttpClient()
+        #43;getMSGraphClient()
+    }
+    
+    class APIService {
+        #45;baseUrl: String
+        #43;get(endpoint)
+        #43;post(endpoint, data)
+        #43;put(endpoint, data)
+        #43;delete(endpoint)
+    }
+    
+    class VoiceCommandService {
+        #45;commands: Array
+        #43;initialize()
+        #43;processCommand(command)
+        #43;applyFilter(webpartId, filterCriteria)
+    }
+    
+    class PaymentAPIService {
+        #45;apiKey: String
+        #45;merchantId: String
+        #43;processTransaction(amount, currency, description)
+        #43;getTransactionStatus(transactionId)
+    }
+    
+    Application "1" --* "n" Page
+    Page <|-- HomePage
+    Page <|-- LoginPage
+    Page <|-- RegisterPage
+    Page <|-- AccessInfoPage
+    Page <|-- AdminDashboardPage
+    Page <|-- AdminClientsChargesPage
+    Page <|-- AdminIASupportPage
+    Page <|-- AdminPredictionPage
+    Page <|-- VisitorDashboardPage
+    Page <|-- AdminInvoiceRevenuesPage
+    Page <|-- AdminExpensesPage
+    Page <|-- HistoryPage
+    Page <|-- AdminMonthlyActivityPage
+    Page <|-- AdminAnnualActivityPage
+    
+    Page "1" --* "n" WebPart
+    WebPart <|-- WelcomeWebPart
+    WebPart <|-- InfoWebPart
+    WebPart <|-- FooterWebPart
+    WebPart <|-- LoginWebPart
+    WebPart <|-- RegisterWebPart
+    WebPart <|-- AccessInfoWebPart
+    WebPart <|-- AuthorizationWebPart
+    WebPart <|-- ClientsChargesWebPart
+    WebPart <|-- IASupportWebPart
+    WebPart <|-- PredictionWebPart
+    WebPart <|-- PowerBIDashboardWebPart
+    WebPart <|-- InvoiceRevenueWebPart
+    WebPart <|-- ExpensesWebPart
+    WebPart <|-- HistoryWebPart
+    WebPart <|-- MonthlyActivityWebPart
+    WebPart <|-- AnnualActivityWebPart
+    
+    HomePage "1" --o "1" WelcomeWebPart
+    HomePage "1" --o "1" InfoWebPart
+    HomePage "1" --o "1" FooterWebPart
+    
+    LoginPage "1" --o "1" LoginWebPart
+    LoginPage "1" --o "1" FooterWebPart
+    
+    RegisterPage "1" --o "1" RegisterWebPart
+    RegisterPage "1" --o "1" FooterWebPart
+    
+    AccessInfoPage "1" --o "1" AccessInfoWebPart
+    AccessInfoPage "1" --o "1" FooterWebPart
+    
+    AdminDashboardPage "1" --o "1" AuthorizationWebPart
+    AdminDashboardPage "1" --o "1" FooterWebPart
+    
+    AdminClientsChargesPage "1" --o "1" ClientsChargesWebPart
+    AdminClientsChargesPage "1" --o "1" FooterWebPart
+    
+    AdminIASupportPage "1" --o "1" IASupportWebPart
+    AdminIASupportPage "1" --o "1" FooterWebPart
+    
+    AdminPredictionPage "1" --o "1" PredictionWebPart
+    AdminPredictionPage "1" --o "1" PowerBIDashboardWebPart
+    AdminPredictionPage "1" --o "1" FooterWebPart
+    
+    VisitorDashboardPage "1" --o "1" PredictionWebPart
+    VisitorDashboardPage "1" --o "1" PowerBIDashboardWebPart
+    VisitorDashboardPage "1" --o "1" FooterWebPart
+    
+    AdminInvoiceRevenuesPage "1" --o "1" InvoiceRevenueWebPart
+    AdminInvoiceRevenuesPage "1" --o "1" FooterWebPart
+    
+    AdminExpensesPage "1" --o "1" ExpensesWebPart
+    AdminExpensesPage "1" --o "1" FooterWebPart
+    
+    HistoryPage "1" --o "1" HistoryWebPart
+    HistoryPage "1" --o "1" FooterWebPart
+    
+    AdminMonthlyActivityPage "1" --o "1" MonthlyActivityWebPart
+    AdminMonthlyActivityPage "1" --o "1" FooterWebPart
+    
+    AdminAnnualActivityPage "1" --o "1" AnnualActivityWebPart
+    AdminAnnualActivityPage "1" --o "1" FooterWebPart
+    
+    IASupportWebPart "1" --* "1" TechnicalSupportInterface
+    IASupportWebPart "1" --* "1" GeldbotInterface
+    
+    HistoryWebPart "1" --* "1" ChargeHistoryInterface
+    HistoryWebPart "1" --* "1" InvoiceHistoryInterface
+    
+    MonthlyActivityWebPart "1" --* "1" GenerateMonthlyResultInterface
+    MonthlyActivityWebPart "1" --* "1" RetrieveMonthlyDataInterface
+    
+    AnnualActivityWebPart "1" --* "1" GenerateAnnualResultInterface
+    AnnualActivityWebPart "1" --* "1" RetrieveAnnualDataInterface
+    
+    WebPart "1" --o "1" SPFxContext
+    WebPart "1" --o "1" APIService
+    
+    ClientsChargesWebPart "1" --o "1" VoiceCommandService
+    PredictionWebPart "1" --o "1" VoiceCommandService
+    InvoiceRevenueWebPart "1" --o "1" VoiceCommandService
+    ExpensesWebPart "1" --o "1" VoiceCommandService
+    
+    InvoiceRevenueWebPart "1" --o "1" PaymentAPIService

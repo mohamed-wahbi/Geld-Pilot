@@ -1,28 +1,28 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import styles from "../components/Prediction.module.scss";
 
 import PredictionForm from './Childs/PredictionForm';
 import PredictionHistory from './Childs/PredictionHistory';
 
 const NewClientCharge: React.FC = () => {
-  // const token = localStorage.getItem("token");
-  // const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const token = localStorage.getItem("token");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const [activeTab, setActiveTab] = useState<string>('partners')
 
-  // useEffect(() => {
-  //     if (token != null) {
-  //       setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
-  //       console.log(token)
-  //       if (isAdmin === false) {
-  //         window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
-  //       }
-  //     }
-  //     if (token == null) {
-  //       window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
-  //     }
-  //   }, [token, isAdmin]);
+  useEffect(() => {
+      if (token != null) {
+        setIsAdmin(JSON.parse(atob(token.split(".")[1])).isAdmin);
+        console.log(token)
+        if (isAdmin === false) {
+          window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Partener_Dash.aspx";
+        }
+      }
+      if (token == null) {
+        window.location.href = "https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Login.aspx";
+      }
+    }, [token]);
 
 
   return (

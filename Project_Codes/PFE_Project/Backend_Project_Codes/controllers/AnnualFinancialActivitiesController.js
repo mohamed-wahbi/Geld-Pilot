@@ -124,7 +124,7 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
 
   // 9️⃣ Récupération des données de l'année précédente
   const previousYearData = await AnnualFinancialActivities.findOne({ year: (parseInt(year) - 1).toString() });
-
+  
   let croissanceRevenu = 0, croissanceCharges = 0;
   if (previousYearData) {
     croissanceRevenu = ((totalRevenue - previousYearData.totalRevenue) / (previousYearData.totalRevenue || 1)) * 100;
@@ -154,10 +154,6 @@ module.exports.createAnnualFinancialActivityCtrl = asyncHandler(async (req, res)
 });
 
 
-
-
-
-
 /*--------------------------------------------------
 * @desc    Get the latest Monthly Financial Activity
 * @route   /api/monthly-financial-activity/latest
@@ -181,7 +177,6 @@ module.exports.getLatestAnnualFinancialActivityCtrl = asyncHandler(async (req, r
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
-
 
 
 

@@ -53,9 +53,14 @@ const Login: React.FC = () => {
         email: formData.email,
         password: formData.password
       } );
-      console.log("Login successful:", response.data);
       localStorage.setItem("token", response.data.token);
-      window.location.href="https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Admin_Auth.aspx"
+      // je veux recuperer la token  et la decode puis  verifier si isAdmin=true or false si ces = true alor me deriger vers : window.location.href="https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Admin_Auth.aspx" si ces false me deriger au window.location.href="https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Partener_Dash.aspx"
+      if (response.data.isAdmin == true) {
+        window.location.href="https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Admin_Auth.aspx"
+      }
+      else {
+        window.location.href="https://yml6b.sharepoint.com/sites/GeldPilot/SitePages/Partener_Dash.aspx"
+      }
     } catch (error: any) {
       console.error("Login error:", error.response?.data || error.message);
       setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");

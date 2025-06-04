@@ -278,8 +278,8 @@ const MonthlyCharge: React.FC = () => {
         <div className={styles.headerTopContent}>
           <div className={styles.searchInput}>
             <VocaFlexMWSTn
-              data={''}
-              keys={['']}
+              data={monthlyExpenses}
+              keys={['year', 'expenseType', 'expenseName']}
               lang={'en-US'}
               threshold={'0.4'}
               allFiltredDatas={getAllFiltredDatas}
@@ -418,7 +418,16 @@ const MonthlyCharge: React.FC = () => {
 
             {monthlyExpenses.map((item) => (
               <tr key={item._id}>
-                {item.covredDay ? <td className={styles.ctrlCl}><span>✅</span></td> :
+                {item.covredDay ?
+
+                  <td className={styles.ctrlCl}>
+                    <span>✅</span>
+                    <div className={styles.ctrlBtn}>
+                      <MdDeleteOutline className={styles.deleteLogo} onClick={() => deleteOneMonthlyChargesById(item._id)} />
+                    </div>
+                  </td>
+
+                  :
                   <td className={styles.ctrlCl}>
                     <span>⚙️</span>
                     <div className={styles.ctrlBtn}>

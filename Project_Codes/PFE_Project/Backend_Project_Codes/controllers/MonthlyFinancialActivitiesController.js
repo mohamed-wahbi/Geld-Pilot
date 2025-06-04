@@ -144,7 +144,7 @@ module.exports.CreateMonthlyFinancialActivitysCtrl = asyncHandler(async (req, re
             prevMonth = 12;
             prevYear -= 1;
         }
-
+__kl
         // Recherche du mois précédent
         const previousMonth = await MonthlyFinancialActivities.findOne({
             year: prevYear.toString(),  // Convertir en string si nécessaire

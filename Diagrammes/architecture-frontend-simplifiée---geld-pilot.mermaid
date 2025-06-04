@@ -1,0 +1,112 @@
+classDiagram
+    class Application {
+        #43;initialize()
+        #43;render()
+    }
+    
+    class PageGroups {
+        Public Pages
+        Admin Pages
+        Visitor Pages
+    }
+    
+    class WebPartTypes {
+        Navigation WebParts
+        Data Management WebParts
+        Visualization WebParts
+        AI Support WebParts
+        Authentication WebParts
+    }
+    
+    class Services {
+        SPFx Context
+        API Service
+        Voice Command Service
+        Payment API Service
+    }
+    
+    class UserFlows {
+        Authentication Flow
+        Admin Workflow
+        Visitor Workflow
+        Financial Management
+    }
+    
+    Application --> PageGroups : contient
+    PageGroups --> WebPartTypes : utilisent
+    WebPartTypes --> Services : consomment
+    UserFlows --> PageGroups : traversent
+    
+    class PublicPages {
+        Home
+        Login
+        Register
+        Access Info
+    }
+    
+    class AdminPages {
+        Dashboard
+        Clients & Charges
+        IA Support
+        Predictions
+        Invoice & Revenues
+        Expenses
+        History
+        Monthly Activity
+        Annual Activity
+    }
+    
+    class VisitorPages {
+        Dashboard
+        Predictions
+    }
+    
+    class NavigationWebParts {
+        Welcome
+        Footer
+    }
+    
+    class DataManagementWebParts {
+        Clients & Charges
+        Invoice & Revenue
+        Expenses
+        Authorization
+    }
+    
+    class VisualizationWebParts {
+        PowerBI Dashboard
+        History
+        Monthly Activity
+        Annual Activity
+    }
+    
+    class AIWebParts {
+        Technical Support
+        Geldbot
+        Prediction
+    }
+    
+    class AuthenticationWebParts {
+        Login
+        Register
+    }
+    
+    PageGroups <|-- PublicPages
+    PageGroups <|-- AdminPages
+    PageGroups <|-- VisitorPages
+    
+    WebPartTypes <|-- NavigationWebParts
+    WebPartTypes <|-- DataManagementWebParts
+    WebPartTypes <|-- VisualizationWebParts
+    WebPartTypes <|-- AIWebParts
+    WebPartTypes <|-- AuthenticationWebParts
+    
+    class KeyFeatures {
+        Voice Command Filtering
+        Payment Processing
+        AI-Powered Support
+        Financial Reporting
+        User Authorization
+    }
+    
+    WebPartTypes --> KeyFeatures : implémentent

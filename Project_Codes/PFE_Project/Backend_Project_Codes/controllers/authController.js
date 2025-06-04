@@ -8,8 +8,6 @@ require("dotenv").config()
 const Token_Secret = process.env.Token_Secret
 
 
-
-
 /*--------------------------------------------------
 * @desc    Register new User
 * @router  /api/auth/register
@@ -63,7 +61,6 @@ module.exports.registerCtel = asyncHandler(async (req, res) => {
 });
 
 
-
 /*--------------------------------------------------
 * @desc    Login new User
 * @router  /api/auth/login
@@ -88,9 +85,6 @@ module.exports.loginCtrl = asyncHandler(async (req, res) => {
   if (!passwordCompare) {
     return res.status(400).json({ message: 'Email or password is invalid' });
   }
-
-  
-  
 
   // Genaration of the Token
   const token = jwt.sign(

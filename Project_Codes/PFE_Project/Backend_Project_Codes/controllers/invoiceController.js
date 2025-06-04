@@ -88,6 +88,7 @@ module.exports.getAllInvoicesCtrl = asyncHandler(async (req, res) => {
 
 
 
+
 /*--------------------------------------------------
 * @desc    Delete one invoice
 * @router  /api/invoice/deleteOne
@@ -115,7 +116,6 @@ module.exports.deleteOneInvoicesCtrl = asyncHandler(async (req, res) => {
 * @access  only admin
 ----------------------------------------------------*/
 module.exports.updateOneInvoicesCtrl = asyncHandler(async (req, res) => {
-
 
     try {
         

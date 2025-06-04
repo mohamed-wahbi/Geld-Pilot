@@ -1,0 +1,111 @@
+classDiagram
+    class Application {
+        #43;main()
+        #45;configureServer()
+        #45;connectDatabases()
+        #45;initializeRoutes()
+    }
+    
+    class Server {
+        #45;port: Number
+        #45;app: Express
+        #43;start()
+        #43;stop()
+    }
+    
+    class Router {
+        #45;routes: Array
+        #43;registerRoutes()
+        #43;mapControllerToEndpoint()
+    }
+    
+    class Middleware {
+        #43;authenticate()
+        #43;authorize(role)
+        #43;validateRequest()
+        #43;handleErrors()
+    }
+    
+    class Controller {
+        #43;create()
+        #43;read()
+        #43;update()
+        #43;delete()
+        #43;list()
+    }
+    
+    class Model {
+        #45;schema: Object
+        #45;validations: Array
+        #43;validate()
+        #43;save()
+        #43;findById()
+        #43;findAll()
+    }
+    
+    class DatabaseManager {
+        #45;connections: Map
+        #43;connect(config)
+        #43;disconnect()
+        #43;executeQuery()
+    }
+    
+    class MongoDBConnector {
+        #45;uri: String
+        #45;options: Object
+        #43;connect()
+        #43;disconnect()
+        #43;query()
+    }
+    
+    class DataverseConnector {
+        #45;endpoint: String
+        #45;credentials: Object
+        #43;connect()
+        #43;disconnect()
+        #43;query()
+    }
+    
+    class FlaskServiceConnector {
+        #45;endpoint: String
+        #43;sendRequest()
+        #43;processResponse()
+    }
+    
+    class ExternalServiceManager {
+        #43;initialize()
+        #43;callService(name, params)
+    }
+    
+    class MailService {
+        #45;config: Object
+        #43;sendEmail()
+        #43;createTemplate()
+    }
+    
+    class OpenAIService {
+        #45;apiKey: String
+        #45;model: String
+        #43;generateResponse()
+        #43;analyzeData()
+    }
+    
+    class CurrencyService {
+        #45;apiKey: String
+        #43;getExchangeRate()
+        #43;convertCurrency()
+    }
+    
+    Application "1" --* "1" Server
+    Server "1" --* "n" Router
+    Router "1" --* "n" Middleware
+    Router "1" --* "n" Controller
+    Controller "1" --o "n" Model
+    Application "1" --* "1" DatabaseManager
+    DatabaseManager "1" --* "1" MongoDBConnector
+    DatabaseManager "1" --* "1" DataverseConnector
+    Application "1" --* "1" FlaskServiceConnector
+    Application "1" --* "1" ExternalServiceManager
+    ExternalServiceManager "1" --* "1" MailService
+    ExternalServiceManager "1" --* "1" OpenAIService
+    ExternalServiceManager "1" --* "1" CurrencyService

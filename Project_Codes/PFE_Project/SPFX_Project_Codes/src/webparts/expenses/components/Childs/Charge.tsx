@@ -184,11 +184,6 @@ const Charge: React.FC = () => {
 
 
 
-
-
-
-
-
   // ----------------------------------Notif Alert---------------------------------
   const notify = (text: string) => toast(text, {
     position: "bottom-right",
@@ -201,7 +196,6 @@ const Charge: React.FC = () => {
     transition: Bounce,
   });
   // _______________________________________________________________________________
-
 
 
 
@@ -229,7 +223,6 @@ const Charge: React.FC = () => {
     notify("All charges reloaded from the Data Base. ✅")
   }
   // _______________________________________________________________________
-
 
 
 
@@ -323,10 +316,6 @@ const Charge: React.FC = () => {
                 </td>
               </tr>
             )}
-
-
-
-
 
 
             {(allFiltredDatas.length != 0 ? allFiltredDatas : charges).map((charge) => (

@@ -1,0 +1,21 @@
+graph LR
+    User["Utilisateur (Application)"]
+    MongoDB["MongoDB (Activités métier)"]
+    Dataverse["Microsoft Dataverse (Analyse & Services)"]
+    PowerBI["Visualisation (Power BI)"]
+    PowerAutomate["Automatisation (Power Automate) & Chatbot (Power Virtual Agent)"]
+    
+    User -->|"Insertion métier"| MongoDB
+    MongoDB -->|"Requête asynchrone"| Dataverse
+    Dataverse --> PowerBI
+    Dataverse --> PowerAutomate
+    
+    classDef database fill:#f9f,stroke:#333,stroke-width:2px
+    classDef service fill:#bbf,stroke:#333,stroke-width:1px
+    classDef user fill:#dfd,stroke:#333,stroke-width:1px
+    classDef output fill:#ffd,stroke:#333,stroke-width:1px
+    
+    class MongoDB database
+    class Dataverse database
+    class User user
+    class PowerBI,PowerAutomate output
